@@ -5,11 +5,14 @@
 #include <algorithm>
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 //#include <SFML/Network.hpp>
 #include <Windows.h>
 
-#include "Tank.h"
+#include "Config.h"
 #include "Block.h"
+#include "Tank.h"
+#include "Bullet.h"
 #include "Stages.cpp"
 
 sf::Clock globalClock;
@@ -21,9 +24,35 @@ bool inFocus = true;
 //bool client = false;
 
 std::vector<std::vector<Block*>> map(26, std::vector<Block*>(26, nullptr));
-uint8_t stage = 1;
+uint8_t stage = 0;
 
-Tank tank(TANK_YELLOW, 72, 200);
+Tank tank(TANK_YELLOW, 72, 200, 0, TANK_MEDIUM);
+std::vector<Bullet*> bullets(0, nullptr);
+
+sf::Music music;
+
+void loadStage(const uint8_t& stage) {
+    tank = Tank(TANK_YELLOW, 72, 200, 0, TANK_MEDIUM);
+    for (uint8_t i = 0; i < 26; ++i) {
+        for (uint8_t j = 0; j < 26; ++j) {
+            // Deleting unused blocks
+            if (map[i][j] != nullptr) {
+                delete map[i][j];
+            }
+
+            // Loading blocks from "Stages.cpp"
+            if (stages[stage][i][j] == ' ') {
+                map[i][j] = new Block(BLOCK_AIR, j, i);
+            }
+            else {
+                map[i][j] = new Block(stages[stage][i][j], j, i);
+            }
+        }
+    }
+    music.play();
+
+    return;
+}
 
 void eventProcess(sf::RenderWindow& window) {
     sf::Event event;
@@ -45,10 +74,49 @@ void eventProcess(sf::RenderWindow& window) {
             inFocus = true;
             holdTime = globalClock.getElapsedTime().asSeconds();
         }
+        else if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::RShift || event.key.code == sf::Keyboard::LShift/* || event.key.code == sf::Keyboard::Space*/) {
+                if (tank.getRotation() == TANK_UP) {
+                    bullets.push_back(new Bullet(tank.getX(), tank.getY() - 8, BULLET_UP));
+                }
+                else if (tank.getRotation() == TANK_LEFT) {
+                    bullets.push_back(new Bullet(tank.getX() - 8, tank.getY(), BULLET_LEFT));
+                }
+                else if (tank.getRotation() == TANK_DOWN) {
+                    bullets.push_back(new Bullet(tank.getX(), tank.getY() + 8, BULLET_DOWN));
+                }
+                else if (tank.getRotation() == TANK_RIGHT) {
+                    bullets.push_back(new Bullet(tank.getX() + 8, tank.getY(), BULLET_RIGHT));
+                }
+            }
+            else if (event.key.code == sf::Keyboard::Space) {
+                if (tank.getRotation() == TANK_UP) {
+                    bullets.push_back(new Bullet(tank.getX(), tank.getY() - 8, BULLET_UP, BULLET_FAST, true));
+                }
+                else if (tank.getRotation() == TANK_LEFT) {
+                    bullets.push_back(new Bullet(tank.getX() - 8, tank.getY(), BULLET_LEFT, BULLET_FAST, true));
+                }
+                else if (tank.getRotation() == TANK_DOWN) {
+                    bullets.push_back(new Bullet(tank.getX(), tank.getY() + 8, BULLET_DOWN, BULLET_FAST, true));
+                }
+                else if (tank.getRotation() == TANK_RIGHT) {
+                    bullets.push_back(new Bullet(tank.getX() + 8, tank.getY(), BULLET_RIGHT, BULLET_FAST, true));
+                }
+            } //test
+            else if (event.key.code == sf::Keyboard::Num1) {
+                loadStage(0);
+            }
+            else if (event.key.code == sf::Keyboard::Num2) {
+                loadStage(1);
+            }
+            else if (event.key.code == sf::Keyboard::Num3) {
+                loadStage(2);
+            }
+        }
     }
     if (inFocus) {
-        while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / tank.speed) {
-            holdTime += 1 / tank.speed;
+        while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / tank.getSpeed()) {
+            holdTime += 1 / tank.getSpeed();
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
                 tank.up(map);
             }
@@ -86,27 +154,27 @@ void eventProcess(sf::RenderWindow& window) {
 //            else {
 //                static float holdTime = globalClock.getElapsedTime().asSeconds();
 //                if (data[0] == 'W') {
-//                    while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / tank.speed) {
+//                    while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / tank.getSpeed()) {
 //                        tank2.up(tank);
-//                        holdTime += 1 / tank.speed;
+//                        holdTime += 1 / tank.getSpeed();
 //                    }
 //                }
 //                else if (data[0] == 'A') {
-//                    while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / tank.speed) {
+//                    while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / tank.getSpeed()) {
 //                        tank2.left(tank);
-//                        holdTime += 1 / tank.speed;
+//                        holdTime += 1 / tank.getSpeed();
 //                    }
 //                }
 //                else if (data[0] == 'S') {
-//                    while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / tank.speed) {
+//                    while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / tank.getSpeed()) {
 //                        tank2.down(tank);
-//                        holdTime += 1 / tank.speed;
+//                        holdTime += 1 / tank.getSpeed();
 //                    }
 //                }
 //                else if (data[0] == 'D') {
-//                    while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / tank.speed) {
+//                    while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / tank.getSpeed()) {
 //                        tank2.right(tank);
-//                        holdTime += 1 / tank.speed;
+//                        holdTime += 1 / tank.getSpeed();
 //                    }
 //                }
 //                else if (data[0] == '_') {
@@ -130,11 +198,23 @@ void eventProcess(sf::RenderWindow& window) {
 //    return;
 //}
 
+void doItNow() {
+    for (uint8_t i = 0; i < bullets.size(); ++i) {
+        if (!bullets[i]->move(map)) {
+            delete bullets[i];
+            bullets.erase(bullets.begin() + i);
+        }
+    }
+    return;
+}
+
 void display(sf::RenderWindow& window) {
     window.clear(sf::Color(0));
 
     tank.draw(window);
-
+    for (uint8_t i = 0; i < bullets.size(); ++i) {
+        bullets[i]->draw(window);
+    }
     for (uint8_t i = 0; i < 26; ++i) {
         for (uint8_t j = 0; j < 26; ++j) {
             map[i][j]->draw(window);
@@ -145,74 +225,50 @@ void display(sf::RenderWindow& window) {
 }
 
 int main() {
-    /*if (connection.bind(NETWORK_PORT) != sf::Socket::Done) {
-        std::cout << "(2 games opened?)" << std::endl;
-        system("pause");
-        throw 1;
-    }
-    connection.setBlocking(false);
+    try {
+        if (!music.openFromFile("resources/sounds/StageBegin.ogg")) throw 1;
+        music.setVolume(50);
+        /*if (connection.bind(NETWORK_PORT) != sf::Socket::Done) throw "(2 games opened?)";
+        connection.setBlocking(false);
 
-    std::cout << "Enter IP to connect (none for 1 player / host): ";
-    if (std::cin.peek() != '\n') {
-        std::cin >> connectedIP;
-        client = true;
+        std::cout << "Enter IP to connect (none for 1 player / host): ";
+        if (std::cin.peek() != '\n') {
+            std::cin >> connectedIP;
+            client = true;
 
-        char data[5] = { 't', 'a', 'n', 'k', 's' };
-        connection.send(data, 5, connectedIP, NETWORK_PORT);
-    }*/
+            char data[5] = { 't', 'a', 'n', 'k', 's' };
+            connection.send(data, 5, connectedIP, NETWORK_PORT);
+        }*/
 
-    #if !DEBUG
+#if !DEBUG
         ShowWindow(GetConsoleWindow(), SW_HIDE);
-    #endif
+#endif
 
-    sf::RenderWindow window(sf::VideoMode(832, 832), "Battle City [0.11]", sf::Style::Close);
-    window.setVerticalSyncEnabled(true);
-    window.setActive(true);
+        sf::RenderWindow window(sf::VideoMode(832, 832), "Battle City [0.3]", sf::Style::Close);
+        window.setVerticalSyncEnabled(true);
+        window.setActive(true);
 
-    for (uint8_t i = 0; i < 26; ++i) {
-        for (uint8_t j = 0; j < 26; ++j) {
-            if (stages[stage][i][j] == ' ') {
-                map[i][j] = new Block(BLOCK_AIR, j, i);
-            }
-            else if (stages[stage][i][j] == 'b') {
-                map[i][j] = new Block(BLOCK_BRICK, j, i);
-            }
-            else if (stages[stage][i][j] == 'w') {
-                map[i][j] = new Block(BLOCK_WALL, j, i);
-            }
-            else if (stages[stage][i][j] == 'B') {
-                map[i][j] = new Block(BLOCK_BUSH, j, i);
-            }
-            else if (stages[stage][i][j] == 'i') {
-                map[i][j] = new Block(BLOCK_ICE, j, i);
-            }
-            else if (stages[stage][i][j] == 'W') {
-                map[i][j] = new Block(BLOCK_AIR, j, i); // TODO
-            }
-            else if (stages[stage][i][j] == 'p') {
-                map[i][j] = new Block(BLOCK_BRICK, j, i);
-            }
-            else if (stages[stage][i][j] == 'e') {
-                map[i][j] = new Block(BLOCK_AIR, j, i); // TODO
-            }
-            else {
-                ShowWindow(GetConsoleWindow(), SW_SHOW);
-                std::cout << "Invalid map config! Exiting..." << std::endl;
-                system("pause");
-                return 0;
-            }
+        loadStage(stage);
+
+        while (window.isOpen()) {
+            sf::Clock fpsClock;
+
+            eventProcess(window);
+            //networkEvent();
+            doItNow();
+            display(window);
+
+            window.setTitle("Battle City [0.3] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
         }
     }
-
-    while (window.isOpen()) {
-        sf::Clock clock;
-
-        eventProcess(window);
-        //networkEvent();
-        display(window);
-
-        window.setTitle("Battle City [0.11] - " + std::to_string((uint16_t)(1 / clock.getElapsedTime().asSeconds())) + " fps");
+    catch (std::string err) {
+        ShowWindow(GetConsoleWindow(), SW_SHOW);
+        std::cout << err << std::endl;
+        system("pause");
     }
-
+    catch (...) {
+        ShowWindow(GetConsoleWindow(), SW_SHOW);
+        system("pause");
+    }
     return 0;
 }

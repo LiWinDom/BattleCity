@@ -1,3 +1,14 @@
+/*
+*   - air (nothing)
+* b - brick
+* w - wall
+* B - bush
+* i - ice
+* W - water
+* p - "protection"
+* e - eagle (upper left corner)
+*/
+
 #include <string>
 
 const std::string stages[36][26] = {
@@ -56,6 +67,34 @@ const std::string stages[36][26] = {
 	"  bb       pppp   bb  bb  ",
 	"  bb  bb   pe p   bbbbbb  ",
 	"  bb  bb   p  p   bbbbbb  "
+},
+{ // STAGE 3
+	"        bb      bb        ",
+	"        bb      bb        ",
+	"  BBBBBBbb                ",
+	"  BBBBBBbb          wwwwww",
+	"bbBBBBBB                  ",
+	"bbBBBBBB                  ",
+	"BBBBBBBB      bb  bbbbbbb ",
+	"BBBBBBBB      bb  bbbbbbb ",
+	"BBBBBBBBbbbbbbbb  bb   b  ",
+	"BBBBBBBBbbbbbb    bb   b  ",
+	"BBBBBBBB    bb         b  ",
+	"BBBBBBBB    bb         b  ",
+	"  BB        wwwwww    BB  ",
+	"  BB        wwwwww    BB  ",
+	"                  BBBBBBBB",
+	"  bb  bb          BBBBBBBB",
+	"bbb  bbbb  bbbbbbbBBBBBBBB",
+	"bbb  bbbb  b      BBBBBBBB",
+	"          bb      BBBBBBBB",
+	"          bb  bbbbBBBBBBBB",
+	"bb    w       bbbbBBBBBB  ",
+	"bb    w           BBBBBB  ",
+	"bbbb  w           BBBBBB  ",
+	"bbbb  w    pppp   BBBBBB  ",
+	"wwbbbb     pe p   bb      ",
+	"wwbbbb     p  p   bb      "
 },
 { // EMPTY STAGE
 	"                          ",

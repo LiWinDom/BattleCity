@@ -1,33 +1,23 @@
 #pragma once
-#define TANK_UP 0
-#define TANK_LEFT 1
-#define TANK_DOWN 2
-#define TANK_RIGHT 3
-#define TANK_YELLOW "TankYellow"
-#define TANK_GREEN "TankGreen"
-#define TANK_WHITE "TankWhite"
-#define TANK_RED "TankRed"
-
-#include <iostream>
 #include <algorithm>
 #include <string>
-#include <vector>
 #include <SFML/Graphics.hpp>
-#include <Windows.h>
 
+#include "Config.h"
 #include "Block.h"
 
 class Tank
 {
 public:
-	int16_t x = 72, y = 200;
-	uint8_t level = 0, rotation = TANK_DOWN;
-	float speed = 48;
-	bool animation = false;
+	Tank(const std::string& view, const uint8_t& x, const uint8_t& y, const uint8_t& level = 0, const float& speed = TANK_SLOW, const uint8_t& rotation = TANK_DOWN);
 
-	Tank(const std::string& view, const uint8_t& x, const uint8_t& y, const uint8_t& level = 0, const uint8_t& rotation = TANK_DOWN);
+	uint8_t getX();
 
-	void set(const uint8_t& x, const uint8_t& y, const uint8_t& rotation, const bool& animation);
+	uint8_t getY();
+
+	uint8_t getRotation();
+
+	float getSpeed();
 
 	void up(const std::vector<std::vector<Block*>>& map);
 
@@ -39,7 +29,11 @@ public:
 
 	void draw(sf::RenderWindow& window);
 private:
-	std::string view = TANK_WHITE;
+	int16_t x, y;
+	uint8_t level, rotation;
+	float speed;
+	bool animation = false;
+	std::string view;
 
 	sf::Texture textures[8][4][2];
 	sf::Sprite sprite;
