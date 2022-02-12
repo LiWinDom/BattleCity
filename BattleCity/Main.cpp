@@ -27,7 +27,6 @@ std::vector<std::vector<Block*>> map(26, std::vector<Block*>(26, nullptr));
 uint8_t stage = 0;
 
 Tank tank(TANK_YELLOW, 72, 200, 0, TANK_MEDIUM);
-std::vector<Bullet*> bullets(0, nullptr);
 
 sf::Music music;
 
@@ -75,34 +74,9 @@ void eventProcess(sf::RenderWindow& window) {
             holdTime = globalClock.getElapsedTime().asSeconds();
         }
         else if (event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::RShift || event.key.code == sf::Keyboard::LShift/* || event.key.code == sf::Keyboard::Space*/) {
-                if (tank.getRotation() == TANK_UP) {
-                    bullets.push_back(new Bullet(tank.getX(), tank.getY() - 8, BULLET_UP));
-                }
-                else if (tank.getRotation() == TANK_LEFT) {
-                    bullets.push_back(new Bullet(tank.getX() - 8, tank.getY(), BULLET_LEFT));
-                }
-                else if (tank.getRotation() == TANK_DOWN) {
-                    bullets.push_back(new Bullet(tank.getX(), tank.getY() + 8, BULLET_DOWN));
-                }
-                else if (tank.getRotation() == TANK_RIGHT) {
-                    bullets.push_back(new Bullet(tank.getX() + 8, tank.getY(), BULLET_RIGHT));
-                }
+            if (event.key.code == sf::Keyboard::RShift || event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::Space) {
+                tank.shoot();
             }
-            else if (event.key.code == sf::Keyboard::Space) {
-                if (tank.getRotation() == TANK_UP) {
-                    bullets.push_back(new Bullet(tank.getX(), tank.getY() - 8, BULLET_UP, BULLET_FAST, true));
-                }
-                else if (tank.getRotation() == TANK_LEFT) {
-                    bullets.push_back(new Bullet(tank.getX() - 8, tank.getY(), BULLET_LEFT, BULLET_FAST, true));
-                }
-                else if (tank.getRotation() == TANK_DOWN) {
-                    bullets.push_back(new Bullet(tank.getX(), tank.getY() + 8, BULLET_DOWN, BULLET_FAST, true));
-                }
-                else if (tank.getRotation() == TANK_RIGHT) {
-                    bullets.push_back(new Bullet(tank.getX() + 8, tank.getY(), BULLET_RIGHT, BULLET_FAST, true));
-                }
-            } //test
             else if (event.key.code == sf::Keyboard::Num1) {
                 loadStage(0);
             }
@@ -199,12 +173,7 @@ void eventProcess(sf::RenderWindow& window) {
 //}
 
 void doItNow() {
-    for (uint8_t i = 0; i < bullets.size(); ++i) {
-        if (!bullets[i]->move(map)) {
-            delete bullets[i];
-            bullets.erase(bullets.begin() + i);
-        }
-    }
+    tank.bulletMove(map);
     return;
 }
 
@@ -212,9 +181,7 @@ void display(sf::RenderWindow& window) {
     window.clear(sf::Color(0));
 
     tank.draw(window);
-    for (uint8_t i = 0; i < bullets.size(); ++i) {
-        bullets[i]->draw(window);
-    }
+    tank.bulletDraw(window);
     for (uint8_t i = 0; i < 26; ++i) {
         for (uint8_t j = 0; j < 26; ++j) {
             map[i][j]->draw(window);
@@ -244,7 +211,7 @@ int main() {
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
-        sf::RenderWindow window(sf::VideoMode(832, 832), "Battle City [0.3]", sf::Style::Close);
+        sf::RenderWindow window(sf::VideoMode(832, 832), "Battle City [0.31]", sf::Style::Close);
         window.setVerticalSyncEnabled(true);
         window.setActive(true);
 
@@ -258,7 +225,7 @@ int main() {
             doItNow();
             display(window);
 
-            window.setTitle("Battle City [0.3] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
+            window.setTitle("Battle City [0.31] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
         }
     }
     catch (std::string err) {

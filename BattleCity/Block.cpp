@@ -67,7 +67,7 @@ bool Block::tankCollide(const sf::Sprite& sprite) {
 bool Block::bulletCollide(const sf::Sprite& sprite, const uint8_t& rotation, const bool& power) {
 	if (this->view == BLOCK_AIR || this->view == BLOCK_BUSH || this->view == BLOCK_ICE || this->view == BLOCK_WATER) return false;
 	if (this->view == BLOCK_BRICK || this->view == BLOCK_PROTECTION) {
-		if (rotation == BULLET_UP) {
+		if (rotation == BULLET_UP || rotation == BULLET_DOWN) {
 			if ((sprite.getGlobalBounds().intersects(this->sprites[2].getGlobalBounds()) && this->state[2]) ||
 				(sprite.getGlobalBounds().intersects(this->sprites[3].getGlobalBounds()) && this->state[3])) {
 				this->state[2] = false;
@@ -81,7 +81,7 @@ bool Block::bulletCollide(const sf::Sprite& sprite, const uint8_t& rotation, con
 				return true;
 			}
 		}
-		else if (rotation == BULLET_LEFT) {
+		else {
 			if ((sprite.getGlobalBounds().intersects(this->sprites[1].getGlobalBounds()) && this->state[1]) ||
 				(sprite.getGlobalBounds().intersects(this->sprites[3].getGlobalBounds()) && this->state[3])) {
 				this->state[1] = false;
@@ -92,34 +92,6 @@ bool Block::bulletCollide(const sf::Sprite& sprite, const uint8_t& rotation, con
 					(sprite.getGlobalBounds().intersects(this->sprites[2].getGlobalBounds()) && this->state[2])) {
 				this->state[0] = false;
 				this->state[2] = false;
-				return true;
-			}
-		}
-		else if (rotation == BULLET_DOWN) {
-			if ((sprite.getGlobalBounds().intersects(this->sprites[0].getGlobalBounds()) && this->state[0]) ||
-				(sprite.getGlobalBounds().intersects(this->sprites[1].getGlobalBounds()) && this->state[1])) {
-				this->state[0] = false;
-				this->state[1] = false;
-				return true;
-			}
-			else if ((sprite.getGlobalBounds().intersects(this->sprites[2].getGlobalBounds()) && this->state[2]) ||
-					(sprite.getGlobalBounds().intersects(this->sprites[3].getGlobalBounds()) && this->state[3])) {
-				this->state[2] = false;
-				this->state[3] = false;
-				return true;
-			}
-		}
-		else if (rotation == BULLET_RIGHT) {
-			if ((sprite.getGlobalBounds().intersects(this->sprites[0].getGlobalBounds()) && this->state[0]) ||
-				(sprite.getGlobalBounds().intersects(this->sprites[2].getGlobalBounds()) && this->state[2])) {
-				this->state[0] = false;
-				this->state[2] = false;
-				return true;
-			}
-			else if ((sprite.getGlobalBounds().intersects(this->sprites[1].getGlobalBounds()) && this->state[1]) ||
-					(sprite.getGlobalBounds().intersects(this->sprites[3].getGlobalBounds()) && this->state[3])) {
-				this->state[1] = false;
-				this->state[3] = false;
 				return true;
 			}
 		}

@@ -7,8 +7,14 @@ Bullet::Bullet(const uint8_t& x, const uint8_t& y, const uint8_t& rotation, cons
 	this->speed = speed;
 	this->power = power;
 
-	if (!this->texture.loadFromFile("resources/graphics/Bullets.png", sf::IntRect(this->rotation << 2, 0, 4, 4))) throw 1;
-	this->sprite.setOrigin(2, 2);
+	if (this->rotation == BULLET_UP || this->rotation == BULLET_DOWN) {
+		if (!this->texture.loadFromFile("resources/graphics/Bullets.png", sf::IntRect(this->rotation * 6, 1, 6, 4))) throw 1;
+		this->sprite.setOrigin(3, 2);
+	}
+	else {
+		if (!this->texture.loadFromFile("resources/graphics/Bullets.png", sf::IntRect(this->rotation * 6 + 1, 0, 4, 6))) throw 1;
+		this->sprite.setOrigin(2, 3);
+	}
 	this->sprite.setScale(4, 4);
 	this->sprite.setPosition(this->x * 4, this->y * 4);
 	this->sprite.setTexture(this->texture);
@@ -16,14 +22,6 @@ Bullet::Bullet(const uint8_t& x, const uint8_t& y, const uint8_t& rotation, cons
 	lastMoveTime = clock.getElapsedTime().asSeconds();
 
 	return;
-}
-
-uint8_t Bullet::getX() {
-	return this->x;
-}
-
-uint8_t Bullet::getY() {
-	return this->y;
 }
 
 bool Bullet::move(const std::vector<std::vector<Block*>>& map) {

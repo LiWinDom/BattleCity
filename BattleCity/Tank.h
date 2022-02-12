@@ -4,18 +4,13 @@
 #include <SFML/Graphics.hpp>
 
 #include "Config.h"
+#include "Bullet.h"
 #include "Block.h"
 
 class Tank
 {
 public:
 	Tank(const std::string& view, const uint8_t& x, const uint8_t& y, const uint8_t& level = 0, const float& speed = TANK_SLOW, const uint8_t& rotation = TANK_DOWN);
-
-	uint8_t getX();
-
-	uint8_t getY();
-
-	uint8_t getRotation();
 
 	float getSpeed();
 
@@ -27,13 +22,23 @@ public:
 
 	void right(const std::vector<std::vector<Block*>>& map);
 
+	void shoot();
+
+	void bulletMove(const std::vector<std::vector<Block*>>& map);
+
 	void draw(sf::RenderWindow& window);
+
+	void bulletDraw(sf::RenderWindow& window);
 private:
 	int16_t x, y;
 	uint8_t level, rotation;
+	std::string view;
 	float speed;
 	bool animation = false;
-	std::string view;
+
+	Bullet* bullet = nullptr;
+	sf::Clock clock;
+	float lastShot;
 
 	sf::Texture textures[8][4][2];
 	sf::Sprite sprite;

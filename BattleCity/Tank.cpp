@@ -21,18 +21,6 @@ Tank::Tank(const std::string& view, const uint8_t& x, const uint8_t& y, const ui
 	return;
 }
 
-uint8_t Tank::getX() {
-	return this->x;
-}
-
-uint8_t Tank::getY() {
-	return this->y;
-}
-
-uint8_t Tank::getRotation() {
-	return this->rotation;
-}
-
 float Tank::getSpeed() {
 	return this->speed;
 }
@@ -97,6 +85,35 @@ void Tank::right(const std::vector<std::vector<Block*>>& map) {
 	return;
 }
 
+void Tank::shoot() {
+	if (clock.getElapsedTime().asSeconds() >= lastShot + 0.25) {
+		if (this->bullet != nullptr) return;
+		if (this->rotation == TANK_UP) {
+			this->bullet = new Bullet(this->x, this->y - 8, BULLET_UP);
+		}
+		else if (this->rotation == TANK_LEFT) {
+			this->bullet = new Bullet(this->x - 8, this->y, BULLET_LEFT);
+		}
+		else if (this->rotation == TANK_DOWN) {
+			this->bullet = new Bullet(this->x, this->y + 8, BULLET_DOWN);
+		}
+		else if (this->rotation == TANK_RIGHT) {
+			this->bullet = new Bullet(this->x + 8, this->y, BULLET_RIGHT);
+		}
+		lastShot = clock.getElapsedTime().asSeconds();
+	}
+	return;
+}
+
+void Tank::bulletMove(const std::vector<std::vector<Block*>>& map) {
+	if (this->bullet == nullptr) return;
+	if (!this->bullet->move(map)) {
+		delete this->bullet;
+		this->bullet = nullptr;
+	}
+	return;
+}
+
 void Tank::draw(sf::RenderWindow& window) {
 	this->sprite.setTexture(this->textures[this->level][this->rotation][this->animation]);
 	window.draw(sprite);
@@ -113,4 +130,10 @@ bool Tank::blockCollide(const std::vector<std::vector<Block*>>& map) {
 		}
 	}
 	return false;
+}
+
+void Tank::bulletDraw(sf::RenderWindow& window) {
+	if (this->bullet == nullptr) return;
+	this->bullet->draw(window);
+	return;
 }
