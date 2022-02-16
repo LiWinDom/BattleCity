@@ -30,7 +30,7 @@ private:
 	bool bonus;
 	bool animation = false;
 
-	bool isMove = false;
+	bool isMove = true;
 	sf::Clock clock;
 	float lastMove, lastShot = 0;
 	uint8_t bullets = 0;
