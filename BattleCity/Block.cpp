@@ -11,15 +11,16 @@ Block::Block(const uint8_t& view, const uint8_t& x, const uint8_t& y) {
 			!this->textures[1].loadFromFile("resources/graphics/Blocks.png", sf::IntRect(4, 0, 4, 4))) throw 1;
 		for (uint8_t i = 0; i < 4; ++i) {
 			this->sprites[i].setTexture(this->textures[i == 1 || i == 2]);
-			this->sprites[i].setScale(4, 4);
-			this->sprites[i].setPosition((this->x * 2 + i % 2) << 4, (this->y * 2 + (i > 1)) << 4);
+			this->sprites[i].setScale(SCALE, SCALE);
+			this->sprites[i].setPosition((this->x * 2 + i % 2) * (SCALE << 2), (this->y * 2 + (i > 1)) * (SCALE << 2));
 		}
 	}
 	else if (this->view == BLOCK_EAGLE) {
-		if (!this->texture.loadFromFile("resources/graphics/Eagle.png", sf::IntRect(0, 0, 16, 16))) throw 1;
-		this->sprite.setTexture(this->texture);
-		this->sprite.setScale(4, 4);
-		this->sprite.setPosition(this->x << 5, this->y << 5);
+		if (!this->textures[0].loadFromFile("resources/graphics/Eagle.png", sf::IntRect(0, 0, 16, 16)) ||
+			!this->textures[1].loadFromFile("resources/graphics/Eagle.png", sf::IntRect(16, 0, 16, 16))) throw 1;
+		this->sprite.setTexture(this->textures[0]);
+		this->sprite.setScale(SCALE, SCALE);
+		this->sprite.setPosition(this->x * (SCALE << 3), this->y * (SCALE << 3));
 	}
 	else {
 		if (this->view == BLOCK_WALL) {
@@ -32,8 +33,8 @@ Block::Block(const uint8_t& view, const uint8_t& x, const uint8_t& y) {
 			if (!this->texture.loadFromFile("resources/graphics/Blocks.png", sf::IntRect(16, 4, 8, 8))) throw 1;
 		}
 		this->sprite.setTexture(this->texture);
-		this->sprite.setScale(4, 4);
-		this->sprite.setPosition(this->x << 5, this->y << 5);
+		this->sprite.setScale(SCALE, SCALE);
+		this->sprite.setPosition(this->x * (SCALE << 3), this->y * (SCALE << 3));
 	}
 	return;
 }
@@ -64,7 +65,7 @@ bool Block::tankCollide(const sf::Sprite& sprite) {
 	return sprite.getGlobalBounds().intersects(this->sprite.getGlobalBounds());
 }
 
-bool Block::bulletCollide(const sf::Sprite& sprite, const uint8_t& rotation, const bool& power) {
+bool Block::bulletCollide(const sf::Sprite& sprite, const uint8_t& rotation, const bool& power, bool& gameOver) {
 	if (this->view == BLOCK_AIR || this->view == BLOCK_BUSH || this->view == BLOCK_ICE || this->view == BLOCK_WATER) return false;
 	if (this->view == BLOCK_BRICK || this->view == BLOCK_PROTECTION) {
 		if (rotation == BULLET_UP || rotation == BULLET_DOWN) {
@@ -99,6 +100,10 @@ bool Block::bulletCollide(const sf::Sprite& sprite, const uint8_t& rotation, con
 	else if (sprite.getGlobalBounds().intersects(this->sprite.getGlobalBounds())) {
 		if (this->view == BLOCK_WALL && power) {
 			this->view = BLOCK_AIR;
+		}
+		else if (this->view == BLOCK_EAGLE) {
+			this->sprite.setTexture(this->textures[1]);
+			gameOver = true;
 		}
 		return true;
 	}

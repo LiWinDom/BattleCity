@@ -1,3 +1,6 @@
+#include <string>
+#include "Config.h"
+
 /*
 *   - air (nothing)
 * b - brick
@@ -8,8 +11,6 @@
 * p - "protection"
 * e - eagle (upper left corner)
 */
-
-#include <string>
 
 const std::string stages[36][26] = {
 { // STAGE 1
@@ -124,4 +125,10 @@ const std::string stages[36][26] = {
 	"                          ",
 	"                          "
 }
+};
+
+const uint8_t tanks[36][20] = {
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+	{3, 3, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 3, 3}
 };
