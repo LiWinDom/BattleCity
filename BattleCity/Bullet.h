@@ -16,9 +16,7 @@ public:
 
 	bool spriteCollide(const sf::Sprite& sprite);
 
-	void bulletCollide(const std::vector<Bullet*>& bullets);
-
-	void move(const std::vector<std::vector<Block*>>& map, bool& gameOver);
+	void move(const std::vector<std::vector<Block*>>& map, const std::vector<Bullet*>& bullets, bool& gameOver);
 
 	void draw(sf::RenderWindow& window);
 private:
@@ -36,5 +34,7 @@ private:
 	sf::Sprite sprite;
 
 	void blockCollide(const std::vector<std::vector<Block*>>& map, bool& gameOver);
+
+	void bulletCollide(const std::vector<Bullet*>& bullets);
 };
 

@@ -30,16 +30,7 @@ bool Bullet::spriteCollide(const sf::Sprite& sprite) {
 	return sprite.getGlobalBounds().intersects(this->sprite.getGlobalBounds());
 }
 
-void Bullet::bulletCollide(const std::vector<Bullet*>& bullets) {
-	for (uint8_t i = 0; i < bullets.size(); ++i) {
-		if (bullets[i]->spriteCollide(this->sprite)) {
-			this->destroy();
-			bullets[i]->destroy();
-		}
-	}
-}
-
-void Bullet::move(const std::vector<std::vector<Block*>>& map, bool& gameOver) {
+void Bullet::move(const std::vector<std::vector<Block*>>& map, const std::vector<Bullet*>& bullets, bool& gameOver) {
 	while (this->clock.getElapsedTime().asSeconds() >= this->lastMoveTime + 1 / this->speed && !this->destroyed) {
 		if (this->rotation == BULLET_UP) {
 			--this->y;
@@ -54,6 +45,7 @@ void Bullet::move(const std::vector<std::vector<Block*>>& map, bool& gameOver) {
 			++this->x;
 		}
 		this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
+		bulletCollide(bullets);
 		blockCollide(map, gameOver);
 		this->lastMoveTime += 1 / this->speed;
 	}
@@ -75,4 +67,13 @@ void Bullet::blockCollide(const std::vector<std::vector<Block*>>& map, bool& gam
 	}
 	if (this->x < 4 || this->x > 204 || this->y < 4 || this->y > 204) this->destroy();
 	return;
+}
+
+void Bullet::bulletCollide(const std::vector<Bullet*>& bullets) {
+	for (uint8_t i = 0; i < bullets.size(); ++i) {
+		if (bullets[i]->spriteCollide(this->sprite)) {
+			this->destroy();
+			bullets[i]->destroy();
+		}
+	}
 }

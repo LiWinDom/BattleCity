@@ -20,13 +20,17 @@
 #define TANK_LEFT 1
 #define TANK_DOWN 2
 #define TANK_RIGHT 3
-#define TANK_YELLOW "TankYellow"
-#define TANK_GREEN "TankGreen"
-#define TANK_WHITE "TankWhite"
-#define TANK_RED "TankRed"
+#define TANK_PLAYER1 10
+#define TANK_PALYER2 11
+#define TANK_ENEMY 12
+#define TANK_WHITE 0
+#define TANK_RED 1
+#define TANK_YELLOW 2
+#define TANK_GREEN 3
 #define TANK_SLOW 30
 #define TANK_MEDIUM 45
 #define TANK_FAST 60
+#define RESPAWN_TIME 1
 
 // Bullet
 #define BULLET_UP 0

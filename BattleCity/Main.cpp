@@ -8,8 +8,7 @@
 
 #include "Config.h"
 #include "Block.h"
-#include "Player.h"
-#include "Enemy.h"
+#include "Tank.h"
 #include "Stages.cpp"
 
 sf::Clock globalClock;
@@ -22,16 +21,114 @@ bool gameOver = false;
 //bool client = false;
 
 std::vector<std::vector<Block*>> map(26, std::vector<Block*>(26, nullptr));
-uint8_t stage = 0;
+uint8_t stage = 1;
 
-std::vector<Player*> players(0, nullptr);
-std::vector<Enemy*> enemies(0, nullptr);
+std::vector<Tank*> players(0, nullptr);
+std::vector<Tank*> enemies(0, nullptr);
 
-std::pair<std::vector<Bullet*>, std::vector<Player*>> playerBullets(std::vector<Bullet*>(0, nullptr), std::vector<Player*>(0, nullptr));
-std::pair<std::vector<Bullet*>, std::vector<Enemy*>> enemyBullets(std::vector<Bullet*>(0, nullptr), std::vector<Enemy*>(0, nullptr));
-std::vector<sf::Sprite> tankSprites;
+std::pair<std::vector<Bullet*>, std::vector<Tank*>> playerBullets(std::vector<Bullet*>(0, nullptr), std::vector<Tank*>(0, nullptr));
+std::pair<std::vector<Bullet*>, std::vector<Tank*>> enemyBullets(std::vector<Bullet*>(0, nullptr), std::vector<Tank*>(0, nullptr));
 
 sf::Music music;
+
+void loadStage(const uint8_t& stage) {
+    // Reinit players
+    for (uint8_t i = 0; i < players.size(); ++i) {
+        delete players[i];
+    }
+    players = std::vector<Tank*>(0, nullptr);
+    players.push_back(new Tank(TANK_PLAYER1, 72, 200, 0, TANK_UP));
+
+    // Reinit enemies
+    for (uint8_t i = 0; i < enemies.size(); ++i) {
+        delete enemies[i];
+    }
+    enemies = std::vector<Tank*>(0, nullptr);
+
+    // Reinit bullets
+    for (uint8_t i = 0; i < playerBullets.first.size(); ++i) delete playerBullets.first[i];
+    for (uint8_t i = 0; i < enemyBullets.first.size(); ++i) delete enemyBullets.first[i];
+    playerBullets = std::pair<std::vector<Bullet*>, std::vector<Tank*>>(std::vector<Bullet*>(0, nullptr), std::vector<Tank*>(0, nullptr));
+    enemyBullets = std::pair<std::vector<Bullet*>, std::vector<Tank*>>(std::vector<Bullet*>(0, nullptr), std::vector<Tank*>(0, nullptr));
+
+    for (uint8_t i = 0; i < 26; ++i) {
+        for (uint8_t j = 0; j < 26; ++j) {
+            // Deleting unused blocks
+            if (map[i][j] != nullptr) {
+                delete map[i][j];
+            }
+
+            // Loading blocks from "Stages.cpp"
+            if (stages[stage][i][j] == ' ') {
+                map[i][j] = new Block(BLOCK_AIR, j, i);
+            }
+            else {
+                map[i][j] = new Block(stages[stage][i][j], j, i);
+            }
+        }
+    }
+    music.play();
+
+    return;
+}
+
+void spawnEnemy(const bool& reset = false) {
+    static float lastSpawned = globalClock.getElapsedTime().asSeconds();
+    static uint8_t spawned = 0;
+    if (reset) {
+        spawned = 0;
+        return;
+    }
+
+    if ((lastSpawned + ((47.5 - stage - (1 - 1) * 5) / 15) < globalClock.getElapsedTime().asSeconds() || spawned == 0) && !gameOver) {
+        if (spawned >= 20) {
+            if (enemies.size() <= 0) {
+                spawned = 0;
+                loadStage(++stage);
+            }
+            return;
+        }
+
+        static sf::Texture tx;
+        if (!tx.loadFromFile("resources/graphics/TankWhite.png", sf::IntRect(0, 0, 16, 16))) throw 1;
+
+        static sf::Sprite pos[3];
+        for (uint8_t i = 0; i < 3; ++i) {
+            pos[i].setOrigin(8, 8);
+            pos[i].setScale(SCALE, SCALE);
+            pos[i].setTexture(tx);
+        }
+        pos[0].setPosition(8 * SCALE, 8 * SCALE);
+        pos[1].setPosition(104 * SCALE, 8 * SCALE);
+        pos[2].setPosition(200 * SCALE, 8 * SCALE);
+
+        const bool bonus = (spawned == 3) || (spawned == 10) || (spawned == 17) ? true : false;
+
+        std::vector<uint8_t> poses(0, 0);
+        for (uint8_t i = 0; i < 3; ++i) {
+            bool collide = false;
+            for (uint8_t j = 0; j < enemies.size() && !collide; ++j) {
+                if (enemies[j]->spriteCollide(pos[i])) {
+                    collide = true;
+                }
+            }
+            for (uint8_t j = 0; j < players.size() && !collide; ++j) {
+                if (players[j]->spriteCollide(pos[i])) {
+                    collide = true;
+                }
+            }
+            if (!collide) {
+                poses.push_back(i * 96 + 8);
+            }
+        }
+        if (poses.size() > 0) {
+            enemies.push_back(new Tank(TANK_ENEMY, poses[std::rand() % poses.size()], 8, tanks[stage][spawned], std::rand() % 3 + 1, bonus));
+            ++spawned;
+            lastSpawned = globalClock.getElapsedTime().asSeconds();
+        }
+    }
+    return;
+}
 
 void eventProcess(sf::RenderWindow& window) {
     sf::Event event;
@@ -53,14 +150,20 @@ void eventProcess(sf::RenderWindow& window) {
             inFocus = true;
             holdTime = globalClock.getElapsedTime().asSeconds();
         }
-        else if (inFocus && !gameOver) {
+        else if (inFocus) {
             if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::RShift || event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::Space) {
+                if ((event.key.code == sf::Keyboard::RShift || event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::Space) && !gameOver) {
                     Bullet* bullet = players[0]->shoot();
                     if (bullet != nullptr) {
                         playerBullets.first.push_back(bullet);
                         playerBullets.second.push_back(players[0]);
                     }
+                }
+                else if (event.key.code == sf::Keyboard::R && gameOver) {
+                    gameOver = false;
+                    stage = 0;
+                    loadStage(stage);
+                    spawnEnemy(true);
                 }
             }
         }
@@ -76,16 +179,16 @@ void eventProcess(sf::RenderWindow& window) {
             while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / players[0]->getSpeed()) {
                 holdTime += 1 / players[0]->getSpeed();
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-                    players[0]->up(map, players);
+                    players[0]->up(map, players, enemies);
                 }
                 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-                    players[0]->left(map, players);
+                    players[0]->left(map, players, enemies);
                 }
                 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-                    players[0]->down(map, players);
+                    players[0]->down(map, players, enemies);
                 }
                 else {
-                    players[0]->right(map, players);
+                    players[0]->right(map, players, enemies);
                 }
             }
         }
@@ -191,11 +294,6 @@ void deleteDestroyedBullets() {
 }
 
 void bulletEvent() {
-    for (uint8_t i = 0; i < playerBullets.first.size(); ++i) {
-        playerBullets.first[i]->bulletCollide(enemyBullets.first);
-    }
-    deleteDestroyedBullets();
-
     for (uint8_t i = 0; i < players.size(); ++i) {
         if (players[i]->bulletCollide(enemyBullets.first)) {
             if (players[i]->isDestroyed()) {
@@ -211,82 +309,12 @@ void bulletEvent() {
     }
 
     for (uint8_t i = 0; i < playerBullets.first.size(); ++i) {
-        playerBullets.first[i]->move(map, gameOver);
+        playerBullets.first[i]->move(map, enemyBullets.first, gameOver);
     }
     for (uint8_t i = 0; i < enemyBullets.first.size(); ++i) {
-        enemyBullets.first[i]->move(map, gameOver);
+        enemyBullets.first[i]->move(map, playerBullets.first, gameOver);
     }
-    return;
-}
-
-void loadStage(const uint8_t& stage) {
-    // Reinit players
-    for (uint8_t i = 0; i < players.size(); ++i) {
-        delete players[i];
-    }
-    players = std::vector<Player*>(0, nullptr);
-    players.push_back(new Player(TANK_YELLOW, 72, 200, 0, TANK_UP));
-
-    // Reinit enemies
-    for (uint8_t i = 0; i < enemies.size(); ++i) {
-        delete enemies[i];
-    }
-    enemies = std::vector<Enemy*>(0, nullptr);
-
-    // Reinit bullets
-    for (uint8_t i = 0; i < playerBullets.first.size(); ++i) delete playerBullets.first[i];
-    for (uint8_t i = 0; i < enemyBullets.first.size(); ++i) delete enemyBullets.first[i];
-    playerBullets = std::pair<std::vector<Bullet*>, std::vector<Player*>>(std::vector<Bullet*>(0, nullptr), std::vector<Player*>(0, nullptr));
-    enemyBullets = std::pair<std::vector<Bullet*>, std::vector<Enemy*>>(std::vector<Bullet*>(0, nullptr), std::vector<Enemy*>(0, nullptr));
-
-    for (uint8_t i = 0; i < 26; ++i) {
-        for (uint8_t j = 0; j < 26; ++j) {
-            // Deleting unused blocks
-            if (map[i][j] != nullptr) {
-                delete map[i][j];
-            }
-
-            // Loading blocks from "Stages.cpp"
-            if (stages[stage][i][j] == ' ') {
-                map[i][j] = new Block(BLOCK_AIR, j, i);
-            }
-            else {
-                map[i][j] = new Block(stages[stage][i][j], j, i);
-            }
-        }
-    }
-    music.play();
-
-    return;
-}
-
-void spawnEnemy() {
-    static float lastSpawned = globalClock.getElapsedTime().asSeconds();
-    static uint8_t spawned = 0;
-
-    if (lastSpawned + ((47.5 - stage - (1 - 1) * 5) / 15) < globalClock.getElapsedTime().asSeconds() || spawned == 0) {
-        if (spawned >= 20) {
-            if (enemies.size() <= 0) {
-                spawned = 0;
-                loadStage(++stage);
-            }
-            return;
-        }
-
-        const uint8_t spawnPos = std::rand() % 3;
-        const bool bonus = (spawned == 3) || (spawned == 10) || (spawned == 17) ? true : false;
-        if (spawnPos == 0) {
-            enemies.push_back(new Enemy(8, 8, tanks[stage][spawned], std::rand() % 3 + 1, bonus));
-        }
-        else if (spawnPos == 1) {
-            enemies.push_back(new Enemy(104, 8, tanks[stage][spawned], std::rand() % 3 + 1, bonus));
-        }
-        else {
-            enemies.push_back(new Enemy(200, 8, tanks[stage][spawned], std::rand() % 3 + 1, bonus));
-        }
-        ++spawned;
-        lastSpawned = globalClock.getElapsedTime().asSeconds();
-    }
+    deleteDestroyedBullets();
     return;
 }
 
@@ -313,11 +341,26 @@ void display(sf::RenderWindow& window) {
         }
     }
 
+    if (gameOver) {
+        //static float lastMove = globalClock.getElapsedTime().asSeconds();
+        static sf::Texture GOtexture;
+        static sf::Sprite GOsprite;
+
+        if (!GOtexture.loadFromFile("resources/graphics/GameOver.png")) throw 1;
+
+        GOsprite.setOrigin(16, 8);
+        GOsprite.setScale(SCALE, SCALE);
+        GOsprite.setPosition(104 * SCALE, 104 * SCALE);
+        GOsprite.setTexture(GOtexture);
+        window.draw(GOsprite);
+    }
+
     window.display();
 }
 
 int main() {
     try {
+        std::srand(std::time(nullptr));
         if (!music.openFromFile("resources/sounds/StageBegin.ogg")) throw 1;
         music.setVolume(50);
         /*if (connection.bind(NETWORK_PORT) != sf::Socket::Done) throw "(2 games opened?)";
@@ -336,7 +379,7 @@ int main() {
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
-        sf::RenderWindow window(sf::VideoMode(208 * SCALE, 208 * SCALE), "Battle City [0.31]", sf::Style::Close);
+        sf::RenderWindow window(sf::VideoMode(208 * SCALE, 208 * SCALE), "Battle City [1.02]", sf::Style::Close);
         window.setVerticalSyncEnabled(true);
         window.setActive(true);
         window.setKeyRepeatEnabled(false);
@@ -354,7 +397,7 @@ int main() {
             bulletEvent();
             display(window);
 
-            window.setTitle("Battle City [0.31] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
+            window.setTitle("Battle City [1.1] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
         }
     }
     catch (std::string err) {
