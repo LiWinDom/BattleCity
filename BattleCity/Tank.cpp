@@ -298,6 +298,7 @@ Bullet* Tank::shoot() {
 }
 
 void Tank::bulletDestroyed() {
+	--this->bullets;
 	return;
 }
 
