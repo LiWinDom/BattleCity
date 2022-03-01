@@ -254,6 +254,7 @@ void Tank::right(const std::vector<std::vector<Block*>>& map, const std::vector<
 void Tank::reset(const bool& fullReset) {
 	this->lives = std::max(this->lives, (int8_t)3);
 	this->destroyed = false;
+	this->bullets = 0;
 
 	this->x = this->startX;
 	this->y = this->startY;
@@ -297,7 +298,6 @@ Bullet* Tank::shoot() {
 }
 
 void Tank::bulletDestroyed() {
-	this->bullets = std::max(this->bullets - 1, 0);
 	return;
 }
 

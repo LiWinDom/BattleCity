@@ -34,7 +34,6 @@ sf::Music music;
 void loadStage(const uint8_t& stage, const bool& reset = false) {
     // Reinit players
     for (uint8_t i = 0; i < players.size(); ++i) {
-        players[i]->bulletDestroyed();
         players[i]->reset(reset);
     }
 
