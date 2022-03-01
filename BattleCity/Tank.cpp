@@ -90,7 +90,7 @@ void Tank::addLife() {
 }
 
 void Tank::levelUp() {
-	this->level = std::max(this->level, (uint8_t)3);
+	this->level = std::min((uint8_t)(this->level + 1), (uint8_t)3);
 	this->sprite.setTexture(textures[this->level][this->rotation][this->animation]);
 }
 
