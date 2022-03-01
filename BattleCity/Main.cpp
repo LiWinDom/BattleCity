@@ -161,6 +161,10 @@ void eventProcess(sf::RenderWindow& window) {
                     gameOver = false;
                     stage = 0;
 
+                    for (uint8_t i = 0; i < players.size(); ++i) {
+                        delete players[i];
+                    }
+                    players = {};
                     players.push_back(new Tank(TANK_PLAYER1, 72, 200, 0, TANK_UP));
 
                     loadStage(stage, true);
@@ -402,7 +406,7 @@ int main() {
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
-        sf::RenderWindow window(sf::VideoMode(208 * SCALE, 208 * SCALE), "Battle City [beta 1.2]", sf::Style::Close);
+        sf::RenderWindow window(sf::VideoMode(208 * SCALE, 208 * SCALE), "Battle City [beta 1.22]", sf::Style::Close);
         window.setVerticalSyncEnabled(true);
         window.setActive(true);
         window.setKeyRepeatEnabled(false);
@@ -421,7 +425,7 @@ int main() {
             bulletEvent();
             display(window);
 
-            window.setTitle("Battle City [beta 1.2] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
+            window.setTitle("Battle City [beta 1.22] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
         }
     }
     catch (std::string err) {
