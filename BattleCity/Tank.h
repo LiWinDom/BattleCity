@@ -16,6 +16,14 @@ public:
 
 	float getSpeed();
 
+	bool getBonus();
+
+	void addLife();
+
+	void levelUp();
+
+	void helmet();
+
 	bool isDestroyed();
 
 	bool spriteCollide(const sf::Sprite& sprite);
@@ -29,6 +37,8 @@ public:
 	void down(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies);
 
 	void right(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies);
+
+	void reset(const bool& fullReset = false);
 
 	Bullet* shoot();
 
@@ -45,17 +55,18 @@ private:
 	bool bonus;
 	bool animation = false;
 	bool isMove = true;
+	uint8_t protectionAnimation = 0;
 
 	sf::Clock clock;
-	float lastMove = 0, lastShot = 0, destroyedTime = -10;
+	float lastMove = 0, lastShot = 0, destroyedTime = -10, protectedUntil = -1;
 	uint8_t bullets = 0;
 
 	uint8_t color = 0;
 	int8_t lives = 1;
 	bool destroyed = false;
 
-	sf::Texture textures[4][4][2];
-	sf::Sprite hitbox, sprite;
+	sf::Texture textures[4][4][2], protectionTextures[2];
+	sf::Sprite hitbox, sprite, protection;
 
 	uint64_t id = std::time(nullptr);
 

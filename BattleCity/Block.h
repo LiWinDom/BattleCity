@@ -7,15 +7,17 @@
 class Block
 {
 public:
-	Block(const uint8_t& view, const uint8_t& x, const uint8_t& y);
+	Block(const uint8_t& type, const uint8_t& x, const uint8_t& y);
 
-	void draw(sf::RenderWindow& window);
+	uint8_t getType();
+
+	void draw(sf::RenderWindow& window, const sf::Clock& clock);
 
 	bool tankCollide(const sf::Sprite& sprite);
 
 	bool bulletCollide(const sf::Sprite& sprite, const uint8_t& rotation, const bool& power, bool& gameOver);
 private:
-	uint8_t view;
+	uint8_t type;
 	uint8_t x, y;
 
 	sf::Texture texture;

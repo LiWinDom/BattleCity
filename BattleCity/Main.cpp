@@ -21,7 +21,7 @@ bool gameOver = false;
 //bool client = false;
 
 std::vector<std::vector<Block*>> map(26, std::vector<Block*>(26, nullptr));
-uint8_t stage = 1;
+uint8_t stage = 0;
 
 std::vector<Tank*> players(0, nullptr);
 std::vector<Tank*> enemies(0, nullptr);
@@ -31,13 +31,11 @@ std::pair<std::vector<Bullet*>, std::vector<Tank*>> enemyBullets(std::vector<Bul
 
 sf::Music music;
 
-void loadStage(const uint8_t& stage) {
+void loadStage(const uint8_t& stage, const bool& reset = false) {
     // Reinit players
     for (uint8_t i = 0; i < players.size(); ++i) {
-        delete players[i];
+        players[i]->reset(reset);
     }
-    players = std::vector<Tank*>(0, nullptr);
-    players.push_back(new Tank(TANK_PLAYER1, 72, 200, 0, TANK_UP));
 
     // Reinit enemies
     for (uint8_t i = 0; i < enemies.size(); ++i) {
@@ -80,11 +78,11 @@ void spawnEnemy(const bool& reset = false) {
         return;
     }
 
-    if ((lastSpawned + ((47.5 - stage - (1 - 1) * 5) / 15) < globalClock.getElapsedTime().asSeconds() || spawned == 0) && !gameOver) {
+    if ((lastSpawned + ((47.5 - stage - (players.size() - 1) * 5) / 15) < globalClock.getElapsedTime().asSeconds() || spawned == 0) && !gameOver) {
         if (spawned >= 20) {
             if (enemies.size() <= 0) {
                 spawned = 0;
-                loadStage(++stage);
+                loadStage(++stage % 8);
             }
             return;
         }
@@ -122,7 +120,7 @@ void spawnEnemy(const bool& reset = false) {
             }
         }
         if (poses.size() > 0) {
-            enemies.push_back(new Tank(TANK_ENEMY, poses[std::rand() % poses.size()], 8, tanks[stage][spawned], std::rand() % 3 + 1, bonus));
+            enemies.push_back(new Tank(TANK_ENEMY, poses[std::rand() % poses.size()], 8, tanks[stage % 8][spawned], std::rand() % 3 + 1, bonus));
             ++spawned;
             lastSpawned = globalClock.getElapsedTime().asSeconds();
         }
@@ -162,7 +160,7 @@ void eventProcess(sf::RenderWindow& window) {
                 else if (event.key.code == sf::Keyboard::R && gameOver) {
                     gameOver = false;
                     stage = 0;
-                    loadStage(stage);
+                    loadStage(stage, true);
                     spawnEnemy(true);
                 }
             }
@@ -260,6 +258,14 @@ void eventProcess(sf::RenderWindow& window) {
 void enemyEvent() {
     for (uint8_t i = 0; i < enemies.size(); ++i) {
         if (enemies[i]->isDestroyed()) {
+            if (enemies[i]->getBonus()) {
+                if (players.size() > 0) {
+                    const uint8_t bonus = std::rand() % 3;
+                    if (bonus == 0) players[0]->addLife();
+                    else if (bonus == 1) players[0]->levelUp();
+                    else if (bonus == 2) players[0]->helmet();
+                }
+            }
             delete enemies[i];
             enemies.erase(enemies.begin() + i);
             continue;
@@ -321,6 +327,16 @@ void bulletEvent() {
 void display(sf::RenderWindow& window) {
     window.clear(sf::Color(0));
 
+    // Drawing game field
+    for (uint8_t i = 0; i < 26; ++i) {
+        for (uint8_t j = 0; j < 26; ++j) {
+            if (map[i][j]->getType() != BLOCK_BUSH) {
+                map[i][j]->draw(window, globalClock);
+            }
+        }
+    }
+
+    // Drawing tanks
     for (uint8_t i = 0; i < players.size(); ++i) {
         players[i]->draw(window);
     }
@@ -328,6 +344,7 @@ void display(sf::RenderWindow& window) {
         enemies[i]->draw(window);
     }
 
+    // Drawing bullets
     for (uint8_t i = 0; i < playerBullets.first.size(); ++i) {
         playerBullets.first[i]->draw(window);
     }
@@ -335,9 +352,12 @@ void display(sf::RenderWindow& window) {
         enemyBullets.first[i]->draw(window);
     }
 
+    // Drawing bushes
     for (uint8_t i = 0; i < 26; ++i) {
         for (uint8_t j = 0; j < 26; ++j) {
-            map[i][j]->draw(window);
+            if (map[i][j]->getType() == BLOCK_BUSH) {
+                map[i][j]->draw(window, globalClock);
+            }
         }
     }
 
@@ -379,11 +399,12 @@ int main() {
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
-        sf::RenderWindow window(sf::VideoMode(208 * SCALE, 208 * SCALE), "Battle City [1.02]", sf::Style::Close);
+        sf::RenderWindow window(sf::VideoMode(208 * SCALE, 208 * SCALE), "Battle City [beta 1.2]", sf::Style::Close);
         window.setVerticalSyncEnabled(true);
         window.setActive(true);
         window.setKeyRepeatEnabled(false);
 
+        players.push_back(new Tank(TANK_PLAYER1, 72, 200, 0, TANK_UP));
         loadStage(stage);
 
         while (window.isOpen()) {
@@ -397,7 +418,7 @@ int main() {
             bulletEvent();
             display(window);
 
-            window.setTitle("Battle City [1.1] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
+            window.setTitle("Battle City [beta 1.2] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
         }
     }
     catch (std::string err) {

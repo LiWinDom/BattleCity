@@ -20,6 +20,7 @@ Tank::Tank(const uint8_t& type, const uint8_t& x, const uint8_t& y, const uint8_
 			}
 		}
 		this->lives = 3;
+		this->protectedUntil = 3;
 	}
 	else if (this->type == TANK_PALYER2) {
 		for (uint8_t i = 0; i < 4; ++i) {
@@ -29,6 +30,7 @@ Tank::Tank(const uint8_t& type, const uint8_t& x, const uint8_t& y, const uint8_
 			}
 		}
 		this->lives = 3;
+		this->protectedUntil = 3;
 	}
 	else {
 		for (uint8_t i = 0; i < 4; ++i) {
@@ -45,6 +47,8 @@ Tank::Tank(const uint8_t& type, const uint8_t& x, const uint8_t& y, const uint8_
 			this->lives = 4;
 		}
 	}
+	if (!this->protectionTextures[0].loadFromFile("resources/graphics/Protection.png", sf::IntRect(0, 0, 16, 16)) ||
+		!this->protectionTextures[1].loadFromFile("resources/graphics/Protection.png", sf::IntRect(16, 0, 16, 16))) throw 1;
 
 	this->sprite.setOrigin(8, 8);
 	this->sprite.setScale(SCALE, SCALE);
@@ -61,6 +65,11 @@ Tank::Tank(const uint8_t& type, const uint8_t& x, const uint8_t& y, const uint8_
 	this->hitbox.setTexture(this->textures[0][0][0]);
 	this->hitbox.setPosition(this->x * SCALE, this->y * SCALE);
 
+	this->protection.setOrigin(8, 8);
+	this->protection.setScale(SCALE, SCALE);
+	this->protection.setTexture(this->protectionTextures[this->clock.getElapsedTime().asMilliseconds() % 10 < 5 ? 0 : 1]);
+	this->protection.setPosition(this->x * SCALE, this->y * SCALE);
+
 	return;
 }
 
@@ -70,6 +79,23 @@ uint64_t Tank::getID() {
 
 float Tank::getSpeed() {
 	return TANK_MEDIUM;
+}
+
+bool Tank::getBonus() {
+	return this->bonus;
+}
+
+void Tank::addLife() {
+	++this->lives;
+}
+
+void Tank::levelUp() {
+	++this->level;
+	this->sprite.setTexture(textures[this->level][this->rotation][this->animation]);
+}
+
+void Tank::helmet() {
+	this->protectedUntil = this->clock.getElapsedTime().asSeconds() + 10;
 }
 
 bool Tank::isDestroyed() {
@@ -225,6 +251,22 @@ void Tank::right(const std::vector<std::vector<Block*>>& map, const std::vector<
 	return;
 }
 
+void Tank::reset(const bool& fullReset) {
+	this->lives = std::max(this->lives, (int8_t)3);
+	this->destroyed = false;
+
+	this->x = this->startX;
+	this->y = this->startY;
+	this->rotation = this->startRotation;
+	if (fullReset) this->level = 0;
+
+	this->sprite.setTexture(textures[this->level][this->rotation][this->animation]);
+	this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
+	this->hitbox.setPosition(this->x * SCALE, this->y * SCALE);
+
+	this->protectedUntil = this->clock.getElapsedTime().asSeconds() + 4;
+}
+
 Bullet* Tank::shoot() {
 	if (this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds()) return nullptr;
 	// Too many bullets check
@@ -266,6 +308,13 @@ void Tank::draw(sf::RenderWindow& window) {
 		this->sprite.setTexture(textures[this->color][this->rotation][this->animation]);
 	}
 	window.draw(this->sprite);
+
+	if (this->clock.getElapsedTime().asSeconds() < this->protectedUntil) {
+		++this->protectionAnimation %= 4;
+		this->protection.setTexture(this->protectionTextures[this->protectionAnimation < 2 ? 0 : 1]);
+		this->protection.setPosition(this->x * SCALE, this->y * SCALE);
+		window.draw(this->protection);
+	}
 	return;
 }
 
@@ -390,19 +439,19 @@ void Tank::changeRotation() {
 void Tank::changeColor() {
 	if (this->bonus) {
 		if (this->clock.getElapsedTime().asMilliseconds() % 300 < 150) this->color = TANK_RED;
-		else this->color = TANK_WHITE;
+		else if (this->color == TANK_RED) this->color = TANK_WHITE;
 	}
 	if (this->level == 3 && this->color != TANK_RED) {
 		if (this->lives == 4) {
-			if (this->color == 0) this->color = TANK_GREEN;
+			if (this->color == TANK_WHITE) this->color = TANK_GREEN;
 			else this->color = TANK_WHITE;
 		}
 		else if (this->lives == 3) {
-			if (this->color == 0) this->color = TANK_YELLOW;
+			if (this->color == TANK_WHITE) this->color = TANK_YELLOW;
 			else this->color = TANK_WHITE;
 		}
 		else if (this->lives == 2) {
-			if (this->color == 2) this->color = TANK_GREEN;
+			if (this->color == TANK_YELLOW) this->color = TANK_GREEN;
 			else this->color = TANK_YELLOW;
 		}
 		else {
@@ -436,15 +485,23 @@ bool Tank::tankCollide(const std::vector<Tank*>& players, const std::vector<Tank
 }
 
 void Tank::destroy() {
-	--this->lives;
-	this->destroyed = this->lives < 1;
-	if (this->type != TANK_ENEMY) {
-		this->destroyedTime = this->clock.getElapsedTime().asSeconds();
-		this->rotation = this->startRotation;
-		this->x = this->startX;
-		this->y = this->startY;
-		this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
-		this->hitbox.setPosition(this->x * SCALE, this->y * SCALE);
+	if (this->clock.getElapsedTime().asSeconds() > this->protectedUntil) {
+		--this->lives;
+		this->destroyed = this->lives < 1;
+
+		if (this->type != TANK_ENEMY) {
+			this->x = this->startX;
+			this->y = this->startY;
+			this->rotation = this->startRotation;
+			this->level = 0;
+			this->destroyedTime = this->clock.getElapsedTime().asSeconds();
+
+			this->sprite.setTexture(textures[this->level][this->rotation][this->animation]);
+			this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
+			this->hitbox.setPosition(this->x * SCALE, this->y * SCALE);
+
+			this->protectedUntil = this->clock.getElapsedTime().asSeconds() + 4;
+		}
 	}
 	return;
 }
