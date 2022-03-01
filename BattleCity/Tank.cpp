@@ -297,7 +297,7 @@ Bullet* Tank::shoot() {
 }
 
 void Tank::bulletDestroyed() {
-	--this->bullets;
+	this->bullets = std::max(this->bullets - 1, 0);
 	return;
 }
 
