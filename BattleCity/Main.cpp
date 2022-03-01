@@ -160,6 +160,9 @@ void eventProcess(sf::RenderWindow& window) {
                 else if (event.key.code == sf::Keyboard::R && gameOver) {
                     gameOver = false;
                     stage = 0;
+
+                    players.push_back(new Tank(TANK_PLAYER1, 72, 200, 0, TANK_UP));
+
                     loadStage(stage, true);
                     spawnEnemy(true);
                 }
