@@ -78,7 +78,17 @@ uint64_t Tank::getID() {
 }
 
 float Tank::getSpeed() {
-	return TANK_MEDIUM;
+	if (this->type != TANK_ENEMY) {
+		return TANK_MEDIUM;
+	}
+	if (this->type == 1) {
+		return TANK_FAST;
+	}
+	return TANK_SLOW;
+}
+
+int8_t Tank::getLives() {
+	return this->lives;
 }
 
 bool Tank::getBonus() {

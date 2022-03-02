@@ -16,6 +16,8 @@ public:
 
 	float getSpeed();
 
+	int8_t getLives();
+
 	bool getBonus();
 
 	void addLife();
