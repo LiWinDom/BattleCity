@@ -38,7 +38,7 @@ public:
 
 	void right(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies);
 
-	void reset(const bool& fullReset = false);
+	void reset();
 
 	Bullet* shoot();
 
@@ -55,7 +55,6 @@ private:
 	bool bonus;
 	bool animation = false;
 	bool isMove = true;
-	uint8_t protectionAnimation = 0;
 
 	sf::Clock clock;
 	float lastMove = 0, lastShot = 0, destroyedTime = -10, protectedUntil = -1;

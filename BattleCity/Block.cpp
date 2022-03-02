@@ -85,9 +85,9 @@ bool Block::bulletCollide(const sf::Sprite& sprite, const uint8_t& rotation, con
 	if (this->type == BLOCK_AIR || this->type == BLOCK_BUSH || this->type == BLOCK_ICE || this->type == BLOCK_WATER) return false;
 	if (this->type == BLOCK_BRICK || this->type == BLOCK_PROTECTION) {
 		if (power) {
-			if ((sprite.getGlobalBounds().intersects(this->sprites[2].getGlobalBounds()) && this->state[0]) ||
-				(sprite.getGlobalBounds().intersects(this->sprites[3].getGlobalBounds()) && this->state[1]) ||
-				(sprite.getGlobalBounds().intersects(this->sprites[3].getGlobalBounds()) && this->state[2]) ||
+			if ((sprite.getGlobalBounds().intersects(this->sprites[0].getGlobalBounds()) && this->state[0]) ||
+				(sprite.getGlobalBounds().intersects(this->sprites[1].getGlobalBounds()) && this->state[1]) ||
+				(sprite.getGlobalBounds().intersects(this->sprites[2].getGlobalBounds()) && this->state[2]) ||
 				(sprite.getGlobalBounds().intersects(this->sprites[3].getGlobalBounds()) && this->state[3])) {
 				this->state[0] = false;
 				this->state[1] = false;

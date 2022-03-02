@@ -31,10 +31,10 @@ std::pair<std::vector<Bullet*>, std::vector<Tank*>> enemyBullets(std::vector<Bul
 
 sf::Music music;
 
-void loadStage(const uint8_t& stage, const bool& reset = false) {
+void loadStage(const uint8_t& stage) {
     // Reinit players
     for (uint8_t i = 0; i < players.size(); ++i) {
-        players[i]->reset(reset);
+        players[i]->reset();
     }
 
     // Reinit enemies
@@ -78,7 +78,7 @@ void spawnEnemy(const bool& reset = false) {
         return;
     }
 
-    if ((lastSpawned + ((47.5 - stage - (players.size() - 1) * 5) / 15) < globalClock.getElapsedTime().asSeconds() || spawned == 0) && !gameOver) {
+    if ((lastSpawned + ((47.5 - stage - (players.size() - 1) * 5) / 15) < globalClock.getElapsedTime().asSeconds() || spawned == 0)) {
         if (spawned >= 20) {
             if (enemies.size() <= 0) {
                 spawned = 0;
@@ -150,30 +150,30 @@ void eventProcess(sf::RenderWindow& window) {
         }
         else if (inFocus) {
             if (event.type == sf::Event::KeyPressed) {
-                if ((event.key.code == sf::Keyboard::RShift || event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::Space) && !gameOver) {
+                if ((event.key.code == sf::Keyboard::RShift || event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::Space) && !players[0]->isDestroyed()) {
                     Bullet* bullet = players[0]->shoot();
                     if (bullet != nullptr) {
                         playerBullets.first.push_back(bullet);
                         playerBullets.second.push_back(players[0]);
                     }
                 }
-                else if (event.key.code == sf::Keyboard::R && gameOver) {
+                else if (event.key.code == sf::Keyboard::R) {
                     gameOver = false;
                     stage = 0;
 
                     for (uint8_t i = 0; i < players.size(); ++i) {
                         delete players[i];
                     }
-                    players = {};
+                    players = std::vector<Tank*>(0, nullptr);
                     players.push_back(new Tank(TANK_PLAYER1, 72, 200, 0, TANK_UP));
 
-                    loadStage(stage, true);
+                    loadStage(stage);
                     spawnEnemy(true);
                 }
             }
         }
     }
-    if (inFocus && !gameOver) {
+    if (inFocus && !players[0]->isDestroyed()) {
         if (!(sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ||
             sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ||
             sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ||
@@ -309,10 +309,6 @@ void deleteDestroyedBullets() {
 void bulletEvent() {
     for (uint8_t i = 0; i < players.size(); ++i) {
         if (players[i]->bulletCollide(enemyBullets.first)) {
-            if (players[i]->isDestroyed()) {
-                delete players[i];
-                players.erase(players.begin() + i);
-            }
             deleteDestroyedBullets();
         }
     }
@@ -406,7 +402,7 @@ int main() {
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
-        sf::RenderWindow window(sf::VideoMode(208 * SCALE, 208 * SCALE), "Battle City [beta 1.26]", sf::Style::Close);
+        sf::RenderWindow window(sf::VideoMode(208 * SCALE, 208 * SCALE), "Battle City [beta 1.27]", sf::Style::Close);
         window.setVerticalSyncEnabled(true);
         window.setActive(true);
         window.setKeyRepeatEnabled(false);
@@ -417,15 +413,26 @@ int main() {
         while (window.isOpen()) {
             sf::Clock fpsClock;
 
-            if (players.size() <= 0) gameOver = true;
-            spawnEnemy();
+            if (!gameOver) {
+                bool over = true;
+                for (uint8_t i = 0; i < players.size(); ++i) {
+                    if (!players[i]->isDestroyed()) {
+                        over = false;
+                        break;
+                    }
+                }
+                gameOver = over;
+                spawnEnemy();
+            }
+
             eventProcess(window);
             //networkEvent();
             enemyEvent();
             bulletEvent();
+
             display(window);
 
-            window.setTitle("Battle City [beta 1.26] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
+            window.setTitle("Battle City [beta 1.27] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
         }
     }
     catch (std::string err) {
