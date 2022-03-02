@@ -69,7 +69,7 @@ private:
 	sf::Texture textures[4][4][2], protectionTextures[2];
 	sf::Sprite hitbox, sprite, protection;
 
-	uint64_t id = std::time(nullptr);
+	uint64_t id = std::time(nullptr) * std::rand();
 
 	Bullet* move(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies);
 

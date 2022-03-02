@@ -21,7 +21,7 @@
 #define TANK_DOWN 2
 #define TANK_RIGHT 3
 #define TANK_PLAYER1 10
-#define TANK_PALYER2 11
+#define TANK_PLAYER2 11
 #define TANK_ENEMY 12
 #define TANK_WHITE 0
 #define TANK_RED 1

@@ -22,7 +22,7 @@ Tank::Tank(const uint8_t& type, const uint8_t& x, const uint8_t& y, const uint8_
 		this->lives = 3;
 		this->protectedUntil = 3;
 	}
-	else if (this->type == TANK_PALYER2) {
+	else if (this->type == TANK_PLAYER2) {
 		for (uint8_t i = 0; i < 4; ++i) {
 			for (uint8_t j = 0; j < 4; ++j) {
 				if (!this->textures[i][j][0].loadFromFile("resources/graphics/TankGreen.png", sf::IntRect(j << 5, i << 4, 16, 16)) ||
@@ -146,13 +146,13 @@ void Tank::up(const std::vector<std::vector<Block*>>& map, const std::vector<Tan
 	// Changing pos
 	this->x = newX;
 	this->hitbox.setPosition(newX * SCALE, newY * SCALE);
-	if (blockCollide(map, this->hitbox) || tankCollide(players, enemies, this->hitbox)) {
+	if (this->blockCollide(map, this->hitbox) || this->tankCollide(players, enemies, this->hitbox)) {
 		newY += 8;
 	}
 	else {
 		--this->y;
 		this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
-		if (blockCollide(map, this->sprite) || tankCollide(players, enemies, this->sprite)) {
+		if (this->blockCollide(map, this->sprite) || this->tankCollide(players, enemies, this->sprite)) {
 			++this->y;
 		}
 	}
@@ -179,13 +179,13 @@ void Tank::left(const std::vector<std::vector<Block*>>& map, const std::vector<T
 	// Changing pos
 	this->y = newY;
 	this->hitbox.setPosition(newX * SCALE, newY * SCALE);
-	if (blockCollide(map, this->hitbox) || tankCollide(players, enemies, this->hitbox)) {
+	if (this->blockCollide(map, this->hitbox) || this->tankCollide(players, enemies, this->hitbox)) {
 		newX += 8;
 	}
 	else {
 		--this->x;
 		this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
-		if (blockCollide(map, this->sprite) || tankCollide(players, enemies, this->sprite)) {
+		if (this->blockCollide(map, this->sprite) || this->tankCollide(players, enemies, this->sprite)) {
 			++this->x;
 		}
 	}
@@ -212,13 +212,13 @@ void Tank::down(const std::vector<std::vector<Block*>>& map, const std::vector<T
 	// Changing pos
 	this->x = newX;
 	this->hitbox.setPosition(newX * SCALE, newY * SCALE);
-	if (blockCollide(map, this->hitbox) || tankCollide(players, enemies, this->hitbox)) {
+	if (this->blockCollide(map, this->hitbox) || this->tankCollide(players, enemies, this->hitbox)) {
 		newY -= 8;
 	}
 	else {
 		++this->y;
 		this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
-		if (blockCollide(map, this->sprite) || tankCollide(players, enemies, this->sprite)) {
+		if (this->blockCollide(map, this->sprite) || this->tankCollide(players, enemies, this->sprite)) {
 			--this->y;
 		}
 	}
@@ -245,13 +245,13 @@ void Tank::right(const std::vector<std::vector<Block*>>& map, const std::vector<
 	// Changing pos
 	this->y = newY;
 	this->hitbox.setPosition(newX * SCALE, newY * SCALE);
-	if (blockCollide(map, this->hitbox) || tankCollide(players, enemies, this->hitbox)) {
+	if (this->blockCollide(map, this->hitbox) || this->tankCollide(players, enemies, this->hitbox)) {
 		newX -= 8;
 	}
 	else {
 		++this->x;
 		this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
-		if (blockCollide(map, this->sprite) || tankCollide(players, enemies, this->sprite)) {
+		if (this->blockCollide(map, this->sprite) || this->tankCollide(players, enemies, this->sprite)) {
 			--this->x;
 		}
 	}
@@ -381,7 +381,7 @@ Bullet* Tank::move(const std::vector<std::vector<Block*>>& map, const std::vecto
 			if (this->rotation == TANK_UP || this->rotation == TANK_DOWN) this->x = newX;
 			else this->y = newY;
 			this->hitbox.setPosition(newX * SCALE, newY * SCALE);
-			if (blockCollide(map, this->hitbox) || tankCollide(players, enemies, this->hitbox)) {
+			if (this->blockCollide(map, this->hitbox) || this->tankCollide(players, enemies, this->hitbox)) {
 				if (this->rotation == TANK_UP) newY += 8;
 				else if (this->rotation == TANK_LEFT) newX += 8;
 				else if (this->rotation == TANK_DOWN) newY -= 8;
@@ -390,7 +390,7 @@ Bullet* Tank::move(const std::vector<std::vector<Block*>>& map, const std::vecto
 				const uint8_t action = std::rand() % 8;
 				if (action == 0) {
 					this->isMove = true;
-					changeRotation();
+					this->changeRotation();
 				}
 				else if (action < 2 && bullet == nullptr) {
 					bullet = this->shoot();
@@ -402,7 +402,7 @@ Bullet* Tank::move(const std::vector<std::vector<Block*>>& map, const std::vecto
 				else if (this->rotation == TANK_DOWN) ++this->y;
 				else ++this->x;
 				this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
-				if (blockCollide(map, this->sprite) || tankCollide(players, enemies, this->sprite)) {
+				if (this->blockCollide(map, this->sprite) || this->tankCollide(players, enemies, this->sprite)) {
 					if (this->rotation == TANK_UP) ++this->y;
 					else if (this->rotation == TANK_LEFT) ++this->x;
 					else if (this->rotation == TANK_DOWN) --this->y;
@@ -411,7 +411,7 @@ Bullet* Tank::move(const std::vector<std::vector<Block*>>& map, const std::vecto
 					const uint8_t action = std::rand() % 8;
 					if (action == 0) {
 						this->isMove = true;
-						changeRotation();
+						this->changeRotation();
 					}
 					else if (action < 2 && bullet == nullptr) {
 						bullet = this->shoot();

@@ -150,7 +150,7 @@ void eventProcess(sf::RenderWindow& window) {
         }
         else if (inFocus) {
             if (event.type == sf::Event::KeyPressed) {
-                if ((event.key.code == sf::Keyboard::RShift || event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::Space) && !players[0]->isDestroyed()) {
+                if ((event.key.code == sf::Keyboard::RShift || event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::Space) && !players[0]->isDestroyed() && !gameOver) {
                     Bullet* bullet = players[0]->shoot();
                     if (bullet != nullptr) {
                         playerBullets.first.push_back(bullet);
@@ -173,7 +173,7 @@ void eventProcess(sf::RenderWindow& window) {
             }
         }
     }
-    if (inFocus && !players[0]->isDestroyed()) {
+    if (inFocus && !players[0]->isDestroyed() && !gameOver) {
         if (!(sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ||
             sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ||
             sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ||
@@ -402,7 +402,7 @@ int main() {
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
-        sf::RenderWindow window(sf::VideoMode(208 * SCALE, 208 * SCALE), "Battle City [beta 1.3]", sf::Style::Close);
+        sf::RenderWindow window(sf::VideoMode(208 * SCALE, 208 * SCALE), "Battle City [beta 1.31]", sf::Style::Close);
         window.setVerticalSyncEnabled(true);
         window.setActive(true);
         window.setKeyRepeatEnabled(false);
@@ -432,7 +432,7 @@ int main() {
 
             display(window);
 
-            window.setTitle("Battle City [beta 1.3] - lives: " + std::to_string(players[0]->getLives()) + " (" + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps)");
+            window.setTitle("Battle City [beta 1.31] - lives: " + std::to_string(players[0]->getLives()) + " (" + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps)");
         }
     }
     catch (std::string err) {
