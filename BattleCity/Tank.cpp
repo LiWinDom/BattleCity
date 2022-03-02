@@ -274,6 +274,7 @@ void Tank::reset() {
 	this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
 	this->hitbox.setPosition(this->x * SCALE, this->y * SCALE);
 
+	this->destroyedTime = -10;
 	this->protectedUntil = this->clock.getElapsedTime().asSeconds() + 4;
 }
 
