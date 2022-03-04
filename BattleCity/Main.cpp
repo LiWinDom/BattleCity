@@ -7,9 +7,10 @@
 #include <Windows.h>
 
 #include "Config.h"
+#include "Stages.cpp"
 #include "Block.h"
 #include "Tank.h"
-#include "Stages.cpp"
+#include "Explosion.h"
 
 sf::Clock globalClock;
 
@@ -28,6 +29,12 @@ std::vector<Tank*> enemies(0, nullptr);
 
 std::pair<std::vector<Bullet*>, std::vector<Tank*>> playerBullets(std::vector<Bullet*>(0, nullptr), std::vector<Tank*>(0, nullptr));
 std::pair<std::vector<Bullet*>, std::vector<Tank*>> enemyBullets(std::vector<Bullet*>(0, nullptr), std::vector<Tank*>(0, nullptr));
+
+std::vector<Explosion*> explosions(0, nullptr);
+Explosion* eagleExplosion = nullptr;
+
+static sf::Texture GOtexture;
+static sf::Sprite GOsprite;
 
 sf::Music music;
 
@@ -65,6 +72,14 @@ void loadStage(const uint8_t& stage) {
             }
         }
     }
+
+    // Reinit explosions
+    for (uint8_t i = 0; i < explosions.size(); ++i) {
+        delete explosions[i];
+    }
+    explosions = std::vector<Explosion*>(0, nullptr);
+    delete eagleExplosion;
+    eagleExplosion = nullptr;
     music.play();
 
     return;
@@ -308,20 +323,37 @@ void deleteDestroyedBullets() {
 
 void bulletEvent() {
     for (uint8_t i = 0; i < players.size(); ++i) {
-        if (players[i]->bulletCollide(enemyBullets.first)) {
-            deleteDestroyedBullets();
+        std::pair<Explosion*, Explosion*> exp = players[i]->bulletCollide(enemyBullets.first);
+        if (exp.first != nullptr) {
+            explosions.push_back(exp.first);
         }
+        if (exp.second != nullptr) {
+            explosions.push_back(exp.second);
+        }
+        deleteDestroyedBullets();
     }
     for (uint8_t i = 0; i < enemies.size(); ++i) {
-        enemies[i]->bulletCollide(playerBullets.first);
+        std::pair<Explosion*, Explosion*> exp = enemies[i]->bulletCollide(playerBullets.first);
+        if (exp.first != nullptr) {
+            explosions.push_back(exp.first);
+        }
+        if (exp.second != nullptr) {
+            explosions.push_back(exp.second);
+        }
         deleteDestroyedBullets();
     }
 
     for (uint8_t i = 0; i < playerBullets.first.size(); ++i) {
-        playerBullets.first[i]->move(map, enemyBullets.first, gameOver);
+        Explosion* exp = playerBullets.first[i]->move(map, enemyBullets.first, gameOver);
+        if (exp != nullptr) {
+            explosions.push_back(exp);
+        }
     }
     for (uint8_t i = 0; i < enemyBullets.first.size(); ++i) {
-        enemyBullets.first[i]->move(map, playerBullets.first, gameOver);
+        Explosion* exp = enemyBullets.first[i]->move(map, playerBullets.first, gameOver);
+        if (exp != nullptr) {
+            explosions.push_back(exp);
+        }
     }
     deleteDestroyedBullets();
     return;
@@ -355,6 +387,15 @@ void display(sf::RenderWindow& window) {
         enemyBullets.first[i]->draw(window);
     }
 
+    // Drawing explosions
+    for (uint8_t i = 0; i < explosions.size(); ++i) {
+        explosions[i]->draw(window);
+        if (explosions[i]->isEnded()) {
+            delete explosions[i];
+            explosions.erase(explosions.begin() + i);
+        }
+    }
+
     // Drawing bushes
     for (uint8_t i = 0; i < 26; ++i) {
         for (uint8_t j = 0; j < 26; ++j) {
@@ -364,18 +405,24 @@ void display(sf::RenderWindow& window) {
         }
     }
 
+    static float GOlastMove;
+    static uint8_t coord = 216;
     if (gameOver) {
-        //static float lastMove = globalClock.getElapsedTime().asSeconds();
-        static sf::Texture GOtexture;
-        static sf::Sprite GOsprite;
-
-        if (!GOtexture.loadFromFile("resources/graphics/GameOver.png")) throw 1;
-
-        GOsprite.setOrigin(16, 8);
-        GOsprite.setScale(SCALE, SCALE);
-        GOsprite.setPosition(104 * SCALE, 104 * SCALE);
-        GOsprite.setTexture(GOtexture);
+        while (GOlastMove + 0.015 < globalClock.getElapsedTime().asSeconds() && coord > 104) {
+            --coord;
+            GOlastMove += 0.015;
+        }
+        GOsprite.setPosition(104 * SCALE, coord* SCALE);
         window.draw(GOsprite);
+
+        if (eagleExplosion == nullptr) {
+            eagleExplosion = new Explosion(104, 200, true);
+        }
+        eagleExplosion->draw(window);
+    }
+    else {
+        GOlastMove = globalClock.getElapsedTime().asSeconds();
+        coord = 216;
     }
 
     window.display();
@@ -402,10 +449,17 @@ int main() {
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
-        sf::RenderWindow window(sf::VideoMode(208 * SCALE, 208 * SCALE), "Battle City [beta 1.32]", sf::Style::Close);
+        sf::RenderWindow window(sf::VideoMode(208 * SCALE, 208 * SCALE), "Battle City [beta 1.4]", sf::Style::Close);
         window.setVerticalSyncEnabled(true);
         window.setActive(true);
         window.setKeyRepeatEnabled(false);
+
+        if (!GOtexture.loadFromFile("resources/graphics/GameOver.png")) throw 1;
+
+        GOsprite.setOrigin(16, 8);
+        GOsprite.setScale(SCALE, SCALE);
+        GOsprite.setPosition(104 * SCALE, 216 * SCALE);
+        GOsprite.setTexture(GOtexture);
 
         players.push_back(new Tank(TANK_PLAYER1, 72, 200, 0, TANK_UP));
         loadStage(stage);
@@ -432,7 +486,7 @@ int main() {
 
             display(window);
 
-            window.setTitle("Battle City [beta 1.32] - lives: " + std::to_string(players[0]->getLives()) + " (" + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps)");
+            window.setTitle("Battle City [beta 1.4] - lives: " + std::to_string(players[0]->getLives()) + " (" + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps)");
         }
     }
     catch (std::string err) {

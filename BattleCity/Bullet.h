@@ -4,6 +4,7 @@
 
 #include "Config.h"
 #include "Block.h"
+#include "Explosion.h"
 
 class Bullet
 {
@@ -12,15 +13,15 @@ public:
 
 	bool isDestroyed();
 
-	void destroy();
+	Explosion* destroy(const bool& animation = true);
 
 	bool spriteCollide(const sf::Sprite& sprite);
 
-	void move(const std::vector<std::vector<Block*>>& map, const std::vector<Bullet*>& bullets, bool& gameOver);
+	Explosion* move(const std::vector<std::vector<Block*>>& map, const std::vector<Bullet*>& bullets, bool& gameOver);
 
 	void draw(sf::RenderWindow& window);
 private:
-	int16_t x, y;
+	uint8_t x, y;
 	uint8_t rotation;
 	float speed;
 	bool power;
@@ -33,7 +34,7 @@ private:
 	sf::Texture texture;
 	sf::Sprite sprite;
 
-	void blockCollide(const std::vector<std::vector<Block*>>& map, bool& gameOver);
+	Explosion* blockCollide(const std::vector<std::vector<Block*>>& map, bool& gameOver);
 
 	void bulletCollide(const std::vector<Bullet*>& bullets);
 };

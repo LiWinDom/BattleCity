@@ -22,15 +22,20 @@ bool Bullet::isDestroyed() {
 	return this->destroyed;
 }
 
-void Bullet::destroy() {
+Explosion* Bullet::destroy(const bool& animation) {
 	this->destroyed = true;
+	if (animation) {
+		return new Explosion(this->x, this->y);
+	}
+	return nullptr;
 }
 
 bool Bullet::spriteCollide(const sf::Sprite& sprite) {
 	return sprite.getGlobalBounds().intersects(this->sprite.getGlobalBounds());
 }
 
-void Bullet::move(const std::vector<std::vector<Block*>>& map, const std::vector<Bullet*>& bullets, bool& gameOver) {
+Explosion* Bullet::move(const std::vector<std::vector<Block*>>& map, const std::vector<Bullet*>& bullets, bool& gameOver) {
+	Explosion* exp = nullptr;
 	while (this->clock.getElapsedTime().asSeconds() >= this->lastMoveTime + 1 / this->speed && !this->destroyed) {
 		if (this->rotation == BULLET_UP) {
 			--this->y;
@@ -46,10 +51,10 @@ void Bullet::move(const std::vector<std::vector<Block*>>& map, const std::vector
 		}
 		this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
 		bulletCollide(bullets);
-		blockCollide(map, gameOver);
+		exp = blockCollide(map, gameOver);
 		this->lastMoveTime += 1 / this->speed;
 	}
-	return;
+	return exp;
 }
 
 void Bullet::draw(sf::RenderWindow& window) {
@@ -57,16 +62,24 @@ void Bullet::draw(sf::RenderWindow& window) {
 	return;
 }
 
-void Bullet::blockCollide(const std::vector<std::vector<Block*>>& map, bool& gameOver) {
+Explosion* Bullet::blockCollide(const std::vector<std::vector<Block*>>& map, bool& gameOver) {
+	bool dstr = false;
 	for (uint8_t i = 0; i < 26; ++i) {
 		for (uint8_t j = 0; j < 26; ++j) {
 			if (map[i][j]->bulletCollide(this->sprite, this->rotation, this->power, gameOver)) {
-				this->destroy();
+				this->destroy(false);
+				dstr = true;
 			}
 		}
 	}
-	if (this->x < 4 || this->x > 204 || this->y < 4 || this->y > 204) this->destroy();
-	return;
+	if (this->x < 4 || this->x > 204 || this->y < 4 || this->y > 204) {
+		this->destroy(false);
+		dstr = true;
+	}
+	if (dstr) {
+		return new Explosion(this->x, this->y);
+	}
+	return nullptr;
 }
 
 void Bullet::bulletCollide(const std::vector<Bullet*>& bullets) {

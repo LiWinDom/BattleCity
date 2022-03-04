@@ -117,16 +117,14 @@ bool Tank::spriteCollide(const sf::Sprite& sprite) {
 	return this->hitbox.getGlobalBounds().intersects(sprite.getGlobalBounds()) || this->sprite.getGlobalBounds().intersects(sprite.getGlobalBounds());
 }
 
-bool Tank::bulletCollide(const std::vector<Bullet*>& bullets) {
-	if (this->destroyed || this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds()) return false;
+std::pair<Explosion*, Explosion*> Tank::bulletCollide(const std::vector<Bullet*>& bullets) {
+	if (this->destroyed || this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds()) return std::pair<Explosion*, Explosion*>(nullptr, nullptr);
 	for (uint8_t i = 0; i < bullets.size(); ++i) {
 		if (bullets[i]->spriteCollide(this->sprite)) {
-			this->destroy();
-			bullets[i]->destroy();
-			return true;
+			return std::pair<Explosion*, Explosion*>(this->destroy(), bullets[i]->destroy());
 		}
 	}
-	return false;
+	return std::pair<Explosion*, Explosion*>(nullptr, nullptr);
 }
 
 void Tank::up(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies) {
@@ -494,12 +492,14 @@ bool Tank::tankCollide(const std::vector<Tank*>& players, const std::vector<Tank
 	return false;
 }
 
-void Tank::destroy() {
+Explosion* Tank::destroy() {
+	Explosion* exp = nullptr;
 	if (this->clock.getElapsedTime().asSeconds() > this->protectedUntil) {
 		--this->lives;
 		this->destroyed = this->lives < 1;
 
 		if (this->type != TANK_ENEMY) {
+			exp = new Explosion(this->x, this->y, true);
 			this->x = this->startX;
 			this->y = this->startY;
 			this->rotation = this->startRotation;
@@ -512,6 +512,9 @@ void Tank::destroy() {
 
 			this->protectedUntil = this->clock.getElapsedTime().asSeconds() + 4;
 		}
+		else if (this->destroyed) {
+			exp = new Explosion(this->x, this->y, true);
+		}
 	}
-	return;
+	return exp;
 }

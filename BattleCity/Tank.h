@@ -6,6 +6,7 @@
 #include "Config.h"
 #include "Bullet.h"
 #include "Block.h"
+#include "Explosion.h"
 
 class Tank
 {
@@ -30,7 +31,7 @@ public:
 
 	bool spriteCollide(const sf::Sprite& sprite);
 
-	bool bulletCollide(const std::vector<Bullet*>& bullets);
+	std::pair<Explosion*, Explosion*> bulletCollide(const std::vector<Bullet*>& bullets);
 
 	void up(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies);
 
@@ -81,6 +82,6 @@ private:
 
 	bool tankCollide(const std::vector<Tank*>& players, const std::vector<Tank*>& enemies, const sf::Sprite& sprite);
 
-	void destroy();
+	Explosion* destroy();
 };
 
