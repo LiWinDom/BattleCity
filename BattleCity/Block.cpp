@@ -81,7 +81,7 @@ bool Block::tankCollide(const sf::Sprite& sprite) {
 	return sprite.getGlobalBounds().intersects(this->sprite.getGlobalBounds());
 }
 
-bool Block::bulletCollide(const sf::Sprite& sprite, const uint8_t& rotation, const bool& power, bool& gameOver) {
+bool Block::bulletCollide(const sf::Sprite& sprite, const uint8_t& rotation, const bool& power, bool& eagleDestroyed) {
 	if (this->type == BLOCK_AIR || this->type == BLOCK_BUSH || this->type == BLOCK_ICE || this->type == BLOCK_WATER) return false;
 	if (this->type == BLOCK_BRICK || this->type == BLOCK_PROTECTION) {
 		if (power) {
@@ -131,7 +131,7 @@ bool Block::bulletCollide(const sf::Sprite& sprite, const uint8_t& rotation, con
 		}
 		else if (this->type == BLOCK_EAGLE) {
 			this->sprite.setTexture(this->textures[1]);
-			gameOver = true;
+			eagleDestroyed = true;
 		}
 		return true;
 	}

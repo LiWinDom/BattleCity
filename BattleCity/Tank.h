@@ -17,7 +17,7 @@ public:
 
 	float getSpeed();
 
-	int8_t getLives();
+	uint8_t getLives();
 
 	bool getBonus();
 
@@ -31,15 +31,17 @@ public:
 
 	bool spriteCollide(const sf::Sprite& sprite);
 
-	std::pair<Explosion*, Explosion*> bulletCollide(const std::vector<Bullet*>& bullets);
+	bool bulletCollide(const std::vector<Bullet*>& bullets1, const std::vector<Bullet*>& bullets2);
 
-	void up(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies);
+	bool bulletCollide(const std::vector<Bullet*>& bullets1, const std::vector<Bullet*>& bullets2, Explosion*& tankExplosion, Explosion*& bulletExplosion);
 
-	void left(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies);
+	void up(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies);
 
-	void down(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies);
+	void left(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies);
 
-	void right(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies);
+	void down(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies);
+
+	void right(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies);
 
 	void reset();
 
@@ -49,7 +51,7 @@ public:
 
 	void draw(sf::RenderWindow& window);
 
-	Bullet* think(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies);
+	Bullet* think(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies);
 private:
 	uint8_t startX, startY, startRotation;
 	uint8_t x, y;
@@ -60,11 +62,11 @@ private:
 	bool isMove = true;
 
 	sf::Clock clock;
-	float lastMove = 0, lastShot = 0, destroyedTime = -10, protectedUntil = -1;
+	float lastMove = 0, lastShot = 0, destroyedTime = -10, protectedUntil = -1, frozenUntil = -1;
 	uint8_t bullets = 0;
 
 	uint8_t color = 0;
-	int8_t lives = 1;
+	uint8_t lives = 1;
 	bool destroyed = false;
 
 	sf::Texture textures[4][4][2], protectionTextures[2];
@@ -72,7 +74,7 @@ private:
 
 	uint64_t id = std::time(nullptr) * std::rand();
 
-	Bullet* move(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies);
+	Bullet* move(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies);
 
 	void changeRotation();
 
@@ -80,8 +82,10 @@ private:
 
 	bool blockCollide(const std::vector<std::vector<Block*>>& map, const sf::Sprite& sprite);
 
-	bool tankCollide(const std::vector<Tank*>& players, const std::vector<Tank*>& enemies, const sf::Sprite& sprite);
+	bool tankCollide(Tank* player1, Tank* player2, const std::vector<Tank*>& enemies, const sf::Sprite& sprite);
 
-	Explosion* destroy();
+	void destroy();
+
+	void destroy(Explosion*& explosion);
 };
 

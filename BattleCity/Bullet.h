@@ -13,11 +13,15 @@ public:
 
 	bool isDestroyed();
 
-	Explosion* destroy(const bool& animation = true);
+	void destroy();
+
+	void destroy(Explosion*& explosion);
 
 	bool spriteCollide(const sf::Sprite& sprite);
 
-	Explosion* move(const std::vector<std::vector<Block*>>& map, const std::vector<Bullet*>& bullets, bool& gameOver);
+	void move(const std::vector<std::vector<Block*>>& map, const std::vector<Bullet*>& bullets1, const std::vector<Bullet*>& bullets2, bool& eagleDestroyed);
+
+	void move(const std::vector<std::vector<Block*>>& map, const std::vector<Bullet*>& bullets1, const std::vector<Bullet*>& bullets2, bool& eagleDestroyed, Explosion*& explosion);
 
 	void draw(sf::RenderWindow& window);
 private:
@@ -34,7 +38,9 @@ private:
 	sf::Texture texture;
 	sf::Sprite sprite;
 
-	Explosion* blockCollide(const std::vector<std::vector<Block*>>& map, bool& gameOver);
+	void blockCollide(const std::vector<std::vector<Block*>>& map, bool& eagleDestroyed);
+
+	void blockCollide(const std::vector<std::vector<Block*>>& map, bool& eagleDestroyed, Explosion*& explosion);
 
 	void bulletCollide(const std::vector<Bullet*>& bullets);
 };

@@ -30,7 +30,11 @@
 #define TANK_SLOW 30
 #define TANK_MEDIUM 45
 #define TANK_FAST 60
+
 #define RESPAWN_TIME 1
+#define SPAWN_PROTECTING_TIME 4
+#define PROTECTING_TIME 10
+#define STUCK_TIME 3
 
 // Bullet
 #define BULLET_UP 0

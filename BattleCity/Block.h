@@ -15,7 +15,7 @@ public:
 
 	bool tankCollide(const sf::Sprite& sprite);
 
-	bool bulletCollide(const sf::Sprite& sprite, const uint8_t& rotation, const bool& power, bool& gameOver);
+	bool bulletCollide(const sf::Sprite& sprite, const uint8_t& rotation, const bool& power, bool& eagleDestroyed);
 private:
 	uint8_t type;
 	uint8_t x, y;

@@ -87,7 +87,7 @@ float Tank::getSpeed() {
 	return TANK_SLOW;
 }
 
-int8_t Tank::getLives() {
+uint8_t Tank::getLives() {
 	return this->lives;
 }
 
@@ -105,7 +105,7 @@ void Tank::levelUp() {
 }
 
 void Tank::helmet() {
-	this->protectedUntil = this->clock.getElapsedTime().asSeconds() + 10;
+	this->protectedUntil = this->clock.getElapsedTime().asSeconds() + PROTECTING_TIME;
 }
 
 bool Tank::isDestroyed() {
@@ -117,18 +117,56 @@ bool Tank::spriteCollide(const sf::Sprite& sprite) {
 	return this->hitbox.getGlobalBounds().intersects(sprite.getGlobalBounds()) || this->sprite.getGlobalBounds().intersects(sprite.getGlobalBounds());
 }
 
-std::pair<Explosion*, Explosion*> Tank::bulletCollide(const std::vector<Bullet*>& bullets) {
-	if (this->destroyed || this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds()) return std::pair<Explosion*, Explosion*>(nullptr, nullptr);
-	for (uint8_t i = 0; i < bullets.size(); ++i) {
-		if (bullets[i]->spriteCollide(this->sprite)) {
-			return std::pair<Explosion*, Explosion*>(this->destroy(), bullets[i]->destroy());
+bool Tank::bulletCollide(const std::vector<Bullet*>& bullets1, const std::vector<Bullet*>& bullets2) {
+	if (this->destroyed || this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds()) return false;
+	for (uint8_t i = 0; i < bullets1.size(); ++i) {
+		if (bullets1[i]->spriteCollide(this->sprite)) {
+			this->destroy();
+			bullets1[i]->destroy();
+			return true;
 		}
 	}
-	return std::pair<Explosion*, Explosion*>(nullptr, nullptr);
+	for (uint8_t i = 0; i < bullets2.size(); ++i) {
+		if (bullets2[i]->spriteCollide(this->sprite)) {
+			bullets2[i]->destroy();
+			if (this->type == TANK_ENEMY) {
+				this->destroy();
+			}
+			else {
+				this->frozenUntil = this->clock.getElapsedTime().asSeconds() + STUCK_TIME;
+			}
+			return true;
+		}
+	}
+	return false;
 }
 
-void Tank::up(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies) {
-	if (this->destroyed || this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds()) return;
+bool Tank::bulletCollide(const std::vector<Bullet*>& bullets1, const std::vector<Bullet*>& bullets2, Explosion*& tankExplosion, Explosion*& bulletExplosion) {
+	if (this->destroyed || this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds()) return false;
+	for (uint8_t i = 0; i < bullets1.size(); ++i) {
+		if (bullets1[i]->spriteCollide(this->sprite)) {
+			this->destroy(tankExplosion);
+			bullets1[i]->destroy(bulletExplosion);
+			return true;
+		}
+	}
+	for (uint8_t i = 0; i < bullets2.size(); ++i) {
+		if (bullets2[i]->spriteCollide(this->sprite)) {
+			bullets2[i]->destroy(bulletExplosion);
+			if (this->type == TANK_ENEMY) {
+				this->destroy(tankExplosion);
+			}
+			else {
+				this->frozenUntil = this->clock.getElapsedTime().asSeconds() + STUCK_TIME;
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
+void Tank::up(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies) {
+	if (this->destroyed || this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds() || this->frozenUntil > this->clock.getElapsedTime().asSeconds()) return;
 	this->rotation = TANK_UP;
 	this->animation = !this->animation;
 	this->sprite.setTexture(textures[this->level][this->rotation][this->animation]);
@@ -144,13 +182,13 @@ void Tank::up(const std::vector<std::vector<Block*>>& map, const std::vector<Tan
 	// Changing pos
 	this->x = newX;
 	this->hitbox.setPosition(newX * SCALE, newY * SCALE);
-	if (this->blockCollide(map, this->hitbox) || this->tankCollide(players, enemies, this->hitbox)) {
+	if (this->blockCollide(map, this->hitbox) || this->tankCollide(player1, player2, enemies, this->hitbox)) {
 		newY += 8;
 	}
 	else {
 		--this->y;
 		this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
-		if (this->blockCollide(map, this->sprite) || this->tankCollide(players, enemies, this->sprite)) {
+		if (this->blockCollide(map, this->sprite) || this->tankCollide(player1, player2, enemies, this->sprite)) {
 			++this->y;
 		}
 	}
@@ -160,8 +198,8 @@ void Tank::up(const std::vector<std::vector<Block*>>& map, const std::vector<Tan
 	return;
 }
 
-void Tank::left(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies) {
-	if (this->destroyed || this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds()) return;
+void Tank::left(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies) {
+	if (this->destroyed || this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds() || this->frozenUntil > this->clock.getElapsedTime().asSeconds()) return;
 	this->rotation = TANK_LEFT;
 	this->animation = !this->animation;
 	this->sprite.setTexture(textures[this->level][this->rotation][this->animation]);
@@ -177,13 +215,13 @@ void Tank::left(const std::vector<std::vector<Block*>>& map, const std::vector<T
 	// Changing pos
 	this->y = newY;
 	this->hitbox.setPosition(newX * SCALE, newY * SCALE);
-	if (this->blockCollide(map, this->hitbox) || this->tankCollide(players, enemies, this->hitbox)) {
+	if (this->blockCollide(map, this->hitbox) || this->tankCollide(player1, player2, enemies, this->hitbox)) {
 		newX += 8;
 	}
 	else {
 		--this->x;
 		this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
-		if (this->blockCollide(map, this->sprite) || this->tankCollide(players, enemies, this->sprite)) {
+		if (this->blockCollide(map, this->sprite) || this->tankCollide(player1, player2, enemies, this->sprite)) {
 			++this->x;
 		}
 	}
@@ -193,8 +231,8 @@ void Tank::left(const std::vector<std::vector<Block*>>& map, const std::vector<T
 	return;
 }
 
-void Tank::down(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies) {
-	if (this->destroyed || this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds()) return;
+void Tank::down(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies) {
+	if (this->destroyed || this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds() || this->frozenUntil > this->clock.getElapsedTime().asSeconds()) return;
 	this->rotation = TANK_DOWN;
 	this->animation = !this->animation;
 	this->sprite.setTexture(textures[this->level][this->rotation][this->animation]);
@@ -210,13 +248,13 @@ void Tank::down(const std::vector<std::vector<Block*>>& map, const std::vector<T
 	// Changing pos
 	this->x = newX;
 	this->hitbox.setPosition(newX * SCALE, newY * SCALE);
-	if (this->blockCollide(map, this->hitbox) || this->tankCollide(players, enemies, this->hitbox)) {
+	if (this->blockCollide(map, this->hitbox) || this->tankCollide(player1, player2, enemies, this->hitbox)) {
 		newY -= 8;
 	}
 	else {
 		++this->y;
 		this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
-		if (this->blockCollide(map, this->sprite) || this->tankCollide(players, enemies, this->sprite)) {
+		if (this->blockCollide(map, this->sprite) || this->tankCollide(player1, player2, enemies, this->sprite)) {
 			--this->y;
 		}
 	}
@@ -226,8 +264,8 @@ void Tank::down(const std::vector<std::vector<Block*>>& map, const std::vector<T
 	return;
 }
 
-void Tank::right(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies) {
-	if (this->destroyed || this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds()) return;
+void Tank::right(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies) {
+	if (this->destroyed || this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds() || this->frozenUntil > this->clock.getElapsedTime().asSeconds()) return;
 	this->rotation = TANK_RIGHT;
 	this->animation = !this->animation;
 	this->sprite.setTexture(textures[this->level][this->rotation][this->animation]);
@@ -243,13 +281,13 @@ void Tank::right(const std::vector<std::vector<Block*>>& map, const std::vector<
 	// Changing pos
 	this->y = newY;
 	this->hitbox.setPosition(newX * SCALE, newY * SCALE);
-	if (this->blockCollide(map, this->hitbox) || this->tankCollide(players, enemies, this->hitbox)) {
+	if (this->blockCollide(map, this->hitbox) || this->tankCollide(player1, player2, enemies, this->hitbox)) {
 		newX -= 8;
 	}
 	else {
 		++this->x;
 		this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
-		if (this->blockCollide(map, this->sprite) || this->tankCollide(players, enemies, this->sprite)) {
+		if (this->blockCollide(map, this->sprite) || this->tankCollide(player1, player2, enemies, this->sprite)) {
 			--this->x;
 		}
 	}
@@ -260,7 +298,7 @@ void Tank::right(const std::vector<std::vector<Block*>>& map, const std::vector<
 }
 
 void Tank::reset() {
-	this->lives = std::max(this->lives, (int8_t)3);
+	this->lives = std::max(this->lives, (uint8_t)3);
 	this->destroyed = false;
 	this->bullets = 0;
 
@@ -273,11 +311,12 @@ void Tank::reset() {
 	this->hitbox.setPosition(this->x * SCALE, this->y * SCALE);
 
 	this->destroyedTime = -10;
-	this->protectedUntil = this->clock.getElapsedTime().asSeconds() + 4;
+	this->protectedUntil = this->clock.getElapsedTime().asSeconds() + SPAWN_PROTECTING_TIME;
+	this->frozenUntil = -1;
 }
 
 Bullet* Tank::shoot() {
-	if (this->destroyed || this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds()) return nullptr;
+	if (this->destroyed || this->destroyedTime + RESPAWN_TIME > this->clock.getElapsedTime().asSeconds() || this->frozenUntil > this->clock.getElapsedTime().asSeconds()) return nullptr;
 	// Too many bullets check
 	if (bullets > 1 || ((this->level < 2 || this->type == TANK_ENEMY) && bullets > 0)) return nullptr;
 
@@ -326,8 +365,8 @@ void Tank::draw(sf::RenderWindow& window) {
 	return;
 }
 
-Bullet* Tank::think(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies) {
-	if (this->isDestroyed()) return nullptr;
+Bullet* Tank::think(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies) {
+	if (this->isDestroyed() || this->frozenUntil > this->clock.getElapsedTime().asSeconds()) return nullptr;
 
 	const uint8_t action = std::rand() % 192;
 	Bullet* bullet = nullptr;
@@ -347,15 +386,15 @@ Bullet* Tank::think(const std::vector<std::vector<Block*>>& map, const std::vect
 	}
 
 	if (bullet != nullptr) {
-		this->move(map, players, enemies);
+		this->move(map, player1, player2, enemies);
 	}
 	else {
-		bullet = this->move(map, players, enemies);
+		bullet = this->move(map, player1, player2, enemies);
 	}
 	return bullet;
 }
 
-Bullet* Tank::move(const std::vector<std::vector<Block*>>& map, const std::vector<Tank*>& players, const std::vector<Tank*>& enemies) {
+Bullet* Tank::move(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies) {
 	Bullet* bullet = nullptr;
 
 	if (this->isMove) {
@@ -380,7 +419,7 @@ Bullet* Tank::move(const std::vector<std::vector<Block*>>& map, const std::vecto
 			if (this->rotation == TANK_UP || this->rotation == TANK_DOWN) this->x = newX;
 			else this->y = newY;
 			this->hitbox.setPosition(newX * SCALE, newY * SCALE);
-			if (this->blockCollide(map, this->hitbox) || this->tankCollide(players, enemies, this->hitbox)) {
+			if (this->blockCollide(map, this->hitbox) || this->tankCollide(player1, player2, enemies, this->hitbox)) {
 				if (this->rotation == TANK_UP) newY += 8;
 				else if (this->rotation == TANK_LEFT) newX += 8;
 				else if (this->rotation == TANK_DOWN) newY -= 8;
@@ -401,7 +440,7 @@ Bullet* Tank::move(const std::vector<std::vector<Block*>>& map, const std::vecto
 				else if (this->rotation == TANK_DOWN) ++this->y;
 				else ++this->x;
 				this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
-				if (this->blockCollide(map, this->sprite) || this->tankCollide(players, enemies, this->sprite)) {
+				if (this->blockCollide(map, this->sprite) || this->tankCollide(player1, player2, enemies, this->sprite)) {
 					if (this->rotation == TANK_UP) ++this->y;
 					else if (this->rotation == TANK_LEFT) ++this->x;
 					else if (this->rotation == TANK_DOWN) --this->y;
@@ -480,10 +519,16 @@ bool Tank::blockCollide(const std::vector<std::vector<Block*>>& map, const sf::S
 	return false;
 }
 
-bool Tank::tankCollide(const std::vector<Tank*>& players, const std::vector<Tank*>& enemies, const sf::Sprite& sprite) {
-	for (uint8_t i = 0; i < players.size(); ++i) {
-		if (players[i]->getID() == this->id) continue;
-		if (players[i]->spriteCollide(sprite)) return true;
+bool Tank::tankCollide(Tank* player1, Tank* player2, const std::vector<Tank*>& enemies, const sf::Sprite& sprite) {
+	if (player1 != nullptr) {
+		if (player1->getID() != this->id) {
+			if (player1->spriteCollide(sprite)) return true;
+		}
+	}
+	if (player2 != nullptr) {
+		if (player2->getID() != this->id) {
+			if (player2->spriteCollide(sprite)) return true;
+		}
 	}
 	for (uint8_t i = 0; i < enemies.size(); ++i) {
 		if (enemies[i]->getID() == this->id) continue;
@@ -492,14 +537,12 @@ bool Tank::tankCollide(const std::vector<Tank*>& players, const std::vector<Tank
 	return false;
 }
 
-Explosion* Tank::destroy() {
-	Explosion* exp = nullptr;
+void Tank::destroy() {
 	if (this->clock.getElapsedTime().asSeconds() > this->protectedUntil) {
 		--this->lives;
 		this->destroyed = this->lives < 1;
 
 		if (this->type != TANK_ENEMY) {
-			exp = new Explosion(this->x, this->y, true);
 			this->x = this->startX;
 			this->y = this->startY;
 			this->rotation = this->startRotation;
@@ -510,11 +553,34 @@ Explosion* Tank::destroy() {
 			this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
 			this->hitbox.setPosition(this->x * SCALE, this->y * SCALE);
 
-			this->protectedUntil = this->clock.getElapsedTime().asSeconds() + 4;
-		}
-		else if (this->destroyed) {
-			exp = new Explosion(this->x, this->y, true);
+			this->protectedUntil = this->clock.getElapsedTime().asSeconds() + SPAWN_PROTECTING_TIME;
 		}
 	}
-	return exp;
+	return;
+}
+
+void Tank::destroy(Explosion*& explosion) {
+	if (this->clock.getElapsedTime().asSeconds() > this->protectedUntil) {
+		--this->lives;
+		this->destroyed = this->lives < 1;
+
+		if (this->type != TANK_ENEMY) {
+			explosion = new Explosion(this->x, this->y, true);
+			this->x = this->startX;
+			this->y = this->startY;
+			this->rotation = this->startRotation;
+			this->level = 0;
+			this->destroyedTime = this->clock.getElapsedTime().asSeconds();
+
+			this->sprite.setTexture(textures[this->level][this->rotation][this->animation]);
+			this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
+			this->hitbox.setPosition(this->x * SCALE, this->y * SCALE);
+
+			this->protectedUntil = this->clock.getElapsedTime().asSeconds() + SPAWN_PROTECTING_TIME;
+		}
+		else if (this->destroyed) {
+			explosion = new Explosion(this->x, this->y, true);
+		}
+	}
+	return;
 }

@@ -16,6 +16,7 @@ sf::Clock globalClock;
 
 bool inFocus = true;
 bool gameOver = false;
+bool eagleDestroyed = false;
 
 //sf::UdpSocket connection;
 //std::string connectedIP = "";
@@ -24,36 +25,50 @@ bool gameOver = false;
 std::vector<std::vector<Block*>> map(26, std::vector<Block*>(26, nullptr));
 uint8_t stage = 0;
 
-std::vector<Tank*> players(0, nullptr);
+Tank* player1 = nullptr;
+Tank* player2 = nullptr;
 std::vector<Tank*> enemies(0, nullptr);
+uint8_t spawned = 0;
 
-std::pair<std::vector<Bullet*>, std::vector<Tank*>> playerBullets(std::vector<Bullet*>(0, nullptr), std::vector<Tank*>(0, nullptr));
+std::vector<Bullet*> player1Bullets(0, nullptr);
+std::vector<Bullet*> player2Bullets(0, nullptr);
 std::pair<std::vector<Bullet*>, std::vector<Tank*>> enemyBullets(std::vector<Bullet*>(0, nullptr), std::vector<Tank*>(0, nullptr));
 
 std::vector<Explosion*> explosions(0, nullptr);
 Explosion* eagleExplosion = nullptr;
 
-static sf::Texture GOtexture;
-static sf::Sprite GOsprite;
+sf::Texture numbers[10];
 
-sf::Music music;
+sf::Texture statsBackgroundTexture;
+sf::Sprite statsBackgroundSprite;
+sf::Texture tankSmallTexture;
+sf::Sprite tankSmallSprite;
+sf::Sprite p1lives;
+sf::Sprite p2lives;
+sf::Sprite stageDozens;
+sf::Sprite stageOnes;
+
+sf::Texture GOtexture;
+sf::Sprite GOsprite;
 
 void loadStage(const uint8_t& stage) {
     // Reinit players
-    for (uint8_t i = 0; i < players.size(); ++i) {
-        players[i]->reset();
-    }
+    if (player1 != nullptr) player1->reset();
+    if (player2 != nullptr) player2->reset();
 
     // Reinit enemies
     for (uint8_t i = 0; i < enemies.size(); ++i) {
         delete enemies[i];
     }
     enemies = std::vector<Tank*>(0, nullptr);
+    spawned = 0;
 
     // Reinit bullets
-    for (uint8_t i = 0; i < playerBullets.first.size(); ++i) delete playerBullets.first[i];
+    for (uint8_t i = 0; i < player1Bullets.size(); ++i) delete player1Bullets[i];
+    for (uint8_t i = 0; i < player2Bullets.size(); ++i) delete player2Bullets[i];
     for (uint8_t i = 0; i < enemyBullets.first.size(); ++i) delete enemyBullets.first[i];
-    playerBullets = std::pair<std::vector<Bullet*>, std::vector<Tank*>>(std::vector<Bullet*>(0, nullptr), std::vector<Tank*>(0, nullptr));
+    player1Bullets = std::vector<Bullet*>(0, nullptr);
+    player2Bullets = std::vector<Bullet*>(0, nullptr);
     enemyBullets = std::pair<std::vector<Bullet*>, std::vector<Tank*>>(std::vector<Bullet*>(0, nullptr), std::vector<Tank*>(0, nullptr));
 
     for (uint8_t i = 0; i < 26; ++i) {
@@ -80,25 +95,37 @@ void loadStage(const uint8_t& stage) {
     explosions = std::vector<Explosion*>(0, nullptr);
     delete eagleExplosion;
     eagleExplosion = nullptr;
-    music.play();
+
+    stageDozens.setTexture(numbers[(stage + 1) / 10 % 10]);
+    stageOnes.setTexture(numbers[(stage + 1) % 10]);
 
     return;
 }
 
-void spawnEnemy(const bool& reset = false) {
-    static float lastSpawned = globalClock.getElapsedTime().asSeconds();
-    static uint8_t spawned = 0;
-    if (reset) {
-        spawned = 0;
-        return;
-    }
+void newGame() {
+    gameOver = false;
+    eagleDestroyed = false;
+    stage = 0;
 
-    if ((lastSpawned + ((47.5 - stage - (players.size() - 1) * 5) / 15) < globalClock.getElapsedTime().asSeconds() || spawned == 0)) {
+    if (player1 != nullptr) delete player1;
+    if (player2 != nullptr) delete player2;
+    player1 = new Tank(TANK_PLAYER1, 72, 200, 0, TANK_UP);
+    //player2 = new Tank(TANK_PLAYER2, 136, 200, 0, TANK_UP);
+
+    loadStage(stage);
+
+    return;
+}
+
+void spawnEnemy() {
+    static float lastSpawned = globalClock.getElapsedTime().asSeconds();
+
+    if ((lastSpawned + ((47.5 - stage - (1 - 1) * 5) / 15) < globalClock.getElapsedTime().asSeconds() || spawned == 0)) {
         if (spawned >= 20) {
             if (enemies.size() <= 0) {
-                spawned = 0;
                 loadStage(++stage % 8);
             }
+            lastSpawned = globalClock.getElapsedTime().asSeconds();
             return;
         }
 
@@ -120,14 +147,20 @@ void spawnEnemy(const bool& reset = false) {
         std::vector<uint8_t> poses(0, 0);
         for (uint8_t i = 0; i < 3; ++i) {
             bool collide = false;
-            for (uint8_t j = 0; j < enemies.size() && !collide; ++j) {
-                if (enemies[j]->spriteCollide(pos[i])) {
+            if (player1 != nullptr) {
+                if (player1->spriteCollide(pos[i])) {
                     collide = true;
                 }
             }
-            for (uint8_t j = 0; j < players.size() && !collide; ++j) {
-                if (players[j]->spriteCollide(pos[i])) {
+            if (player2 != nullptr) {
+                if (player2->spriteCollide(pos[i])) {
                     collide = true;
+                }
+            }
+            for (uint8_t j = 0; j < enemies.size() && !collide; ++j) {
+                if (enemies[j]->spriteCollide(pos[i])) {
+                    collide = true;
+                    break;
                 }
             }
             if (!collide) {
@@ -165,30 +198,19 @@ void eventProcess(sf::RenderWindow& window) {
         }
         else if (inFocus) {
             if (event.type == sf::Event::KeyPressed) {
-                if ((event.key.code == sf::Keyboard::RShift || event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::Space) && !players[0]->isDestroyed() && !gameOver) {
-                    Bullet* bullet = players[0]->shoot();
+                if ((event.key.code == sf::Keyboard::RShift || event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::Space) && !player1->isDestroyed() && !gameOver) {
+                    Bullet* bullet = player1->shoot();
                     if (bullet != nullptr) {
-                        playerBullets.first.push_back(bullet);
-                        playerBullets.second.push_back(players[0]);
+                        player1Bullets.push_back(bullet);
                     }
                 }
                 else if (event.key.code == sf::Keyboard::R) {
-                    gameOver = false;
-                    stage = 0;
-
-                    for (uint8_t i = 0; i < players.size(); ++i) {
-                        delete players[i];
-                    }
-                    players = std::vector<Tank*>(0, nullptr);
-                    players.push_back(new Tank(TANK_PLAYER1, 72, 200, 0, TANK_UP));
-
-                    loadStage(stage);
-                    spawnEnemy(true);
+                    newGame();
                 }
             }
         }
     }
-    if (inFocus && !players[0]->isDestroyed() && !gameOver) {
+    if (inFocus && !player1->isDestroyed() && !gameOver) {
         if (!(sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ||
             sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ||
             sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ||
@@ -196,19 +218,19 @@ void eventProcess(sf::RenderWindow& window) {
             holdTime = globalClock.getElapsedTime().asSeconds();
         }
         else {
-            while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / players[0]->getSpeed()) {
-                holdTime += 1 / players[0]->getSpeed();
+            while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / player1->getSpeed()) {
+                holdTime += 1 / player1->getSpeed();
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-                    players[0]->up(map, players, enemies);
+                    player1->up(map, player1, player2, enemies);
                 }
                 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-                    players[0]->left(map, players, enemies);
+                    player1->left(map, player1, player2, enemies);
                 }
                 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-                    players[0]->down(map, players, enemies);
+                    player1->down(map, player1, player2, enemies);
                 }
                 else {
-                    players[0]->right(map, players, enemies);
+                    player1->right(map, player1, player2, enemies);
                 }
             }
         }
@@ -281,18 +303,16 @@ void enemyEvent() {
     for (uint8_t i = 0; i < enemies.size(); ++i) {
         if (enemies[i]->isDestroyed()) {
             if (enemies[i]->getBonus()) {
-                if (players.size() > 0) {
-                    const uint8_t bonus = std::rand() % 3;
-                    if (bonus == 0) players[0]->addLife();
-                    else if (bonus == 1) players[0]->levelUp();
-                    else if (bonus == 2) players[0]->helmet();
-                }
+                const uint8_t bonus = std::rand() % 3;
+                if (bonus == 0) player1->addLife();
+                else if (bonus == 1) player1->levelUp();
+                else if (bonus == 2) player1->helmet();
             }
             delete enemies[i];
             enemies.erase(enemies.begin() + i);
             continue;
         }
-        Bullet* bullet = enemies[i]->think(map, players, enemies);
+        Bullet* bullet = enemies[i]->think(map, player1, player2, enemies);
         if (bullet != nullptr) {
             enemyBullets.first.push_back(bullet);
             enemyBullets.second.push_back(enemies[i]);
@@ -302,12 +322,20 @@ void enemyEvent() {
 }
 
 void deleteDestroyedBullets() {
-    for (uint8_t i = 0; i < playerBullets.first.size(); ++i) {
-        if (playerBullets.first[i]->isDestroyed()) {
-            delete playerBullets.first[i];
-            playerBullets.second[i]->bulletDestroyed();
-            playerBullets.first.erase(playerBullets.first.begin() + i);
-            playerBullets.second.erase(playerBullets.second.begin() + i);
+    for (uint8_t i = 0; i < player1Bullets.size(); ++i) {
+        if (player1Bullets[i]->isDestroyed()) {
+            delete player1Bullets[i];
+            player1->bulletDestroyed();
+            player1Bullets.erase(player1Bullets.begin() + i);
+            --i;
+        }
+    }
+    for (uint8_t i = 0; i < player2Bullets.size(); ++i) {
+        if (player2Bullets[i]->isDestroyed()) {
+            delete player2Bullets[i];
+            player2->bulletDestroyed();
+            player2Bullets.erase(player2Bullets.begin() + i);
+            --i;
         }
     }
     for (uint8_t i = 0; i < enemyBullets.first.size(); ++i) {
@@ -316,51 +344,114 @@ void deleteDestroyedBullets() {
             enemyBullets.second[i]->bulletDestroyed();
             enemyBullets.first.erase(enemyBullets.first.begin() + i);
             enemyBullets.second.erase(enemyBullets.second.begin() + i);
+            --i;
         }
     }
     return;
 }
 
 void bulletEvent() {
-    for (uint8_t i = 0; i < players.size(); ++i) {
-        std::pair<Explosion*, Explosion*> exp = players[i]->bulletCollide(enemyBullets.first);
-        if (exp.first != nullptr) {
-            explosions.push_back(exp.first);
+    if (player1 != nullptr) {
+        Explosion* tankExplosion = nullptr, * bulletExplosion = nullptr;
+        if (player1->bulletCollide(enemyBullets.first, player2Bullets, tankExplosion, bulletExplosion)) {
+            deleteDestroyedBullets();
         }
-        if (exp.second != nullptr) {
-            explosions.push_back(exp.second);
+        if (tankExplosion != nullptr) {
+            explosions.push_back(tankExplosion);
         }
-        deleteDestroyedBullets();
+        if (bulletExplosion != nullptr) {
+            explosions.push_back(bulletExplosion);
+        }
+    }
+    if (player2 != nullptr) {
+        Explosion* tankExplosion = nullptr, * bulletExplosion = nullptr;
+        if (player2->bulletCollide(enemyBullets.first, player1Bullets, tankExplosion, bulletExplosion)) {
+            deleteDestroyedBullets();
+        }
+        if (tankExplosion != nullptr) {
+            explosions.push_back(tankExplosion);
+        }
+        if (bulletExplosion != nullptr) {
+            explosions.push_back(bulletExplosion);
+        }
     }
     for (uint8_t i = 0; i < enemies.size(); ++i) {
-        std::pair<Explosion*, Explosion*> exp = enemies[i]->bulletCollide(playerBullets.first);
-        if (exp.first != nullptr) {
-            explosions.push_back(exp.first);
+        Explosion* tankExplosion = nullptr, * bulletExplosion = nullptr;
+        if (enemies[i]->bulletCollide(player1Bullets, player2Bullets, tankExplosion, bulletExplosion)) {
+            deleteDestroyedBullets();
         }
-        if (exp.second != nullptr) {
-            explosions.push_back(exp.second);
+        if (tankExplosion != nullptr) {
+            explosions.push_back(tankExplosion);
         }
-        deleteDestroyedBullets();
+        if (bulletExplosion != nullptr) {
+            explosions.push_back(bulletExplosion);
+        }
     }
 
-    for (uint8_t i = 0; i < playerBullets.first.size(); ++i) {
-        Explosion* exp = playerBullets.first[i]->move(map, enemyBullets.first, gameOver);
+    for (uint8_t i = 0; i < player1Bullets.size(); ++i) {
+        Explosion* exp = nullptr;
+        player1Bullets[i]->move(map, enemyBullets.first, player2Bullets, eagleDestroyed, exp);
+        if (exp != nullptr) {
+            explosions.push_back(exp);
+        }
+    }
+    for (uint8_t i = 0; i < player2Bullets.size(); ++i) {
+        Explosion* exp = nullptr;
+        player2Bullets[i]->move(map, enemyBullets.first, player1Bullets, eagleDestroyed, exp);
         if (exp != nullptr) {
             explosions.push_back(exp);
         }
     }
     for (uint8_t i = 0; i < enemyBullets.first.size(); ++i) {
-        Explosion* exp = enemyBullets.first[i]->move(map, playerBullets.first, gameOver);
+        Explosion* exp = nullptr;
+        enemyBullets.first[i]->move(map, player1Bullets, player2Bullets, eagleDestroyed, exp);
         if (exp != nullptr) {
             explosions.push_back(exp);
         }
     }
     deleteDestroyedBullets();
+
+    if (eagleDestroyed) {
+        gameOver = true;
+    }
+    return;
+}
+
+void displayStats(sf::RenderWindow& window) {
+    window.draw(statsBackgroundSprite);
+
+    for (uint8_t i = 0; i < 20 - spawned; ++i) {
+        tankSmallSprite.setPosition((216 + ((i % 2) << 3)) * SCALE, ((i / 2 + 1) * SCALE) << 3);
+        window.draw(tankSmallSprite);
+    }
+
+    p1lives.setTexture(numbers[std::min(player1->getLives(), (uint8_t)9)]);
+    window.draw(p1lives);
+
+    if (player2 == nullptr) {
+        static sf::RectangleShape fillP2;
+        fillP2.setFillColor(sf::Color(0x636363FF));
+        fillP2.setScale(SCALE, SCALE);
+        fillP2.setSize(sf::Vector2f(16, 16));
+        fillP2.setPosition(216 * SCALE, 144 * SCALE);
+        window.draw(fillP2);
+    }
+    else {
+        p2lives.setTexture(numbers[std::min(player2->getLives(), (uint8_t)9)]);
+        window.draw(p2lives);
+    }
+
+    if (stage > 8) {
+        window.draw(stageDozens);
+    }
+    window.draw(stageOnes);
+
     return;
 }
 
 void display(sf::RenderWindow& window) {
     window.clear(sf::Color(0));
+    displayStats(window);
 
     // Drawing game field
     for (uint8_t i = 0; i < 26; ++i) {
@@ -372,16 +463,18 @@ void display(sf::RenderWindow& window) {
     }
 
     // Drawing tanks
-    for (uint8_t i = 0; i < players.size(); ++i) {
-        players[i]->draw(window);
-    }
+    if (player1 != nullptr) player1->draw(window);
+    if (player2 != nullptr) player2->draw(window);
     for (uint8_t i = 0; i < enemies.size(); ++i) {
         enemies[i]->draw(window);
     }
 
     // Drawing bullets
-    for (uint8_t i = 0; i < playerBullets.first.size(); ++i) {
-        playerBullets.first[i]->draw(window);
+    for (uint8_t i = 0; i < player1Bullets.size(); ++i) {
+        player1Bullets[i]->draw(window);
+    }
+    for (uint8_t i = 0; i < player2Bullets.size(); ++i) {
+        player2Bullets[i]->draw(window);
     }
     for (uint8_t i = 0; i < enemyBullets.first.size(); ++i) {
         enemyBullets.first[i]->draw(window);
@@ -389,11 +482,13 @@ void display(sf::RenderWindow& window) {
 
     // Drawing explosions
     for (uint8_t i = 0; i < explosions.size(); ++i) {
-        explosions[i]->draw(window);
         if (explosions[i]->isEnded()) {
             delete explosions[i];
             explosions.erase(explosions.begin() + i);
+            --i;
+            continue;
         }
+        explosions[i]->draw(window);
     }
 
     // Drawing bushes
@@ -405,6 +500,7 @@ void display(sf::RenderWindow& window) {
         }
     }
 
+    // Draw Game Over (if needed)
     static float GOlastMove;
     static uint8_t coord = 216;
     if (gameOver) {
@@ -412,17 +508,18 @@ void display(sf::RenderWindow& window) {
             --coord;
             GOlastMove += 0.015;
         }
-        GOsprite.setPosition(104 * SCALE, coord* SCALE);
+        GOsprite.setPosition(104 * SCALE, coord * SCALE);
         window.draw(GOsprite);
-
-        if (eagleExplosion == nullptr) {
-            eagleExplosion = new Explosion(104, 200, true);
-        }
-        eagleExplosion->draw(window);
     }
     else {
         GOlastMove = globalClock.getElapsedTime().asSeconds();
         coord = 216;
+    }
+    if (eagleDestroyed) {
+        if (eagleExplosion == nullptr) {
+            eagleExplosion = new Explosion(104, 200, true);
+        }
+        eagleExplosion->draw(window);
     }
 
     window.display();
@@ -431,8 +528,36 @@ void display(sf::RenderWindow& window) {
 int main() {
     try {
         std::srand(std::time(nullptr));
-        if (!music.openFromFile("resources/sounds/StageBegin.ogg")) throw 1;
-        music.setVolume(50);
+
+        // Preloading textures/sprites
+        for (uint8_t i = 0; i < 10; ++i) {
+            if (!numbers[i].loadFromFile("resources/graphics/Numbers.png", sf::IntRect(i << 3, 0, 8, 8))) throw 1;
+        }
+        p1lives.setScale(SCALE, SCALE);
+        p1lives.setPosition(224 * SCALE, 128 * SCALE);
+        p2lives.setScale(SCALE, SCALE);
+        p2lives.setPosition(224 * SCALE, 152 * SCALE);
+
+        stageDozens.setScale(SCALE, SCALE);
+        stageDozens.setPosition(216 * SCALE, 184 * SCALE);
+        stageOnes.setScale(SCALE, SCALE);
+        stageOnes.setPosition(224 * SCALE, 184 * SCALE);
+
+        if (!statsBackgroundTexture.loadFromFile("resources/graphics/StatsBackground.png")) throw 1;
+        statsBackgroundSprite.setScale(SCALE, SCALE);
+        statsBackgroundSprite.setPosition(208 * SCALE, 0);
+        statsBackgroundSprite.setTexture(statsBackgroundTexture);
+
+        if (!tankSmallTexture.loadFromFile("resources/graphics/TankSmall.png")) throw 1;
+        tankSmallSprite.setScale(SCALE, SCALE);
+        tankSmallSprite.setTexture(tankSmallTexture);
+
+        if (!GOtexture.loadFromFile("resources/graphics/GameOver.png")) throw 1;
+        GOsprite.setOrigin(16, 8);
+        GOsprite.setScale(SCALE, SCALE);
+        GOsprite.setPosition(104 * SCALE, 216 * SCALE);
+        GOsprite.setTexture(GOtexture);
+
         /*if (connection.bind(NETWORK_PORT) != sf::Socket::Done) throw "(2 games opened?)";
         connection.setBlocking(false);
 
@@ -449,30 +574,26 @@ int main() {
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
-        sf::RenderWindow window(sf::VideoMode(208 * SCALE, 208 * SCALE), "Battle City [beta 1.4]", sf::Style::Close);
+        sf::RenderWindow window(sf::VideoMode(240 * SCALE, 208 * SCALE), "Battle City [beta 1.5]", sf::Style::Close);
         window.setVerticalSyncEnabled(true);
         window.setActive(true);
         window.setKeyRepeatEnabled(false);
 
-        if (!GOtexture.loadFromFile("resources/graphics/GameOver.png")) throw 1;
-
-        GOsprite.setOrigin(16, 8);
-        GOsprite.setScale(SCALE, SCALE);
-        GOsprite.setPosition(104 * SCALE, 216 * SCALE);
-        GOsprite.setTexture(GOtexture);
-
-        players.push_back(new Tank(TANK_PLAYER1, 72, 200, 0, TANK_UP));
-        loadStage(stage);
+        newGame();
 
         while (window.isOpen()) {
             sf::Clock fpsClock;
 
             if (!gameOver) {
                 bool over = true;
-                for (uint8_t i = 0; i < players.size(); ++i) {
-                    if (!players[i]->isDestroyed()) {
+                if (player1 != nullptr) {
+                    if (!player1->isDestroyed()) {
                         over = false;
-                        break;
+                    }
+                }
+                if (player2 != nullptr) {
+                    if (!player2->isDestroyed()) {
+                        over = false;
                     }
                 }
                 gameOver = over;
@@ -486,7 +607,7 @@ int main() {
 
             display(window);
 
-            window.setTitle("Battle City [beta 1.4] - lives: " + std::to_string(players[0]->getLives()) + " (" + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps)");
+            window.setTitle("Battle City [beta 1.5] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
         }
     }
     catch (std::string err) {
