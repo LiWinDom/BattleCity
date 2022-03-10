@@ -32,8 +32,7 @@
 #define TANK_FAST 60
 
 #define RESPAWN_TIME 1
-#define SPAWN_PROTECTING_TIME 4
-#define PROTECTING_TIME 10
+#define SPAWN_PROTECTING_TIME 3
 #define STUCK_TIME 3
 
 // Bullet
@@ -45,3 +44,15 @@
 #define BULLET_ENEMY 5
 #define BULLET_SLOW 120
 #define BULLET_FAST 240
+
+// Bonus
+#define BONUS_HELMET 0
+#define BONUS_FREEZE 1
+#define BONUS_SHOWEL 2
+#define BONUS_UPGRADE 3
+#define BONUS_BOMB 4
+#define BONUS_LIFE 5
+
+#define HELMET_TIME 10
+#define FREEZE_TIME 10
+#define SHOWEL_TIME 20

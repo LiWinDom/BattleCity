@@ -101,11 +101,25 @@ void Tank::addLife() {
 
 void Tank::levelUp() {
 	this->level = std::min((uint8_t)(this->level + 1), (uint8_t)3);
+	if (this->type == TANK_ENEMY) {
+		for (uint8_t i = 0; i < 4; ++i) {
+			if (!this->textures[0][i][0].loadFromFile("resources/graphics/TankWhite.png", sf::IntRect(i << 5, (this->level + 4) << 4, 16, 16)) ||
+				!this->textures[0][i][1].loadFromFile("resources/graphics/TankWhite.png", sf::IntRect((i << 5) + 16, (this->level + 4) << 4, 16, 16))) throw 1;
+			if (!this->textures[1][i][0].loadFromFile("resources/graphics/TankRed.png", sf::IntRect(i << 5, (this->level + 4) << 4, 16, 16)) ||
+				!this->textures[1][i][1].loadFromFile("resources/graphics/TankRed.png", sf::IntRect((i << 5) + 16, (this->level + 4) << 4, 16, 16))) throw 1;
+			if (!this->textures[2][i][0].loadFromFile("resources/graphics/TankYellow.png", sf::IntRect(i << 5, (this->level + 4) << 4, 16, 16)) ||
+				!this->textures[2][i][1].loadFromFile("resources/graphics/TankYellow.png", sf::IntRect((i << 5) + 16, (this->level + 4) << 4, 16, 16))) throw 1;
+			if (!this->textures[3][i][0].loadFromFile("resources/graphics/TankGreen.png", sf::IntRect(i << 5, (this->level + 4) << 4, 16, 16)) ||
+				!this->textures[3][i][1].loadFromFile("resources/graphics/TankGreen.png", sf::IntRect((i << 5) + 16, (this->level + 4) << 4, 16, 16))) throw 1;
+		}
+		return;
+	}
 	this->sprite.setTexture(textures[this->level][this->rotation][this->animation]);
+	return;
 }
 
 void Tank::helmet() {
-	this->protectedUntil = this->clock.getElapsedTime().asSeconds() + PROTECTING_TIME;
+	this->protectedUntil = this->clock.getElapsedTime().asSeconds() + HELMET_TIME;
 }
 
 bool Tank::isDestroyed() {
@@ -394,6 +408,54 @@ Bullet* Tank::think(const std::vector<std::vector<Block*>>& map, Tank* player1, 
 	return bullet;
 }
 
+void Tank::destroy() {
+	if (this->clock.getElapsedTime().asSeconds() > this->protectedUntil) {
+		--this->lives;
+		this->destroyed = this->lives < 1;
+
+		if (this->type != TANK_ENEMY) {
+			this->x = this->startX;
+			this->y = this->startY;
+			this->rotation = this->startRotation;
+			this->level = 0;
+			this->destroyedTime = this->clock.getElapsedTime().asSeconds();
+
+			this->sprite.setTexture(textures[this->level][this->rotation][this->animation]);
+			this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
+			this->hitbox.setPosition(this->x * SCALE, this->y * SCALE);
+
+			this->protectedUntil = this->clock.getElapsedTime().asSeconds() + SPAWN_PROTECTING_TIME;
+		}
+	}
+	return;
+}
+
+void Tank::destroy(Explosion*& explosion) {
+	if (this->clock.getElapsedTime().asSeconds() > this->protectedUntil) {
+		--this->lives;
+		this->destroyed = this->lives < 1;
+
+		if (this->type != TANK_ENEMY) {
+			explosion = new Explosion(this->x, this->y, true);
+			this->x = this->startX;
+			this->y = this->startY;
+			this->rotation = this->startRotation;
+			this->level = 0;
+			this->destroyedTime = this->clock.getElapsedTime().asSeconds();
+
+			this->sprite.setTexture(textures[this->level][this->rotation][this->animation]);
+			this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
+			this->hitbox.setPosition(this->x * SCALE, this->y * SCALE);
+
+			this->protectedUntil = this->clock.getElapsedTime().asSeconds() + SPAWN_PROTECTING_TIME;
+		}
+		else if (this->destroyed) {
+			explosion = new Explosion(this->x, this->y, true);
+		}
+	}
+	return;
+}
+
 Bullet* Tank::move(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies) {
 	Bullet* bullet = nullptr;
 
@@ -484,27 +546,31 @@ void Tank::changeRotation() {
 }
 
 void Tank::changeColor() {
-	if (this->bonus) {
-		if (this->clock.getElapsedTime().asMilliseconds() % 300 < 150) this->color = TANK_RED;
-		else if (this->color == TANK_RED) this->color = TANK_WHITE;
+	if (this->bonus && this->clock.getElapsedTime().asMilliseconds() % 300 < 150) {
+		this->color = TANK_RED;
+		return;
 	}
-	if (this->level == 3 && this->color != TANK_RED) {
-		if (this->lives == 4) {
-			if (this->color == TANK_WHITE) this->color = TANK_GREEN;
-			else this->color = TANK_WHITE;
-		}
-		else if (this->lives == 3) {
-			if (this->color == TANK_WHITE) this->color = TANK_YELLOW;
-			else this->color = TANK_WHITE;
-		}
-		else if (this->lives == 2) {
-			if (this->color == TANK_YELLOW) this->color = TANK_GREEN;
-			else this->color = TANK_YELLOW;
-		}
-		else {
-			this->color = TANK_WHITE;
-		}
+	if (this->lives > 4) {
+		if (this->color == TANK_WHITE) this->color = TANK_RED;
+		else this->color = TANK_WHITE;
+		return;
 	}
+	if (this->lives == 4) {
+		if (this->color == TANK_WHITE) this->color = TANK_GREEN;
+		else this->color = TANK_WHITE;
+		return;
+	}
+	if (this->lives == 3) {
+		if (this->color == TANK_WHITE) this->color = TANK_YELLOW;
+		else this->color = TANK_WHITE;
+		return;
+	}
+	if (this->lives == 2) {
+		if (this->color == TANK_YELLOW) this->color = TANK_GREEN;
+		else this->color = TANK_YELLOW;
+		return;
+	}
+	this->color = TANK_WHITE;
 	return;
 }
 
@@ -535,52 +601,4 @@ bool Tank::tankCollide(Tank* player1, Tank* player2, const std::vector<Tank*>& e
 		if (enemies[i]->spriteCollide(sprite)) return true;
 	}
 	return false;
-}
-
-void Tank::destroy() {
-	if (this->clock.getElapsedTime().asSeconds() > this->protectedUntil) {
-		--this->lives;
-		this->destroyed = this->lives < 1;
-
-		if (this->type != TANK_ENEMY) {
-			this->x = this->startX;
-			this->y = this->startY;
-			this->rotation = this->startRotation;
-			this->level = 0;
-			this->destroyedTime = this->clock.getElapsedTime().asSeconds();
-
-			this->sprite.setTexture(textures[this->level][this->rotation][this->animation]);
-			this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
-			this->hitbox.setPosition(this->x * SCALE, this->y * SCALE);
-
-			this->protectedUntil = this->clock.getElapsedTime().asSeconds() + SPAWN_PROTECTING_TIME;
-		}
-	}
-	return;
-}
-
-void Tank::destroy(Explosion*& explosion) {
-	if (this->clock.getElapsedTime().asSeconds() > this->protectedUntil) {
-		--this->lives;
-		this->destroyed = this->lives < 1;
-
-		if (this->type != TANK_ENEMY) {
-			explosion = new Explosion(this->x, this->y, true);
-			this->x = this->startX;
-			this->y = this->startY;
-			this->rotation = this->startRotation;
-			this->level = 0;
-			this->destroyedTime = this->clock.getElapsedTime().asSeconds();
-
-			this->sprite.setTexture(textures[this->level][this->rotation][this->animation]);
-			this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
-			this->hitbox.setPosition(this->x * SCALE, this->y * SCALE);
-
-			this->protectedUntil = this->clock.getElapsedTime().asSeconds() + SPAWN_PROTECTING_TIME;
-		}
-		else if (this->destroyed) {
-			explosion = new Explosion(this->x, this->y, true);
-		}
-	}
-	return;
 }

@@ -11,6 +11,7 @@
 #include "Block.h"
 #include "Tank.h"
 #include "Explosion.h"
+#include "Bonus.h"
 
 sf::Clock globalClock;
 
@@ -29,6 +30,9 @@ Tank* player1 = nullptr;
 Tank* player2 = nullptr;
 std::vector<Tank*> enemies(0, nullptr);
 uint8_t spawned = 0;
+
+float playersFrozenUntil = -1;
+float enemiesFrozenUntil = -1;
 
 std::vector<Bullet*> player1Bullets(0, nullptr);
 std::vector<Bullet*> player2Bullets(0, nullptr);
@@ -51,6 +55,8 @@ sf::Sprite stageOnes;
 sf::Texture GOtexture;
 sf::Sprite GOsprite;
 
+Bonus* bonus = nullptr;
+
 void loadStage(const uint8_t& stage) {
     // Reinit players
     if (player1 != nullptr) player1->reset();
@@ -62,6 +68,9 @@ void loadStage(const uint8_t& stage) {
     }
     enemies = std::vector<Tank*>(0, nullptr);
     spawned = 0;
+
+    playersFrozenUntil = -1;
+    enemiesFrozenUntil = -1;
 
     // Reinit bullets
     for (uint8_t i = 0; i < player1Bullets.size(); ++i) delete player1Bullets[i];
@@ -95,6 +104,10 @@ void loadStage(const uint8_t& stage) {
     explosions = std::vector<Explosion*>(0, nullptr);
     delete eagleExplosion;
     eagleExplosion = nullptr;
+
+    // Reinit bonus
+    if (bonus != nullptr) delete bonus;
+    bonus = nullptr;
 
     stageDozens.setTexture(numbers[(stage + 1) / 10 % 10]);
     stageOnes.setTexture(numbers[(stage + 1) % 10]);
@@ -196,41 +209,43 @@ void eventProcess(sf::RenderWindow& window) {
             inFocus = true;
             holdTime = globalClock.getElapsedTime().asSeconds();
         }
-        else if (inFocus) {
-            if (event.type == sf::Event::KeyPressed) {
-                if ((event.key.code == sf::Keyboard::RShift || event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::Space) && !player1->isDestroyed() && !gameOver) {
+        else if (inFocus && event.type == sf::Event::KeyPressed) {
+            if (player1 != nullptr && !gameOver && globalClock.getElapsedTime().asSeconds() > playersFrozenUntil) {
+                if ((event.key.code == sf::Keyboard::RShift || event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::Space) && !player1->isDestroyed()) {
                     Bullet* bullet = player1->shoot();
                     if (bullet != nullptr) {
                         player1Bullets.push_back(bullet);
                     }
                 }
-                else if (event.key.code == sf::Keyboard::R) {
-                    newGame();
-                }
+            }
+            if (event.key.code == sf::Keyboard::R) {
+                newGame();
             }
         }
     }
-    if (inFocus && !player1->isDestroyed() && !gameOver) {
-        if (!(sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ||
-            sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ||
-            sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ||
-            sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))) {
-            holdTime = globalClock.getElapsedTime().asSeconds();
-        }
-        else {
-            while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / player1->getSpeed()) {
-                holdTime += 1 / player1->getSpeed();
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-                    player1->up(map, player1, player2, enemies);
-                }
-                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-                    player1->left(map, player1, player2, enemies);
-                }
-                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-                    player1->down(map, player1, player2, enemies);
-                }
-                else {
-                    player1->right(map, player1, player2, enemies);
+    if (inFocus && player1 != nullptr && !gameOver && globalClock.getElapsedTime().asSeconds() > playersFrozenUntil) {
+        if (!player1->isDestroyed()) {
+            if (!(sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ||
+                sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ||
+                sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ||
+                sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))) {
+                holdTime = globalClock.getElapsedTime().asSeconds();
+            }
+            else {
+                while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / player1->getSpeed()) {
+                    holdTime += 1 / player1->getSpeed();
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+                        player1->up(map, player1, player2, enemies);
+                    }
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+                        player1->left(map, player1, player2, enemies);
+                    }
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+                        player1->down(map, player1, player2, enemies);
+                    }
+                    else {
+                        player1->right(map, player1, player2, enemies);
+                    }
                 }
             }
         }
@@ -303,19 +318,19 @@ void enemyEvent() {
     for (uint8_t i = 0; i < enemies.size(); ++i) {
         if (enemies[i]->isDestroyed()) {
             if (enemies[i]->getBonus()) {
-                const uint8_t bonus = std::rand() % 3;
-                if (bonus == 0) player1->addLife();
-                else if (bonus == 1) player1->levelUp();
-                else if (bonus == 2) player1->helmet();
+                if (bonus != nullptr) delete bonus;
+                bonus = new Bonus(map, player1, player2, enemies);
             }
             delete enemies[i];
             enemies.erase(enemies.begin() + i);
             continue;
         }
-        Bullet* bullet = enemies[i]->think(map, player1, player2, enemies);
-        if (bullet != nullptr) {
-            enemyBullets.first.push_back(bullet);
-            enemyBullets.second.push_back(enemies[i]);
+        if (globalClock.getElapsedTime().asSeconds() > enemiesFrozenUntil) {
+            Bullet* bullet = enemies[i]->think(map, player1, player2, enemies);
+            if (bullet != nullptr) {
+                enemyBullets.first.push_back(bullet);
+                enemyBullets.second.push_back(enemies[i]);
+            }
         }
     }
     return;
@@ -417,6 +432,17 @@ void bulletEvent() {
     return;
 }
 
+void bonusEvent() {
+    if (bonus != nullptr) {
+        bonus->collideCheck(player1, player2, enemies, map, globalClock, playersFrozenUntil, enemiesFrozenUntil, explosions);
+        if (bonus->isTaken()) {
+            delete bonus;
+            bonus = nullptr;
+        }
+    }
+    return;
+}
+
 void displayStats(sf::RenderWindow& window) {
     window.draw(statsBackgroundSprite);
 
@@ -461,6 +487,9 @@ void display(sf::RenderWindow& window) {
             }
         }
     }
+
+    // Drawing bonus
+    if (bonus != nullptr) bonus->draw(window);
 
     // Drawing tanks
     if (player1 != nullptr) player1->draw(window);
@@ -574,7 +603,7 @@ int main() {
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
-        sf::RenderWindow window(sf::VideoMode(240 * SCALE, 208 * SCALE), "Battle City [beta 1.5]", sf::Style::Close);
+        sf::RenderWindow window(sf::VideoMode(240 * SCALE, 208 * SCALE), "Battle City [beta 1.6]", sf::Style::Close);
         window.setVerticalSyncEnabled(true);
         window.setActive(true);
         window.setKeyRepeatEnabled(false);
@@ -604,10 +633,11 @@ int main() {
             //networkEvent();
             enemyEvent();
             bulletEvent();
+            bonusEvent();
 
             display(window);
 
-            window.setTitle("Battle City [beta 1.5] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
+            window.setTitle("Battle City [beta 1.6] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
         }
     }
     catch (std::string err) {

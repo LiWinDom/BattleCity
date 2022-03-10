@@ -11,7 +11,11 @@ public:
 
 	uint8_t getType();
 
-	void draw(sf::RenderWindow& window, const sf::Clock& clock);
+	void placeProtection();
+
+	void removeProtection();
+
+	void draw(sf::RenderWindow& window, const sf::Clock& globalClock);
 
 	bool tankCollide(const sf::Sprite& sprite);
 
@@ -27,5 +31,10 @@ private:
 	bool state[4] = { true, true, true, true };
 	sf::Texture textures[2];
 	sf::Sprite sprites[4];
+
+	// For protection
+	sf::Clock clock;
+	float protectedUntil = -1;
+	float unprotectedUntil = -1;
 };
 

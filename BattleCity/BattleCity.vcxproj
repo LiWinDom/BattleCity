@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="Bonus.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -44,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
+    <ClInclude Include="Bonus.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Explosion.h" />

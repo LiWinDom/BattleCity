@@ -52,6 +52,10 @@ public:
 	void draw(sf::RenderWindow& window);
 
 	Bullet* think(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies);
+
+	void destroy();
+
+	void destroy(Explosion*& explosion);
 private:
 	uint8_t startX, startY, startRotation;
 	uint8_t x, y;
@@ -83,9 +87,5 @@ private:
 	bool blockCollide(const std::vector<std::vector<Block*>>& map, const sf::Sprite& sprite);
 
 	bool tankCollide(Tank* player1, Tank* player2, const std::vector<Tank*>& enemies, const sf::Sprite& sprite);
-
-	void destroy();
-
-	void destroy(Explosion*& explosion);
 };
 
