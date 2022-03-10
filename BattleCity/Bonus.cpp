@@ -66,7 +66,7 @@ void Bonus::collideCheck(Tank* player1, Tank* player2, const std::vector<Tank*>&
 			else if (this->type == BONUS_UPGRADE) {
 				player1->levelUp();
 			}
-			else if (this->type == BONUS_BOMB) {
+			else if (this->type == BONUS_GRANADE) {
 				for (uint8_t i = 0; i < enemies.size(); ++i) {
 					Explosion* exp = nullptr;
 					enemies[i]->destroy(exp);
@@ -102,7 +102,7 @@ void Bonus::collideCheck(Tank* player1, Tank* player2, const std::vector<Tank*>&
 			else if (this->type == BONUS_UPGRADE) {
 				player2->levelUp();
 			}
-			else if (this->type == BONUS_BOMB) {
+			else if (this->type == BONUS_GRANADE) {
 				for (uint8_t i = 0; i < enemies.size(); ++i) {
 					Explosion* exp = nullptr;
 					enemies[i]->destroy(exp);
@@ -138,7 +138,7 @@ void Bonus::collideCheck(Tank* player1, Tank* player2, const std::vector<Tank*>&
 			else if (this->type == BONUS_UPGRADE) {
 				enemies[i]->levelUp();
 			}
-			else if (this->type == BONUS_BOMB) {
+			else if (this->type == BONUS_GRANADE) {
 				if (player1 != nullptr) {
 					Explosion* exp = nullptr;
 					player1->destroy(exp);

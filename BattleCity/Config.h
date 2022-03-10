@@ -50,7 +50,7 @@
 #define BONUS_FREEZE 1
 #define BONUS_SHOWEL 2
 #define BONUS_UPGRADE 3
-#define BONUS_BOMB 4
+#define BONUS_GRANADE 4
 #define BONUS_LIFE 5
 
 #define HELMET_TIME 10
