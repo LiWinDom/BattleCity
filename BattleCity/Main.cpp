@@ -57,7 +57,7 @@ sf::Sprite GOsprite;
 
 Bonus* bonus = nullptr;
 
-void loadStage(const uint8_t& stage) {
+void loadStage(const uint8_t& loadingStage) {
     // Reinit players
     if (player1 != nullptr) player1->reset();
     if (player2 != nullptr) player2->reset();
@@ -88,11 +88,11 @@ void loadStage(const uint8_t& stage) {
             }
 
             // Loading blocks from "Stages.cpp"
-            if (stages[stage][i][j] == ' ') {
+            if (stages[loadingStage][i][j] == ' ') {
                 map[i][j] = new Block(BLOCK_AIR, j, i);
             }
             else {
-                map[i][j] = new Block(stages[stage][i][j], j, i);
+                map[i][j] = new Block(stages[loadingStage][i][j], j, i);
             }
         }
     }
@@ -136,7 +136,7 @@ void spawnEnemy() {
     if ((lastSpawned + ((47.5 - stage - (1 - 1) * 5) / 15) < globalClock.getElapsedTime().asSeconds() || spawned == 0)) {
         if (spawned >= 20) {
             if (enemies.size() <= 0) {
-                loadStage(++stage % 8);
+                loadStage(++stage % 16);
             }
             lastSpawned = globalClock.getElapsedTime().asSeconds();
             return;
