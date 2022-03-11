@@ -355,7 +355,7 @@ void Tank::right(const std::vector<std::vector<Block*>>& map, Tank* player1, Tan
 	return;
 }
 
-void Tank::reset() {
+void Tank::playerReset() {
 	this->lives = std::max(this->lives, (uint8_t)3);
 	this->spawned = false;
 	this->destroyed = false;
@@ -369,6 +369,7 @@ void Tank::reset() {
 	this->sprite.setPosition(this->x * SCALE, this->y * SCALE);
 	this->hitbox.setPosition(this->x * SCALE, this->y * SCALE);
 
+	this->destroyedTime = this->clock.getElapsedTime().asSeconds() - SPAWNING_TIME / 2.0;
 	this->protectedUntil = this->clock.getElapsedTime().asSeconds() + SPAWN_PROTECTING_TIME;
 	this->frozenUntil = -1;
 }

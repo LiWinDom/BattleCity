@@ -56,10 +56,7 @@
     <ResourceCompile Include="BattleCity.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icon.ico" />
-    <Image Include="Icon.png" />
-    <Image Include="icon1.ico" />
-    <Image Include="icon2.ico" />
+    <Image Include="Icon.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

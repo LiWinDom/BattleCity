@@ -49,7 +49,7 @@ public:
 
 	void right(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies);
 
-	void reset();
+	void playerReset();
 
 	Bullet* shoot();
 

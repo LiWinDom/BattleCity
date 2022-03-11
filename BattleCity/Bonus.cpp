@@ -16,19 +16,19 @@ Bonus::Bonus(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* p
 					break;
 				}
 				if (player1 != nullptr) {
-					if (player1->spriteCollide(this->sprite)) {
+					if (player1->spriteCollide(this->sprite, true)) {
 						collide = true;
 						break;
 					}
 				}
 				if (player2 != nullptr) {
-					if (player2->spriteCollide(this->sprite)) {
+					if (player2->spriteCollide(this->sprite, true)) {
 						collide = true;
 						break;
 					}
 				}
 				for (uint8_t i = 0; i < enemies.size(); ++i) {
-					if (enemies[i]->spriteCollide(this->sprite)) {
+					if (enemies[i]->spriteCollide(this->sprite, true)) {
 						collide = true;
 						break;
 					}
