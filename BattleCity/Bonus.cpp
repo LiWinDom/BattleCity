@@ -53,6 +53,9 @@ void Bonus::collideCheck(Tank* player1, Tank* player2, const std::vector<Tank*>&
 			}
 			else if (this->type == BONUS_FREEZE) {
 				enemiesFrozenUntil = globalClock.getElapsedTime().asSeconds() + FREEZE_TIME;
+				for (uint8_t i = 0; i < enemies.size(); ++i) {
+					enemies[i]->freeze();
+				}
 			}
 			else if (this->type == BONUS_SHOWEL) {
 				for (uint8_t i = 0; i < map.size(); ++i) {
@@ -69,7 +72,7 @@ void Bonus::collideCheck(Tank* player1, Tank* player2, const std::vector<Tank*>&
 			else if (this->type == BONUS_GRANADE) {
 				for (uint8_t i = 0; i < enemies.size(); ++i) {
 					Explosion* exp = nullptr;
-					enemies[i]->destroy(exp);
+					enemies[i]->destroy(exp, true);
 					if (exp != nullptr) {
 						explosions.push_back(exp);
 					}
@@ -89,6 +92,9 @@ void Bonus::collideCheck(Tank* player1, Tank* player2, const std::vector<Tank*>&
 			}
 			else if (this->type == BONUS_FREEZE) {
 				enemiesFrozenUntil = globalClock.getElapsedTime().asSeconds() + FREEZE_TIME;
+				for (uint8_t i = 0; i < enemies.size(); ++i) {
+					enemies[i]->freeze();
+				}
 			}
 			else if (this->type == BONUS_SHOWEL) {
 				for (uint8_t i = 0; i < map.size(); ++i) {
@@ -105,7 +111,7 @@ void Bonus::collideCheck(Tank* player1, Tank* player2, const std::vector<Tank*>&
 			else if (this->type == BONUS_GRANADE) {
 				for (uint8_t i = 0; i < enemies.size(); ++i) {
 					Explosion* exp = nullptr;
-					enemies[i]->destroy(exp);
+					enemies[i]->destroy(exp, true);
 					if (exp != nullptr) {
 						explosions.push_back(exp);
 					}
@@ -125,6 +131,8 @@ void Bonus::collideCheck(Tank* player1, Tank* player2, const std::vector<Tank*>&
 			}
 			else if (this->type == BONUS_FREEZE) {
 				playersFrozenUntil = globalClock.getElapsedTime().asSeconds() + FREEZE_TIME;
+				if (player1 != nullptr) player1->freeze();
+				if (player2 != nullptr) player2->freeze();
 			}
 			else if (this->type == BONUS_SHOWEL) {
 				for (uint8_t i = 0; i < map.size(); ++i) {

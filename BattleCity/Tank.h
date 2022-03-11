@@ -11,9 +11,13 @@
 class Tank
 {
 public:
-	Tank(const uint8_t& type, const uint8_t& x, const uint8_t& y, const uint8_t& level = 0, const uint8_t& rotation = TANK_DOWN, const bool& bonus = false);
+	Tank(const uint8_t& type, const uint8_t& x, const uint8_t& y, const uint8_t& level = 0, const uint8_t& rotation = TANK_DOWN, const float& freezeTime = -1, const bool& bonus = false);
 
 	uint64_t getID();
+
+	bool isSpawned();
+
+	bool isDestroyed();
 
 	float getSpeed();
 
@@ -21,15 +25,17 @@ public:
 
 	bool getBonus();
 
-	void addLife();
+	void helmet();
+
+	void freeze();
 
 	void levelUp();
 
-	void helmet();
+	void addLife();
 
-	bool isDestroyed();
+	void spawn(Tank* player1, Tank* player2, const std::vector<Tank*>& enemies);
 
-	bool spriteCollide(const sf::Sprite& sprite);
+	bool spriteCollide(const sf::Sprite& sprite, const bool& countNotSpawned = false);
 
 	bool bulletCollide(const std::vector<Bullet*>& bullets1, const std::vector<Bullet*>& bullets2);
 
@@ -53,28 +59,29 @@ public:
 
 	Bullet* think(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* player2, const std::vector<Tank*>& enemies);
 
-	void destroy();
+	void destroy(const bool full = false);
 
-	void destroy(Explosion*& explosion);
+	void destroy(Explosion*& explosion, const bool full = false);
 private:
 	uint8_t startX, startY, startRotation;
 	uint8_t x, y;
 	uint8_t level, rotation;
 	uint8_t type;
+	bool spawned = false;
 	bool bonus;
 	bool animation = false;
 	bool isMove = true;
 
 	sf::Clock clock;
-	float lastMove = 0, lastShot = 0, destroyedTime = -10, protectedUntil = -1, frozenUntil = -1;
+	float lastMove = 0, lastShot = 0, destroyedTime = 0, protectedUntil = -1, frozenUntil = 0;
 	uint8_t bullets = 0;
 
 	uint8_t color = 0;
 	uint8_t lives = 1;
 	bool destroyed = false;
 
-	sf::Texture textures[4][4][2], protectionTextures[2];
-	sf::Sprite hitbox, sprite, protection;
+	sf::Texture textures[4][4][2], protectionTextures[2], spawnFrames[6];
+	sf::Sprite hitbox, sprite, protection, spawnSprite;
 
 	uint64_t id = std::time(nullptr) * std::rand();
 

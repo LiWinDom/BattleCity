@@ -31,7 +31,7 @@
 #define TANK_MEDIUM 45
 #define TANK_FAST 60
 
-#define RESPAWN_TIME 1
+#define SPAWNING_TIME 1
 #define SPAWN_PROTECTING_TIME 3
 #define STUCK_TIME 3
 

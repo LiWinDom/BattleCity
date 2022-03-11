@@ -130,6 +130,25 @@ void newGame() {
     return;
 }
 
+void spawnTanks() {
+    if (player1 != nullptr) {
+        if (!player1->isSpawned()) {
+            player1->spawn(player1, player2, enemies);
+        }
+    }
+    if (player2 != nullptr) {
+        if (!player2->isSpawned()) {
+            player2->spawn(player1, player2, enemies);
+        }
+    }
+    for (uint8_t i = 0; i < enemies.size(); ++i) {
+        if (!enemies[i]->isSpawned()) {
+            enemies[i]->spawn(player1, player2, enemies);
+        }
+    }
+    return;
+}
+
 void spawnEnemy() {
     static float lastSpawned = globalClock.getElapsedTime().asSeconds();
 
@@ -161,17 +180,17 @@ void spawnEnemy() {
         for (uint8_t i = 0; i < 3; ++i) {
             bool collide = false;
             if (player1 != nullptr) {
-                if (player1->spriteCollide(pos[i])) {
-                    collide = true;
+                if (player1->spriteCollide(pos[i], true)) {
+                    continue;
                 }
             }
             if (player2 != nullptr) {
-                if (player2->spriteCollide(pos[i])) {
-                    collide = true;
+                if (player2->spriteCollide(pos[i], true)) {
+                    continue;
                 }
             }
             for (uint8_t j = 0; j < enemies.size() && !collide; ++j) {
-                if (enemies[j]->spriteCollide(pos[i])) {
+                if (enemies[j]->spriteCollide(pos[i], true)) {
                     collide = true;
                     break;
                 }
@@ -181,7 +200,7 @@ void spawnEnemy() {
             }
         }
         if (poses.size() > 0) {
-            enemies.push_back(new Tank(TANK_ENEMY, poses[std::rand() % poses.size()], 8, tanks[stage % 8][spawned], std::rand() % 3 + 1, bonus));
+            enemies.push_back(new Tank(TANK_ENEMY, poses[std::rand() % poses.size()], 8, tanks[stage % 8][spawned], std::rand() % 3 + 1, enemiesFrozenUntil - globalClock.getElapsedTime().asSeconds(), bonus));
             ++spawned;
             lastSpawned = globalClock.getElapsedTime().asSeconds();
         }
@@ -210,7 +229,7 @@ void eventProcess(sf::RenderWindow& window) {
             holdTime = globalClock.getElapsedTime().asSeconds();
         }
         else if (inFocus && event.type == sf::Event::KeyPressed) {
-            if (player1 != nullptr && !gameOver && globalClock.getElapsedTime().asSeconds() > playersFrozenUntil) {
+            if (player1 != nullptr && !gameOver) {
                 if ((event.key.code == sf::Keyboard::RShift || event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::Space) && !player1->isDestroyed()) {
                     Bullet* bullet = player1->shoot();
                     if (bullet != nullptr) {
@@ -223,7 +242,7 @@ void eventProcess(sf::RenderWindow& window) {
             }
         }
     }
-    if (inFocus && player1 != nullptr && !gameOver && globalClock.getElapsedTime().asSeconds() > playersFrozenUntil) {
+    if (inFocus && player1 != nullptr && !gameOver) {
         if (!player1->isDestroyed()) {
             if (!(sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ||
                 sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ||
@@ -325,12 +344,10 @@ void enemyEvent() {
             enemies.erase(enemies.begin() + i);
             continue;
         }
-        if (globalClock.getElapsedTime().asSeconds() > enemiesFrozenUntil) {
-            Bullet* bullet = enemies[i]->think(map, player1, player2, enemies);
-            if (bullet != nullptr) {
-                enemyBullets.first.push_back(bullet);
-                enemyBullets.second.push_back(enemies[i]);
-            }
+        Bullet* bullet = enemies[i]->think(map, player1, player2, enemies);
+        if (bullet != nullptr) {
+            enemyBullets.first.push_back(bullet);
+            enemyBullets.second.push_back(enemies[i]);
         }
     }
     return;
@@ -491,11 +508,26 @@ void display(sf::RenderWindow& window) {
     // Drawing bonus
     if (bonus != nullptr) bonus->draw(window);
 
-    // Drawing tanks
-    if (player1 != nullptr) player1->draw(window);
-    if (player2 != nullptr) player2->draw(window);
+    // Drawing spawn animations
+    if (player1 != nullptr) {
+        if (!player1->isSpawned()) player1->draw(window);
+    }
+    if (player2 != nullptr) {
+        if (!player2->isSpawned()) player2->draw(window);
+    }
     for (uint8_t i = 0; i < enemies.size(); ++i) {
-        enemies[i]->draw(window);
+        if (!enemies[i]->isSpawned()) enemies[i]->draw(window);
+    }
+
+    // Drawing tanks
+    if (player1 != nullptr) {
+        if (player1->isSpawned()) player1->draw(window);
+    }
+    if (player2 != nullptr) {
+        if (player2->isSpawned()) player2->draw(window);
+    }
+    for (uint8_t i = 0; i < enemies.size(); ++i) {
+        if (enemies[i]->isSpawned()) enemies[i]->draw(window);
     }
 
     // Drawing bullets
@@ -603,7 +635,7 @@ int main() {
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
-        sf::RenderWindow window(sf::VideoMode(240 * SCALE, 208 * SCALE), "Battle City [beta 1.61]", sf::Style::Close);
+        sf::RenderWindow window(sf::VideoMode(240 * SCALE, 208 * SCALE), "Battle City [beta 1.7]", sf::Style::Close);
         window.setVerticalSyncEnabled(true);
         window.setActive(true);
         window.setKeyRepeatEnabled(false);
@@ -629,6 +661,7 @@ int main() {
                 spawnEnemy();
             }
 
+            spawnTanks();
             eventProcess(window);
             //networkEvent();
             enemyEvent();
@@ -637,7 +670,7 @@ int main() {
 
             display(window);
 
-            window.setTitle("Battle City [beta 1.61] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
+            window.setTitle("Battle City [beta 1.7] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
         }
     }
     catch (std::string err) {

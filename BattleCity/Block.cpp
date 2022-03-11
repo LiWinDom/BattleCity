@@ -166,8 +166,8 @@ bool Block::bulletCollide(const sf::Sprite& sprite, const uint8_t& rotation, con
 			}
 		}
 	}
-	else if (this->type == BLOCK_PROTECTION) {
-		if (this->unprotectedUntil > this->clock.getElapsedTime().asSeconds()) return false;
+	else if (this->type == BLOCK_PROTECTION && this->unprotectedUntil > this->clock.getElapsedTime().asSeconds()) {
+		return false;
 	}
 	else if (sprite.getGlobalBounds().intersects(this->sprite.getGlobalBounds())) {
 		if (this->type == BLOCK_WALL && power) {
