@@ -591,6 +591,9 @@ int main() {
         std::srand(std::time(nullptr));
 
         // Preloading textures/sprites
+        sf::Image icon;
+        if (!icon.loadFromFile("resources/Icon.png")) throw 1;
+
         for (uint8_t i = 0; i < 10; ++i) {
             if (!numbers[i].loadFromFile("resources/graphics/Numbers.png", sf::IntRect(i << 3, 0, 8, 8))) throw 1;
         }
@@ -635,7 +638,8 @@ int main() {
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
-        sf::RenderWindow window(sf::VideoMode(240 * SCALE, 208 * SCALE), "Battle City [beta 1.7]", sf::Style::Close);
+        sf::RenderWindow window(sf::VideoMode(240 * SCALE, 208 * SCALE), "Battle City [beta 1.71]", sf::Style::Close);
+        window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
         window.setVerticalSyncEnabled(true);
         window.setActive(true);
         window.setKeyRepeatEnabled(false);
@@ -670,7 +674,7 @@ int main() {
 
             display(window);
 
-            window.setTitle("Battle City [beta 1.7] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
+            window.setTitle("Battle City [beta 1.71] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
         }
     }
     catch (std::string err) {

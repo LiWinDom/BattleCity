@@ -49,7 +49,17 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Explosion.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Tank.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BattleCity.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
+    <Image Include="Icon.png" />
+    <Image Include="icon1.ico" />
+    <Image Include="icon2.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
