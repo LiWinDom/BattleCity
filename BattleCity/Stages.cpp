@@ -334,30 +334,30 @@ const std::string stages[36][26] = {
 	},
 	// STAGE 12
 	{
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"                          ",
-		"           pppp           ",
+		"              bbbbbb      ",
+		"              bbbbbb      ",
+		"  bbbbbb          bb      ",
+		"  bbbbbbbb  bb    bb      ",
+		"        bb  bb        bbbb",
+		"        bb            bbbb",
+		"  WWWWWWWWWW          bbww",
+		"  WWWWWWWWWW          bb  ",
+		"          WW      www bb  ",
+		"    wwwwwwWW      www bb  ",
+		"bb  bbbbbbWWWWWW  WWbbbb  ",
+		"bb  bbbbbbWWWWWW  WWbbbb  ",
+		"        wwWW      WWww    ",
+		"        wwWW      WW      ",
+		"WWWWWW  WWWWbbbb  WW      ",
+		"WWWWWW  WWWWbbbb  WW      ",
+		"          bbwwww  WWWWWW  ",
+		"          bb      WWWWWW  ",
+		"bbbbbb                    ",
+		"bbbbbb                    ",
+		"    bb  wwww      bbbb   b",
+		"    bb            bbbb   b",
+		"bb                bb    bb",
+		"bb         pppp   bb    bb",
 		"           pe p           ",
 		"           p  p           "
 	},
@@ -520,7 +520,7 @@ const uint8_t tanks[36][20] = {
 	{0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3}, // STAGE 9
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 3, 3}, // STAGE 10
 	{1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 1}, // STAGE 11
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 3, 3}, // STAGE 12
+	{2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3}, // STAGE 12
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 3, 3}, // STAGE 13
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 3, 3}, // STAGE 14
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 3, 3}, // STAGE 15

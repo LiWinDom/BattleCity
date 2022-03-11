@@ -8,7 +8,7 @@ Bonus::Bonus(const std::vector<std::vector<Block*>>& map, Tank* player1, Tank* p
 	this->sprite.setTexture(this->texture);
 	while (true) {
 		bool collide = false;
-		this->sprite.setPosition(std::rand() % 24 * SCALE << 3, std::rand() % 24 * SCALE << 3);
+		this->sprite.setPosition(std::rand() % 25 * SCALE << 3, std::rand() % 25 * SCALE << 3);
 		for (uint8_t i = 0; i < map.size() && !collide; ++i) {
 			for (uint8_t j = 0; j < map[i].size() && !collide; ++j) {
 				if (map[i][j]->tankCollide(this->sprite)) {
