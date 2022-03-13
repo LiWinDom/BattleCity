@@ -155,7 +155,10 @@ void spawnEnemy() {
     if ((lastSpawned + ((47.5 - stage - (1 - 1) * 5) / 15) < globalClock.getElapsedTime().asSeconds() || spawned == 0)) {
         if (spawned >= 20) {
             if (enemies.size() <= 0) {
-                loadStage(++stage % 16);
+                if (spawned >= 21) {
+                    loadStage(++stage % 16);
+                }
+                ++spawned;
             }
             lastSpawned = globalClock.getElapsedTime().asSeconds();
             return;
@@ -638,7 +641,7 @@ int main() {
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
-        sf::RenderWindow window(sf::VideoMode(240 * SCALE, 208 * SCALE), "Battle City [beta 1.72]", sf::Style::Close);
+        sf::RenderWindow window(sf::VideoMode(240 * SCALE, 208 * SCALE), "Battle City [beta 1.73]", sf::Style::Close);
         window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
         window.setVerticalSyncEnabled(true);
         window.setActive(true);
@@ -674,7 +677,7 @@ int main() {
 
             display(window);
 
-            window.setTitle("Battle City [beta 1.72] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
+            window.setTitle("Battle City [beta 1.73] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
         }
     }
     catch (std::string err) {
