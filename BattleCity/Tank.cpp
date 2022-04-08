@@ -475,7 +475,7 @@ void Tank::destroy(const bool full) {
 			this->lives = 0;
 		}
 		else {
-			--this->lives;
+			if (this->lives > 0) --this->lives;
 		}
 		this->destroyed = this->lives < 1;
 

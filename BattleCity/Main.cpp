@@ -645,7 +645,7 @@ int main() {
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
-        sf::RenderWindow window(sf::VideoMode(240 * SCALE, 208 * SCALE), "Battle City [beta 1.74]", sf::Style::Close);
+        sf::RenderWindow window(sf::VideoMode(240 * SCALE, 208 * SCALE), "Battle City [beta 1.75]", sf::Style::Close);
         window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
         window.setVerticalSyncEnabled(true);
         window.setActive(true);
@@ -681,7 +681,7 @@ int main() {
 
             display(window);
 
-            window.setTitle("Battle City [beta 1.74] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
+            window.setTitle("Battle City [beta 1.75] - " + std::to_string((uint16_t)(1 / fpsClock.getElapsedTime().asSeconds())) + " fps");
         }
     }
     catch (std::string err) {
