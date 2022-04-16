@@ -1,7 +1,6 @@
 #pragma once
 
 // Global
-#define DEBUG false
 #define SCALE std::min(sf::VideoMode::getDesktopMode().width >> 8, sf::VideoMode::getDesktopMode().height >> 8)
 #define NETWORK_PORT 61000
 

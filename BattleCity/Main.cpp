@@ -641,7 +641,7 @@ int main() {
             connection.send(data, 5, connectedIP, NETWORK_PORT);
         }*/
 
-#if !DEBUG
+#if RELEASE
         ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
