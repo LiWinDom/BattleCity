@@ -6,7 +6,11 @@ project(BattleCity LANGUAGES CXX)
 # Executables
 set(CLIENT_EXECUTABLES ./src/client.cpp)
 set(SERVER_EXECUTABLES ./src/server.cpp)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin/${CMAKE_BUILD_TYPE})
+if (WIN32)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin/${CMAKE_BUILD_ARCHITECTURE})
+else ()
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin/${CMAKE_BUILD_TYPE})
+endif()
 
 # Linking
 set(CLIENT_SFML_LIBRARIES
@@ -54,20 +58,17 @@ FetchContent_MakeAvailable(SFML)
 include_directories(${SFML_INCLUDE_DIR})
 
 # Adding executables
-if (CMAKE_BUILD_TYPE STREQUAL "Release" AND WIN32)
-  add_executable(${CLIENT_PROJECT_NAME} WIN32 ${CLIENT_EXECUTABLES})
-  add_executable(${SERVER_PROJECT_NAME} WIN32 ${SERVER_EXECUTABLES})
-else ()
-  add_executable(${CLIENT_PROJECT_NAME} ${CLIENT_EXECUTABLES})
-  add_executable(${SERVER_PROJECT_NAME} ${SERVER_EXECUTABLES})
-endif ()
+add_executable(${CLIENT_PROJECT_NAME} ${CLIENT_EXECUTABLES})
+add_executable(${SERVER_PROJECT_NAME} ${SERVER_EXECUTABLES})
 
 # It's recommended to build frameworks on MacOS
 if(APPLE)
   set(SFML_BUILD_FRAMEWORKS TRUE)
 elseif(WIN32)
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:CONSOLE")
   set(LINK_FLAGS -static)
   set(SFML_STATIC_LIBRARIES TRUE)
+  set(SFML_USE_STATIC_STD_LIBS TRUE)
 endif()
 
 # Configuring executable
@@ -75,9 +76,6 @@ if (WIN32)
   set(ARCHITECTURE -${CMAKE_BUILD_ARCHITECTURE})
 endif()
 
-if (${CMAKE_BUILD_TYPE} STREQUAL "Release")
-  target_compile_options(${SERVER_PROJECT_NAME} PRIVATE -O2)
-endif()
 target_compile_features(${CLIENT_PROJECT_NAME} PRIVATE cxx_std_17)
 target_link_libraries(${CLIENT_PROJECT_NAME} PRIVATE ${CLIENT_SFML_LIBRARIES} ${LINK_FLAGS})
 set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES
@@ -85,9 +83,6 @@ set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES
     CLEAN_DIRECT_OUTPUT 1
 )
 
-if (${CMAKE_BUILD_TYPE} STREQUAL "Release")
-  target_compile_options(${SERVER_PROJECT_NAME} PRIVATE -O2)
-endif()
 target_compile_features(${SERVER_PROJECT_NAME} PRIVATE cxx_std_17)
 target_link_libraries(${SERVER_PROJECT_NAME} PRIVATE ${SERVER_SFML_LIBRARIES} ${LINK_FLAGS})
 set_target_properties(${SERVER_PROJECT_NAME} PROPERTIES

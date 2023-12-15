@@ -22,18 +22,18 @@ win32:
 	cmake --build ./${CMAKE_BUILD_WINDOWS}-Win32 --config Release
 
 win64:
-	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_ARCHITECTURE=x64 -S ./ -B ./${CMAKE_WINDOWS_RELEASE}-x64 -A x64
-	cmake --build ./${CMAKE_WINDOWS_RELEASE}-x64 --config Release
+	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_ARCHITECTURE=x64 -S ./ -B ./${CMAKE_BUILD_WINDOWS}-x64 -A x64
+	cmake --build ./${CMAKE_BUILD_WINDOWS}-x64 --config Release
 
 win: win32 win64
 
 linux:
 	cmake -DCMAKE_BUILD_TYPE=${RELEASE} -S ./ -B ./${CMAKE_BUILD_LINUX}
-	+$(MAKE) -c ./${CMAKE_BUILD_LINUX}
+	cmake --build ./${CMAKE_BUILD_LINUX}
 
 darwin:
 	cmake -DCMAKE_BUILD_TYPE=${RELEASE} -S ./ -B ./${CMAKE_BUILD_DARWIN}
-	+$(MAKE) -c ./${CMAKE_BUILD_DARWIN}
+	cmake --build ./${CMAKE_BUILD_DARWIN}
 
 clean:
 	rm -rf ./$(BIN)
