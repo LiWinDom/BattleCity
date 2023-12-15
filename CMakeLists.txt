@@ -3,6 +3,13 @@ set(CLIENT_PROJECT_NAME BattleCity-client)
 set(SERVER_PROJECT_NAME BattleCity-server)
 project(BattleCity LANGUAGES CXX)
 
+# Output directory
+if (WIN32)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin/${CMAKE_BUILD_ARCHITECTURE})
+else ()
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin/${CMAKE_BUILD_TYPE})
+endif ()
+
 # Executables
 add_executable(${CLIENT_PROJECT_NAME} ./src/client.cpp)
 add_executable(${SERVER_PROJECT_NAME} ./src/server.cpp)
@@ -10,8 +17,10 @@ add_executable(${SERVER_PROJECT_NAME} ./src/server.cpp)
 # Adding defines
 if (${CMAKE_BUILD_TYPE} STREQUAL "Release")
   add_compile_definitions(RELEASE)
+  set(RELEASE TRUE)
 elseif (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
   add_compile_definitions(DEBUG)
+  set(DEBUG TRUE)
 endif ()
 
 if (WIN32)
@@ -20,13 +29,6 @@ elseif (LINUX)
   add_compile_definitions(LINUX)
 elseif (APPLE)
   add_compile_definitions(APPLE)
-endif ()
-
-# Output directory
-if (WIN32)
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin/${CMAKE_BUILD_ARCHITECTURE})
-else ()
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin/${CMAKE_BUILD_TYPE})
 endif ()
 
 # Checking ethernet connection to be able to compile offline
@@ -51,6 +53,9 @@ else ()
   set(FETCHCONTENT_FULLY_DISCONNECTED OFF)
 endif ()
 
+# For some reason we need to place it before fetching SFML to enable static linking
+set(BUILD_SHARED_LIBS OFF)
+
 # Fetching SFML
 include(FetchContent)
 FetchContent_Declare(
@@ -62,11 +67,14 @@ FetchContent_MakeAvailable(SFML)
 include_directories(${SFML_INCLUDE_DIR})
 
 # Linking options
-set(BUILD_SHARED_LIBS OFF)
 if (APPLE)
   set(SFML_BUILD_FRAMEWORKS TRUE)
 elseif (WIN32)
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:CONSOLE")
+  if (RELEASE)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ENTRY:mainCRTStartup") # Hiding console
+  else ()
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:CONSOLE")
+  endif ()
   set(LINK_FLAGS -static)
   set(SFML_STATIC_LIBRARIES TRUE)
   set(SFML_USE_STATIC_STD_LIBS TRUE)
