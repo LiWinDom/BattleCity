@@ -3,6 +3,12 @@ set(CLIENT_PROJECT_NAME BattleCity-client)
 set(SERVER_PROJECT_NAME BattleCity-server)
 project(BattleCity LANGUAGES CXX)
 
+set(CLIENT_VERSION "beta 2.0a")
+set(SERVER_VERSION "beta 2.0a")
+
+add_compile_definitions(CLIENT_VERSION="${CLIENT_VERSION}")
+add_compile_definitions(SERVER_VERSION="${SERVER_VERSION}")
+
 # Output directory
 if (WIN32)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin/${CMAKE_BUILD_ARCHITECTURE})
@@ -11,8 +17,18 @@ else ()
 endif ()
 
 # Executables
-add_executable(${CLIENT_PROJECT_NAME} ./src/client.cpp)
-add_executable(${SERVER_PROJECT_NAME} ./src/server.cpp)
+set (CLIENT_EXECUTABLES ./src/client.cpp ./src/Log.cpp src/Log.h ./src/Window.h ./src/Window.cpp)
+set (SERVER_EXECUTABLES ./src/server.cpp ./src/Log.cpp src/Log.h)
+if (WIN32)
+  add_executable(${CLIENT_PROJECT_NAME} WIN32 ${CLIENT_EXECUTABLES})
+  add_executable(${SERVER_PROJECT_NAME} WIN32 ${SERVER_EXECUTABLES})
+elseif (APPLE)
+  add_executable(${CLIENT_PROJECT_NAME} MACOSX_BUNDLE ${CLIENT_EXECUTABLES})
+  add_executable(${SERVER_PROJECT_NAME} ${SERVER_EXECUTABLES})
+else ()
+  add_executable(${CLIENT_PROJECT_NAME} ${CLIENT_EXECUTABLES})
+  add_executable(${SERVER_PROJECT_NAME} ${SERVER_EXECUTABLES})
+endif ()
 
 # Adding defines
 if (${CMAKE_BUILD_TYPE} STREQUAL "Release")
@@ -69,6 +85,15 @@ include_directories(${SFML_INCLUDE_DIR})
 # Linking options
 if (APPLE)
   set(SFML_BUILD_FRAMEWORKS TRUE)
+  if (RELEASE)
+    set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES
+        MACOSX_BUNDLE TRUE
+        MACOSX_BUNDLE_GUI_IDENTIFIER LiWinDom.BattleCity.Client
+        MACOSX_BUNDLE_BUNDLE_NAME ${CLIENT_PROJECT_NAME}
+        MACOSX_BUNDLE_BUNDLE_VERSION ${CLIENT_VERSION}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${CLIENT_VERSION}
+    )
+  endif ()
 elseif (WIN32)
   if (RELEASE)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ENTRY:mainCRTStartup") # Hiding console
@@ -114,7 +139,6 @@ set_target_properties(${SERVER_PROJECT_NAME} PROPERTIES
 
 # Copying OpenAL on Windows
 if (WIN32)
-  set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE TRUE)
   add_custom_command(
       TARGET ${CLIENT_PROJECT_NAME}
       COMMENT "Copy OpenAL DLL"
@@ -122,5 +146,5 @@ if (WIN32)
       VERBATIM)
 endif()
 
-install(TARGETS ${CLIENT_PROJECT_NAME})
+install(TARGETS ${CLIENT_PROJECT_NAME} BUNDLE DESTINATION ./)
 install(TARGETS ${SERVER_PROJECT_NAME})
