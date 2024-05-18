@@ -19,17 +19,25 @@ endif ()
 # Executables
 set (CLIENT_EXECUTABLES ./src/client.cpp ./src/Log.cpp src/Log.h ./src/Window.h ./src/Window.cpp)
 set (SERVER_EXECUTABLES ./src/server.cpp ./src/Log.cpp src/Log.h)
-# Adding icon
+
+# Adding icon and other resources
+file(GLOB_RECURSE RESOURCES "./resources/*")
+foreach (FILE ${RESOURCES})
+  file(RELATIVE_PATH NEW_FILE "${CMAKE_SOURCE_DIR}/resources" ${FILE})
+  get_filename_component(NEW_FILE_PATH ${NEW_FILE} DIRECTORY)
+  set_source_files_properties(${FILE} PROPERTIES MACOSX_PACKAGE_LOCATION "MacOS/resources/${NEW_FILE_PATH}")
+  # Better to add to Resources folder, but it will break cross compilation
+endforeach()
 include(AddIconToBinary.cmake)
-AddIconToBinary(CLIENT_EXECUTABLES ICONS ./resources/Icon.ico ./resources/Icon.icns)
+AddIconToBinary(RESOURCES ICONS ./resources/Icon.ico ./resources/Icon.icns)
 if (WIN32)
-  add_executable(${CLIENT_PROJECT_NAME} WIN32 ${CLIENT_EXECUTABLES})
+  add_executable(${CLIENT_PROJECT_NAME} WIN32 ${CLIENT_EXECUTABLES} ${RESOURCES})
   add_executable(${SERVER_PROJECT_NAME} WIN32 ${SERVER_EXECUTABLES})
 elseif (APPLE)
-  add_executable(${CLIENT_PROJECT_NAME} MACOSX_BUNDLE ${CLIENT_EXECUTABLES})
+  add_executable(${CLIENT_PROJECT_NAME} MACOSX_BUNDLE ${CLIENT_EXECUTABLES} ${RESOURCES})
   add_executable(${SERVER_PROJECT_NAME} ${SERVER_EXECUTABLES})
 else ()
-  add_executable(${CLIENT_PROJECT_NAME} ${CLIENT_EXECUTABLES})
+  add_executable(${CLIENT_PROJECT_NAME} ${CLIENT_EXECUTABLES} ${RESOURCES})
   add_executable(${SERVER_PROJECT_NAME} ${SERVER_EXECUTABLES})
 endif ()
 
@@ -73,7 +81,12 @@ else ()
 endif ()
 
 # For some reason we need to place it before fetching SFML to enable static linking
-set(BUILD_SHARED_LIBS OFF)
+if (WIN32)
+  set(BUILD_SHARED_LIBS OFF)
+else ()
+  set(BUILD_SHARED_LIBS ON)
+endif ()
+set(SFML_INSTALL_PKGCONFIG_FILES ON)
 
 # Fetching SFML
 include(FetchContent)
@@ -87,8 +100,9 @@ include_directories(${SFML_INCLUDE_DIR})
 
 # Linking options
 if (APPLE)
-  set(SFML_BUILD_FRAMEWORKS TRUE)
-  # set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ./resources/Info.plist)
+  if (RELEASE)
+    set(SFML_BUILD_FRAMEWORKS TRUE)
+  endif ()
   set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER LiWinDom.BattleCity.Client
     MACOSX_BUNDLE_BUNDLE_NAME ${CLIENT_PROJECT_NAME}
@@ -119,6 +133,10 @@ set(SERVER_SFML_LIBRARIES
     # sfml-network
 )
 
+# Dont need yet
+set(SFML_BUILD_AUDIO FALSE)
+set(SFML_BUILD_NETWORK FALSE)
+
 # Configuring executable
 if (WIN32)
   set(ARCHITECTURE -${CMAKE_BUILD_ARCHITECTURE})
@@ -138,6 +156,10 @@ set_target_properties(${SERVER_PROJECT_NAME} PROPERTIES
     CLEAN_DIRECT_OUTPUT 1
 )
 
+# Copying resources folder
+if (NOT APPLE)
+  file(COPY ./resources/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/)
+endif()
 # Copying OpenAL on Windows
 if (WIN32)
   add_custom_command(
