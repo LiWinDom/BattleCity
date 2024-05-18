@@ -19,6 +19,9 @@ endif ()
 # Executables
 set (CLIENT_EXECUTABLES ./src/client.cpp ./src/Log.cpp src/Log.h ./src/Window.h ./src/Window.cpp)
 set (SERVER_EXECUTABLES ./src/server.cpp ./src/Log.cpp src/Log.h)
+# Adding icon
+include(AddIconToBinary.cmake)
+AddIconToBinary(CLIENT_EXECUTABLES ICONS ./resources/Icon.ico ./resources/Icon.icns)
 if (WIN32)
   add_executable(${CLIENT_PROJECT_NAME} WIN32 ${CLIENT_EXECUTABLES})
   add_executable(${SERVER_PROJECT_NAME} WIN32 ${SERVER_EXECUTABLES})
@@ -85,15 +88,13 @@ include_directories(${SFML_INCLUDE_DIR})
 # Linking options
 if (APPLE)
   set(SFML_BUILD_FRAMEWORKS TRUE)
-  if (RELEASE)
-    set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES
-        MACOSX_BUNDLE TRUE
-        MACOSX_BUNDLE_GUI_IDENTIFIER LiWinDom.BattleCity.Client
-        MACOSX_BUNDLE_BUNDLE_NAME ${CLIENT_PROJECT_NAME}
-        MACOSX_BUNDLE_BUNDLE_VERSION ${CLIENT_VERSION}
-        MACOSX_BUNDLE_SHORT_VERSION_STRING ${CLIENT_VERSION}
-    )
-  endif ()
+  # set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ./resources/Info.plist)
+  set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES
+    MACOSX_BUNDLE_GUI_IDENTIFIER LiWinDom.BattleCity.Client
+    MACOSX_BUNDLE_BUNDLE_NAME ${CLIENT_PROJECT_NAME}
+    MACOSX_BUNDLE_BUNDLE_VERSION ${CLIENT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${CLIENT_VERSION}
+  )
 elseif (WIN32)
   if (RELEASE)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ENTRY:mainCRTStartup") # Hiding console
@@ -146,5 +147,9 @@ if (WIN32)
       VERBATIM)
 endif()
 
-install(TARGETS ${CLIENT_PROJECT_NAME} BUNDLE DESTINATION ./)
+if (APPLE)
+  install(TARGETS ${CLIENT_PROJECT_NAME} DESTINATION ./)
+else ()
+  install(TARGETS ${CLIENT_PROJECT_NAME})
+endif ()
 install(TARGETS ${SERVER_PROJECT_NAME})
