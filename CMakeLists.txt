@@ -17,8 +17,8 @@ else ()
 endif ()
 
 # Executables
-set (CLIENT_EXECUTABLES ./src/client.cpp ./src/Log.cpp src/Log.h ./src/Window.h ./src/Window.cpp)
-set (SERVER_EXECUTABLES ./src/server.cpp ./src/Log.cpp src/Log.h)
+set (CLIENT_EXECUTABLES ./src/Client.cpp ./src/Log.cpp src/Log.h ./src/Window.h ./src/Window.cpp)
+set (SERVER_EXECUTABLES ./src/Server.cpp ./src/Log.cpp src/Log.h)
 
 # Adding icon and other resources
 file(GLOB_RECURSE RESOURCES "./resources/*")
@@ -169,9 +169,5 @@ if (WIN32)
       VERBATIM)
 endif()
 
-if (APPLE)
-  install(TARGETS ${CLIENT_PROJECT_NAME} DESTINATION ./)
-else ()
-  install(TARGETS ${CLIENT_PROJECT_NAME})
-endif ()
-install(TARGETS ${SERVER_PROJECT_NAME})
+install(TARGETS ${CLIENT_PROJECT_NAME} DESTINATION ./)
+install(TARGETS ${SERVER_PROJECT_NAME} DESTINATION ./)
