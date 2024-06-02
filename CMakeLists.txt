@@ -80,14 +80,6 @@ else ()
   set(FETCHCONTENT_FULLY_DISCONNECTED OFF)
 endif ()
 
-# For some reason we need to place it before fetching SFML to enable static linking
-if (WIN32)
-  set(BUILD_SHARED_LIBS OFF)
-else ()
-  set(BUILD_SHARED_LIBS ON)
-endif ()
-set(SFML_INSTALL_PKGCONFIG_FILES ON)
-
 # Fetching SFML
 include(FetchContent)
 FetchContent_Declare(
@@ -95,13 +87,13 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/SFML/SFML.git
     GIT_TAG 2.6.x
 )
-FetchContent_MakeAvailable(SFML)
-include_directories(${SFML_INCLUDE_DIR})
 
 # Linking options
+set(BUILD_SHARED_LIBS OFF)
 if (APPLE)
   if (RELEASE)
-    set(SFML_BUILD_FRAMEWORKS TRUE)
+    set(BUILD_SHARED_LIBS ON)
+    set(SFML_BUILD_FRAMEWORKS ON)
   endif ()
   set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER LiWinDom.BattleCity.Client
@@ -136,6 +128,10 @@ set(SERVER_SFML_LIBRARIES
 # Dont need yet
 set(SFML_BUILD_AUDIO FALSE)
 set(SFML_BUILD_NETWORK FALSE)
+
+# Compiling SFML
+FetchContent_MakeAvailable(SFML)
+include_directories(${SFML_INCLUDE_DIR})
 
 # Configuring executable
 if (WIN32)
