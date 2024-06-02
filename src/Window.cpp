@@ -1,17 +1,18 @@
 #include "Window.h"
 
 #include <cmath>
+#include <memory>
 
 #include "Log.h"
 
 Window::Window() {
   auto screen = sf::VideoMode::getDesktopMode();
   _scale = std::min(screen.width / _width, screen.height / _height);
-  _window = std::unique_ptr<sf::RenderWindow>(new sf::RenderWindow(
+  _window = std::make_unique<sf::RenderWindow>(
       sf::VideoMode(_width * _scale, _height * _scale),
       std::string("BattleCity client [") + CLIENT_VERSION + "]",
       sf::Style::Default
-  ));
+  );
   _window->setVerticalSyncEnabled(true);
 
   _transform.scale(_scale, _scale);
