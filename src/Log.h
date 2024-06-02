@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 
-enum class LogOptions : uint8_t {
+enum class LogOptions {
   None = 0,
   Console = 1,
   File = 1 << 1,
@@ -20,6 +20,8 @@ inline LogOptions operator&(const LogOptions& left, const LogOptions& right) {
   using T = std::underlying_type_t<LogOptions>;
   return static_cast<LogOptions>(static_cast<T>(left) & static_cast<T>(right));
 }
+
+static std::ofstream clean("./latest.log"); // Creating file, to start it over
 
 namespace Log {
   static void message(const std::string& message, LogOptions options = LogOptions::Console | LogOptions::File) noexcept {
@@ -43,6 +45,7 @@ namespace Log {
 
   static void error(const std::string& message, const LogOptions options = LogOptions::Console | LogOptions::File) {
     Log::message("[ERROR] " + message, options);
+    throw std::runtime_error(message);
   }
 }
 
