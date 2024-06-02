@@ -17,8 +17,16 @@ else ()
 endif ()
 
 # Executables
-set (CLIENT_EXECUTABLES ./src/Client.cpp ./src/Log.cpp src/Log.h ./src/Window.h ./src/Window.cpp)
-set (SERVER_EXECUTABLES ./src/Server.cpp ./src/Log.cpp src/Log.h)
+set (
+    CLIENT_EXECUTABLES ./src/Client.cpp
+    src/Log.h ./src/Log.cpp
+    ./src/IObject.h ./src/IObject.cpp
+    ./src/Window.h ./src/Window.cpp
+)
+set (
+    SERVER_EXECUTABLES ./src/Server.cpp
+    src/Log.h ./src/Log.cpp
+)
 
 # Adding icon and other resources
 file(GLOB_RECURSE RESOURCES "./resources/*")
@@ -73,15 +81,17 @@ else ()
   )
 endif ()
 
+# FetchContent config
 if (NO_CONNECTION GREATER 0)
   set(FETCHCONTENT_FULLY_DISCONNECTED ON)
   message(WARNING "Fetch offline mode: requires already populated _deps")
 else ()
   set(FETCHCONTENT_FULLY_DISCONNECTED OFF)
 endif ()
+set(FETCHCONTENT_QUIET OFF)
+include(FetchContent)
 
 # Fetching SFML
-include(FetchContent)
 FetchContent_Declare(
     SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
