@@ -4,7 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 
-enum class ObjectType : uint8_t {
+enum class ObjectType {
   None = 0,
   Block = 1,
   Tank = 2,
@@ -12,7 +12,7 @@ enum class ObjectType : uint8_t {
 
 class IObject {
  public:
-  IObject(const sf::Vector2f& position, const sf::Vector2u& size, const ObjectType type);
+  IObject(const sf::Vector2f& position, const sf::Vector2u& size, ObjectType type);
 
 
   //sf::Vector2i getPosition() const { return _position; }
