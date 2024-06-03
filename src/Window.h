@@ -17,10 +17,7 @@ class Window final {
   void clear() const;
   void display() const;
 
-  void draw(const IObject& object) const;
-  void draw(const IObject& object, const IObject& other...) const;
-  void draw(const std::vector<IObject>& objects) const;
-  void draw(const std::vector<IObject>& objects, const std::vector<IObject>& other...) const;
+  void draw(const IObject& object);
 
  private:
   std::unique_ptr<sf::RenderWindow> _window;

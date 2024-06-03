@@ -38,11 +38,12 @@ sf::Event Window::pollEvent() {
       uint8_t newScale = std::max(std::round(((double)size.x / _width + (double)size.y / _height) / 2), 1.0);
       auto newSize = sf::Vector2u(_width * newScale, _height * newScale);
       if (newSize == size) break;
+      auto oldScale = _scale;
       _scale = newScale;
       _window->setSize(newSize);
       _window->setView(sf::View(sf::FloatRect(0, 0, _window->getSize().x, _window->getSize().y)));
 
-      _transform.scale(_scale, _scale);
+      _transform.scale((double)_scale / oldScale, (double)_scale / oldScale);
       Log::info("Window resized to " + std::to_string(_window->getSize().x) + "x" + std::to_string(_window->getSize().y) +
                 " (scale=" + std::to_string(_scale) + ")");
   }
@@ -57,22 +58,6 @@ void Window::display() const {
   _window->display();
 }
 
-void Window::draw(const IObject& object) const {
+void Window::draw(const IObject& object) {
   _window->draw(object.getSprite(), _transform);
-}
-
-void Window::draw(const IObject &object, const IObject &other, ...) const {
-  draw(object);
-  draw(other);
-}
-
-void Window::draw(const std::vector<IObject> &objects) const {
-  for (auto object : objects) {
-    draw(object);
-  }
-}
-
-void Window::draw(const std::vector<IObject> &objects, const std::vector<IObject> &other, ...) const {
-  draw(objects);
-  draw(other);
 }
