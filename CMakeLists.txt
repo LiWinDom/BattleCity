@@ -11,7 +11,7 @@ add_compile_definitions(SERVER_VERSION="${SERVER_VERSION}")
 
 # Output directory
 if (WIN32)
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin/${CMAKE_BUILD_ARCHITECTURE})
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin/)
 else ()
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin/${CMAKE_BUILD_TYPE})
 endif ()
@@ -163,7 +163,9 @@ set_target_properties(${SERVER_PROJECT_NAME} PROPERTIES
 )
 
 # Copying resources folder
-if (NOT APPLE)
+if (WIN32)
+  file(COPY ./resources/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/resources/)
+elseif (LINUX)
   file(COPY ./resources/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/)
 endif()
 # Copying OpenAL on Windows
