@@ -1,5 +1,8 @@
 #include <iostream>
 
+#include "Path.h"
+
 int main() {
-  std::cout << "Hello, world!";
+  std::cout << Path::getExecutableDir() << std::endl;
+  std::cout << Path::getExecutablePath() << std::endl;
 }

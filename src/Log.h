@@ -5,6 +5,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "Path.h"
+
 enum class LogOptions {
   None = 0,
   Console = 1,
@@ -21,7 +23,7 @@ inline LogOptions operator&(const LogOptions& left, const LogOptions& right) {
   return static_cast<LogOptions>(static_cast<T>(left) & static_cast<T>(right));
 }
 
-static std::ofstream clean("./latest.log"); // Creating file, to start it over
+static std::ofstream clean(Path::getAbsolutePath("latest.log")); // Creating file, to start it over
 
 namespace Log {
   static void message(const std::string& message, LogOptions options = LogOptions::Console | LogOptions::File) noexcept {
@@ -29,7 +31,7 @@ namespace Log {
       std::cout << message << std::endl;
     }
     if ((options & LogOptions::File) != LogOptions::None) {
-      std::ofstream file("./latest.log", std::ios::app);
+      std::ofstream file(Path::getAbsolutePath("latest.log"), std::ios::app);
       file << message << std::endl;
       file.close();
     }

@@ -3,8 +3,8 @@ set(CLIENT_PROJECT_NAME BattleCity-client)
 set(SERVER_PROJECT_NAME BattleCity-server)
 project(BattleCity LANGUAGES CXX)
 
-set(CLIENT_VERSION "beta 2.0a")
-set(SERVER_VERSION "beta 2.0a")
+set(CLIENT_VERSION "2024.603.1")
+set(SERVER_VERSION "2024.603.1")
 
 add_compile_definitions(CLIENT_VERSION="${CLIENT_VERSION}")
 add_compile_definitions(SERVER_VERSION="${SERVER_VERSION}")
@@ -19,13 +19,15 @@ endif ()
 # Executables
 set (
     CLIENT_EXECUTABLES ./src/Client.cpp
-    src/Log.h ./src/Log.cpp
+    ./src/Path.h ./src/Path.cpp
+    ./src/Log.h ./src/Log.cpp
     ./src/IObject.h ./src/IObject.cpp
     ./src/Window.h ./src/Window.cpp
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp
-    src/Log.h ./src/Log.cpp
+    ./src/Path.h ./src/Path.cpp
+    ./src/Log.h ./src/Log.cpp
 )
 
 # Adding icon and other resources
@@ -101,10 +103,7 @@ FetchContent_Declare(
 # Linking options
 set(BUILD_SHARED_LIBS OFF)
 if (APPLE)
-  if (RELEASE)
-    set(BUILD_SHARED_LIBS ON)
-    set(SFML_BUILD_FRAMEWORKS ON)
-  endif ()
+  set(SFML_BUILD_FRAMEWORKS OFF)
   set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER LiWinDom.BattleCity.Client
     MACOSX_BUNDLE_BUNDLE_NAME ${CLIENT_PROJECT_NAME}

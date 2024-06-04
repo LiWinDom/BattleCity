@@ -1,7 +1,7 @@
 #include "Log.h"
 #include "Window.h"
 
-int main() {
+int main(int argc, char* argv[]) {
   Log::message("Started client");
   Log::message(std::string("Version: ") + CLIENT_VERSION);
   Log::message("");

@@ -5,7 +5,7 @@
 IObject::IObject(const sf::Vector2f& position, const sf::Vector2u& size, ObjectType type) : _type(type) {
   _sprite.setPosition(position);
 
-  if (!_texture.loadFromFile("./resources/graphics/Eagle.png")) {
+  if (!_texture.loadFromFile(Path::getAbsolutePath("resources/graphics/Eagle.png"))) {
     Log::error("Cannot load texture");
   }
 
