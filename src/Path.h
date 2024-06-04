@@ -8,7 +8,6 @@ namespace Path {
   std::string getExecutableDir();
   std::string mergePaths(const std::string& pathA, const std::string& pathB);
   std::string getAbsolutePath(const std::string& path);
-  bool checkIfFileExists(const std::string& filePath);
 }
 
 

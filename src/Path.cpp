@@ -1,10 +1,10 @@
 #include "Path.h"
 
 #if defined(WIN32)
+  #pragma comment(lib, "Shlwapi.lib")
   #include <windows.h>
   #include <Shlwapi.h>
   #include <io.h>
-  #define access _access_s
 #endif
 
 #ifdef APPLE
@@ -102,8 +102,4 @@
 
 std::string Path::getAbsolutePath(const std::string& path) {
   return Path::mergePaths(Path::getExecutableDir(), path);
-}
-
-bool Path::checkIfFileExists(const std::string& filePath) {
-  return access(filePath.c_str(), 0) == 0;
 }
