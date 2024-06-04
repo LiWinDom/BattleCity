@@ -59,5 +59,7 @@ void Window::display() const {
 }
 
 void Window::draw(const IObject& object) {
-  _window->draw(object.getSprite(), _transform);
+  for (const auto& sprite : object.getSprites()) {
+    _window->draw(sprite, _transform);
+  }
 }

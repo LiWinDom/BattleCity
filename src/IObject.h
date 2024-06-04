@@ -3,6 +3,7 @@
 #define BATTLECITY_OBJECT_H
 
 #include <SFML/Graphics.hpp>
+#include <vector>
 
 enum class ObjectType {
   None = 0,
@@ -19,7 +20,7 @@ class IObject {
 
   //sf::Vector2u getSize() const { return _size; }
 
-  sf::Sprite getSprite() const { return _sprite; }
+  std::vector<sf::Sprite> getSprites() const { return _sprites; }
 
   //void setPosition(const sf::Vector2i& position) { _position = position; }
 
@@ -36,7 +37,7 @@ class IObject {
   uint16_t _state;
 
   sf::Texture _texture;
-  sf::Sprite _sprite;
+  std::vector<sf::Sprite> _sprites;
 };
 
 
