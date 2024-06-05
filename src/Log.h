@@ -1,4 +1,3 @@
-#pragma once
 #ifndef BATTLECITY_LOG_H
 #define BATTLECITY_LOG_H
 
@@ -47,7 +46,6 @@ namespace Log {
 
   static void error(const std::string& message, const LogOptions options = LogOptions::Console | LogOptions::File) {
     Log::message("[ERROR] " + message, options);
-    throw std::runtime_error(message);
   }
 }
 
