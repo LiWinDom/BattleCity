@@ -2,9 +2,10 @@
 #define BATTLECITY_OBJECT_H
 
 #include <SFML/System.hpp>
+#include <stdint.h>
 #include <vector>
 
-enum class ObjectType {
+enum class ObjectType : uint8_t {
   None = 0,
   Air = 1,
   Tank = 10,
