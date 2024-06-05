@@ -22,12 +22,15 @@ set (
     ./src/Path.h ./src/Path.cpp
     ./src/Log.h ./src/Log.cpp
     ./src/IObject.h ./src/IObject.cpp
+    ./src/Objects/ITank.h ./src/Objects/ITank.cpp
     ./src/Window.h ./src/Window.cpp
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp
     ./src/Path.h ./src/Path.cpp
     ./src/Log.h ./src/Log.cpp
+    ./src/IObject.h ./src/IObject.cpp
+    ./src/Objects/ITank.h ./src/Objects/ITank.cpp
 )
 
 # Adding icon and other resources
@@ -130,6 +133,7 @@ set(CLIENT_SFML_LIBRARIES
 )
 set(SERVER_SFML_LIBRARIES
     sfml-system
+    sfml-graphics
     # sfml-network
 )
 

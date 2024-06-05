@@ -1,15 +1,15 @@
 #include "IObject.h"
 
-#include "Log.h"
+std::vector<sf::Sprite> IObject::getSprites() const {
+  return _sprites;
+}
 
-IObject::IObject(const sf::Vector2f& position, const sf::Vector2u& size, ObjectType type) : _type(type) {
-  _sprites.push_back(sf::Sprite());
-  _sprites[0].setPosition(position);
+sf::Vector2f IObject::getPosition() const {
+  return _sprites.empty() ? sf::Vector2f(0, 0) : _sprites[0].getPosition();
+}
 
-  if (!_texture.loadFromFile(Path::getAbsolutePath("resources/graphics/Eagle.png"))) {
-    Log::error("Cannot load texture");
+void IObject::setPosition(const sf::Vector2f &position) {
+  for (auto& sprite : _sprites) {
+    sprite.setPosition(position);
   }
-
-  _sprites[0].setTexture(_texture);
-  _sprites[0].setTextureRect(sf::IntRect(0, 0, 16, 16));
 }

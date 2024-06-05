@@ -1,23 +1,32 @@
 #include "Log.h"
 #include "Window.h"
 
+#include "Objects/ITank.h"
+
 int main(int argc, char* argv[]) {
   Log::message("Started client");
   Log::message(std::string("Version: ") + CLIENT_VERSION);
   Log::message("");
 
-  auto window = new Window();
-  IObject test(sf::Vector2f(-1, 16), sf::Vector2u(0, 0), ObjectType::Tank);
-  IObject test2(sf::Vector2f(0, 0), sf::Vector2u(0, 0), ObjectType::Tank);
-  IObject test3(sf::Vector2f(16, 0), sf::Vector2u(0, 0), ObjectType::Tank);
-  while (window->isOpen()) {
-    window->clear();
-    window->draw(test);
-    window->draw(test2);
-    window->draw(test3);
-    window->display();
+  try {
+    auto window = new Window();
+    while (window->isOpen()) {
+      auto tank = ITank(sf::Vector2i(0, 0));
+      window->clear();
+      window->display();
 
-    window->pollEvent();
+      window->pollEvent();
+    }
+  }
+  catch (const std::runtime_error& error) {
+    Log::message("");
+    Log::error("Something critical went wrong :(");
+    Log::error(error.what());
+  }
+  catch (...) {
+    Log::message("");
+    Log::error("Something critical went wrong :(");
+    Log::error("...and we don't know what is it");
   }
 
   Log::message("");
