@@ -133,7 +133,6 @@ set(CLIENT_SFML_LIBRARIES
 )
 set(SERVER_SFML_LIBRARIES
     sfml-system
-    sfml-graphics
     # sfml-network
 )
 

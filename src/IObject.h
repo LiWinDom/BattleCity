@@ -1,7 +1,7 @@
 #ifndef BATTLECITY_OBJECT_H
 #define BATTLECITY_OBJECT_H
 
-#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include <vector>
 
 enum class ObjectType {
@@ -15,21 +15,18 @@ enum class ObjectType {
 class IObject {
  public:
   // Intersection check
-  bool operator&(const IObject& other) {
-    // TODO
-    return false;
-  }
+  bool operator&(const IObject& other);
 
-  std::vector<sf::Sprite> getSprites() const;
-  virtual sf::Vector2f getPosition() const;
+  sf::Vector2f getPosition() const;
+  sf::Vector2f getSize();
 
-  virtual void setPosition(const sf::Vector2f& position);
+  void setPosition(const sf::Vector2f& position);
 
   virtual void think(const std::vector<IObject>& objects, uint16_t index) {};
 
  protected:
-  sf::Texture _texture;
-  std::vector<sf::Sprite> _sprites;
+  sf::Vector2f _position;
+  sf::Vector2f _size;
 };
 
 
