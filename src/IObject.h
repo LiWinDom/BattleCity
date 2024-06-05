@@ -14,9 +14,12 @@ enum class ObjectType {
 
 class IObject {
  public:
+  IObject(ObjectType type = ObjectType::None);
+
   // Intersection check
   bool operator&(const IObject& other);
 
+  ObjectType getType();
   sf::Vector2f getPosition() const;
   sf::Vector2f getSize();
 
@@ -25,6 +28,8 @@ class IObject {
   virtual void think(const std::vector<IObject>& objects, uint16_t index) {};
 
  protected:
+  ObjectType _type;
+
   sf::Vector2f _position;
   sf::Vector2f _size;
 };

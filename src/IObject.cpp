@@ -1,5 +1,7 @@
 #include "IObject.h"
 
+IObject::IObject(ObjectType type) : _type(type) {}
+
 bool IObject::operator&(const IObject &other) {
   sf::Vector2f pos2 = _position + _size, pos4 = other._position + other._size;
   if (_position.x < other._position.x) {
@@ -15,6 +17,10 @@ bool IObject::operator&(const IObject &other) {
     if (_position.y < pos4.y) return false;
   }
   return true;
+}
+
+ObjectType IObject::getType() {
+  return _type;
 }
 
 sf::Vector2f IObject::getPosition() const {
