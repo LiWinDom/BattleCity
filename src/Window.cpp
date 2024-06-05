@@ -25,8 +25,10 @@ bool Window::isOpen() const {
 }
 
 sf::Event Window::pollEvent() {
-  sf::Event event;
-  _window->pollEvent(event);
+  sf::Event event{};
+  if (!_window->pollEvent(event)) {
+    return event;
+  }
   switch (event.type) {
     case sf::Event::Closed:
       _window->close();
