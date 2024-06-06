@@ -26,13 +26,11 @@ int main(int argc, char* argv[]) {
           else {
             drawables.emplace_back(std::make_shared<Drawable>(*objects[i]));
           }
+          window->draw(*drawables[i]);
         }
         else {
           drawables.erase(drawables.begin() + (i--));
         }
-      }
-      for (const auto drawable : drawables) {
-        window->draw(*drawable);
       }
 
       window->display();

@@ -15,8 +15,7 @@ class Drawable final {
   void update(const IObject& object);
 
  private:
-  void initTank();
-  void initPlayerTank();
+  void updateTank(const IObject& object);
 
   sf::Texture _texture;
   std::vector<sf::Sprite> _sprites;

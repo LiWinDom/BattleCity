@@ -26,8 +26,12 @@ std::vector<sf::Sprite> Drawable::getSprites() const {
 void Drawable::update(const IObject &object) {
   switch (object.getType()) {
     case ObjectType::PlayerTank:
-      _sprites[0].setTextureRect(sf::IntRect(0, 0, 16, 16));
-      _sprites[0].setPosition(object.getPosition());
+      updateTank(object);
       break;
   }
+}
+
+void Drawable::updateTank(const IObject& object) {
+  _sprites[0].setTextureRect(sf::IntRect(0, 0, 16, 16));
+  _sprites[0].setPosition(object.getPosition());
 }
