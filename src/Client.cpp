@@ -9,17 +9,20 @@ int main(int argc, char* argv[]) {
   Log::message("");
 
   try {
-    auto window = new Window();
+    sf::Clock globalClock;
+    auto window = std::make_unique<Window>();
 
     std::vector<std::shared_ptr<IObject>> objects;
     std::vector<std::shared_ptr<Drawable>> drawables;
     objects.push_back(std::make_shared<PlayerTank>(sf::Vector2f(0, 0)));
+
 
     while (window->isOpen()) {
       window->clear();
 
       for (size_t i = 0; i < std::max(objects.size(), drawables.size()); ++i) {
         if (i < objects.size()) {
+          objects[i]->think(objects, i, globalClock);
           if (i < drawables.size()) {
             drawables[i]->update(*objects[i]);
           }

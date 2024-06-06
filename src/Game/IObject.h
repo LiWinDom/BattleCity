@@ -3,7 +3,6 @@
 
 #include <cstdint>
 #include <SFML/System.hpp>
-#include <SFML/Window/Event.hpp>
 #include <vector>
 
 enum class ObjectType : uint8_t {
@@ -28,7 +27,7 @@ class IObject {
 
   void setPosition(const sf::Vector2f& position);
 
-  virtual void think(const std::vector<IObject>& objects, uint16_t index, const sf::Event& event) = 0;
+  virtual void think(const std::vector<std::shared_ptr<IObject>>& objects, uint16_t index, const sf::Clock& globalClock) = 0;
 
  protected:
   ObjectType _type;

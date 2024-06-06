@@ -7,7 +7,7 @@ class PlayerTank : public ITank {
  public:
   PlayerTank(const sf::Vector2f& position);
 
-  void think(const std::vector<IObject>& objects, uint16_t index, const sf::Event& event) override;
+  void think(const std::vector<std::shared_ptr<IObject>>& objects, uint16_t index, const sf::Clock& globalClock) override;
 };
 
 
