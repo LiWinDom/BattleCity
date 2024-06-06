@@ -1,10 +1,11 @@
 #ifndef BATTLECITY_WINDOW_H
 #define BATTLECITY_WINDOW_H
 
-#include <SFML/Graphics.hpp>
+#include "SFML/Graphics.hpp"
 #include <memory>
 #include <vector>
 
+#include "../Event.h"
 #include "Drawable.h"
 
 class Window final {
@@ -12,7 +13,7 @@ class Window final {
   Window();
 
   bool isOpen() const;
-  sf::Event pollEvent();
+  Event pollEvent();
 
   void clear() const;
   void display() const;

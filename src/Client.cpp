@@ -1,5 +1,5 @@
 #include "Log.h"
-#include "Render/Window.h"
+#include "Game/Render/Window.h"
 
 #include "Game/Objects/PlayerTank.h"
 
@@ -16,13 +16,10 @@ int main(int argc, char* argv[]) {
     std::vector<std::shared_ptr<Drawable>> drawables;
     objects.push_back(std::make_shared<PlayerTank>(sf::Vector2f(0, 0)));
 
-
     while (window->isOpen()) {
       window->clear();
-
       for (size_t i = 0; i < std::max(objects.size(), drawables.size()); ++i) {
         if (i < objects.size()) {
-          objects[i]->think(objects, i, globalClock);
           if (i < drawables.size()) {
             drawables[i]->update(*objects[i]);
           }
@@ -35,9 +32,12 @@ int main(int argc, char* argv[]) {
           drawables.erase(drawables.begin() + (i--));
         }
       }
-
       window->display();
-      window->pollEvent();
+
+      auto event = window->pollEvent();
+      for (size_t i = 0; i < objects.size(); ++i) {
+        objects[i]->think(objects, i, globalClock, event);
+      }
     }
   }
   catch (const std::runtime_error& error) {

@@ -1,6 +1,6 @@
 #include "Drawable.h"
 
-#include "../Log.h"
+#include "../../Log.h"
 
 Drawable::Drawable(const IObject& object) {
   if (!_texture.loadFromFile(Path::getAbsolutePath("resources/Graphics.png"))) {

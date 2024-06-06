@@ -20,17 +20,17 @@ endif ()
 set (
     CLIENT_EXECUTABLES ./src/Client.cpp
     ./src/Path.h ./src/Path.cpp
-    ./src/Log.h ./src/Log.cpp
+    ./src/Log.h ./src/Game/Event.h
     src/Game/IObject.h src/Game/IObject.cpp
     src/Game/Objects/ITank.h src/Game/Objects/ITank.cpp
     src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp
-    src/Render/Window.h src/Render/Window.cpp
-    src/Render/Drawable.h src/Render/Drawable.cpp
+    src/Game/Render/Window.h src/Game/Render/Window.cpp
+    src/Game/Render/Drawable.h src/Game/Render/Drawable.cpp
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp
     ./src/Path.h ./src/Path.cpp
-    ./src/Log.h ./src/Log.cpp
+    ./src/Log.h ./src/Game/Event.h
     src/Game/IObject.h src/Game/IObject.cpp
     src/Game/Objects/ITank.h src/Game/Objects/ITank.cpp
     src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp

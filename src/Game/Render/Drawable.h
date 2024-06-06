@@ -1,10 +1,10 @@
 #ifndef BATTLECITY_DRAWABLE_H
 #define BATTLECITY_DRAWABLE_H
 
-#include <SFML/Graphics.hpp>
+#include "SFML/Graphics.hpp"
 #include <vector>
 
-#include "../Game/IObject.h"
+#include "../IObject.h"
 
 class Drawable final {
  public:
