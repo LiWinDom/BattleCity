@@ -3,7 +3,8 @@
 #include <cmath>
 #include <memory>
 
-#include "Log.h"
+#include "../Log.h"
+#include "Drawable.h"
 
 Window::Window() {
   auto screen = sf::VideoMode::getDesktopMode();
@@ -33,6 +34,7 @@ sf::Event Window::pollEvent() {
     case sf::Event::Closed:
       _window->close();
       Log::info("Window closed");
+      break;
 
     case sf::Event::Resized:
       // Align window to pixel perfect
@@ -60,7 +62,7 @@ void Window::display() const {
   _window->display();
 }
 
-void Window::draw(const IObject& object) {
+void Window::draw(const Drawable& object) {
   for (const auto& sprite : object.getSprites()) {
     _window->draw(sprite, _transform);
   }

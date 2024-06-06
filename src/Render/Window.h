@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-#include "IObject.h"
+#include "Drawable.h"
 
 class Window final {
  public:
@@ -17,7 +17,7 @@ class Window final {
   void clear() const;
   void display() const;
 
-  void draw(const IObject& object);
+  void draw(const Drawable& object);
 
  private:
   std::unique_ptr<sf::RenderWindow> _window;

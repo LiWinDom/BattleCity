@@ -1,7 +1,7 @@
 #include "Log.h"
-#include "Window.h"
+#include "Render/Window.h"
 
-#include "Objects/ITank.h"
+#include "Game/Objects/PlayerTank.h"
 
 int main(int argc, char* argv[]) {
   Log::message("Started client");
@@ -10,11 +10,32 @@ int main(int argc, char* argv[]) {
 
   try {
     auto window = new Window();
-    while (window->isOpen()) {
-      auto tank = ITank(sf::Vector2i(0, 0));
-      window->clear();
-      window->display();
 
+    std::vector<std::shared_ptr<IObject>> objects;
+    std::vector<std::shared_ptr<Drawable>> drawables;
+    objects.push_back(std::make_shared<PlayerTank>(sf::Vector2f(0, 0)));
+
+    while (window->isOpen()) {
+      window->clear();
+
+      for (size_t i = 0; i < std::max(objects.size(), drawables.size()); ++i) {
+        if (i < objects.size()) {
+          if (i < drawables.size()) {
+            drawables[i]->update(*objects[i]);
+          }
+          else {
+            drawables.emplace_back(std::make_shared<Drawable>(*objects[i]));
+          }
+        }
+        else {
+          drawables.erase(drawables.begin() + (i--));
+        }
+      }
+      for (const auto drawable : drawables) {
+        window->draw(*drawable);
+      }
+
+      window->display();
       window->pollEvent();
     }
   }

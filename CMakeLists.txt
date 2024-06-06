@@ -21,16 +21,19 @@ set (
     CLIENT_EXECUTABLES ./src/Client.cpp
     ./src/Path.h ./src/Path.cpp
     ./src/Log.h ./src/Log.cpp
-    ./src/IObject.h ./src/IObject.cpp
-    ./src/Objects/ITank.h ./src/Objects/ITank.cpp
-    ./src/Window.h ./src/Window.cpp
+    src/Game/IObject.h src/Game/IObject.cpp
+    src/Game/Objects/ITank.h src/Game/Objects/ITank.cpp
+    src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp
+    src/Render/Window.h src/Render/Window.cpp
+    src/Render/Drawable.h src/Render/Drawable.cpp
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp
     ./src/Path.h ./src/Path.cpp
     ./src/Log.h ./src/Log.cpp
-    ./src/IObject.h ./src/IObject.cpp
-    ./src/Objects/ITank.h ./src/Objects/ITank.cpp
+    src/Game/IObject.h src/Game/IObject.cpp
+    src/Game/Objects/ITank.h src/Game/Objects/ITank.cpp
+    src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp
 )
 
 # Adding icon and other resources
