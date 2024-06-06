@@ -2,3 +2,4 @@
 /cmake-*
 /CMakeFiles
 *.log
+*.DS_Store
