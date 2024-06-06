@@ -26,7 +26,7 @@ class IObject {
   ObjectType getType() const;
   sf::Vector2f getPosition() const;
   sf::Vector2f getSize() const;
-  virtual uint16_t getState() const = 0;
+  virtual uint8_t getState() const = 0;
 
   void setPosition(const sf::Vector2f& position);
 

@@ -7,10 +7,10 @@ class ITank : public IObject {
  public:
   ITank(ObjectType type, const sf::Vector2f& position);
 
-  uint16_t getState() const override;
+  uint8_t getState() const override;
 
  protected:
-
+    uint8_t _rotation = 0;
 };
 
 

@@ -10,15 +10,19 @@ void PlayerTank::think(const std::vector<std::shared_ptr<IObject>> &objects, uin
     while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / 45.0) {
       holdTime += 1 / 45.0;
       if (event.up) {
+        _rotation = 0;
         --_position.y;
       }
-      else if (event.down) {
-        ++_position.y;
-      }
       else if (event.left) {
+        _rotation = 1;
         --_position.x;
       }
+      else if (event.down) {
+        _rotation = 2;
+        ++_position.y;
+      }
       else {
+        _rotation = 3;
         ++_position.x;
       }
     }

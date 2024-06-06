@@ -32,6 +32,7 @@ void Drawable::update(const IObject &object) {
 }
 
 void Drawable::updateTank(const IObject& object) {
-  _sprites[0].setTextureRect(sf::IntRect(0, 0, 16, 16));
+  uint8_t state = object.getState();
+  _sprites[0].setTextureRect(sf::IntRect((state & 3) * 32, 0, 16, 16));
   _sprites[0].setPosition(object.getPosition());
 }
