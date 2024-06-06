@@ -2,6 +2,7 @@
 #define BATTLECITY_IOBJECT_H
 
 #include <cstdint>
+#include <memory>
 #include <SFML/System.hpp>
 #include <vector>
 
