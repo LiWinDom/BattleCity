@@ -3,3 +3,4 @@
 /CMakeFiles
 *.log
 *.DS_Store
+.cache
