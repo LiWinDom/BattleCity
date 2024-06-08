@@ -1,6 +1,7 @@
 /bin
 /cmake-*
 /CMakeFiles
-*.log
 *.DS_Store
+.idea
 .cache
+.fleet
