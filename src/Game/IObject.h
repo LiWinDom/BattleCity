@@ -37,6 +37,8 @@ class IObject {
 
   sf::Vector2f _position;
   sf::Vector2f _size;
+
+  bool _isCollide = true;
 };
 
 

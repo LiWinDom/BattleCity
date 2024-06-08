@@ -4,6 +4,8 @@ IObject::IObject(ObjectType type, const sf::Vector2f& position, const sf::Vector
   _type(type), _position(position), _size(size) {}
 
 bool IObject::operator&(const IObject &other) {
+  if (!_isCollide || !other._isCollide) return false;
+
   sf::Vector2f pos2 = _position + _size, pos4 = other._position + other._size;
   if (_position.x < other._position.x) {
     if (other._position.x > pos2.x) return false;
