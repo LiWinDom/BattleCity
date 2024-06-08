@@ -1,6 +1,6 @@
 #include "Path.h"
 
-#if defined(WIN32)
+#ifdef WIN32
   #pragma comment(lib, "Shlwapi.lib")
   #include <windows.h>
   #include <Shlwapi.h>
@@ -27,7 +27,7 @@
   #endif
 #endif
 
-#if defined(WIN32)
+#ifdef WIN32
   std::string Path::getExecutablePath() {
     char rawPathName[MAX_PATH];
     GetModuleFileNameA(NULL, rawPathName, MAX_PATH);
