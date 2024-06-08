@@ -1,7 +1,5 @@
 #include "PlayerTank.h"
 
-#include <SFML/Window/Keyboard.hpp>
-
 PlayerTank::PlayerTank(const sf::Vector2f& position) : ITank(ObjectType::PlayerTank, position) {}
 
 void PlayerTank::think(const std::vector<std::shared_ptr<IObject>> &objects, uint16_t index, const sf::Clock& globalClock, const Event& event) {

@@ -3,12 +3,11 @@
 #include "../../Log.h"
 
 Drawable::Drawable(const IObject& object) {
-  if (!_texture.loadFromFile(Path::getAbsolutePath("resources/Graphics.png"))) {
-    throw std::runtime_error(R"(Cannot load "resources/Graphics.png" texture)");
-  }
-
   switch (object.getType()) {
     case ObjectType::PlayerTank:
+      if (!_texture.loadFromFile(Path::getAbsolutePath("resources/graphics/Tanks.png"))) {
+        throw std::runtime_error(R"(Cannot load "resources/graphics/Tanks.png" texture)");
+      }
       _sprites.emplace_back(_texture);
       Log::info(R"(Drawable "PlayerTank" created)");
       break;
