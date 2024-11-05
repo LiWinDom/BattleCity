@@ -31,7 +31,7 @@ jobs:
 
       - name: Installing dependencies
         working-directory: ./
-        run: "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\setup.exe" modify --quiet --productId Microsoft.VisualStudio.Product.Enterprise --channelId VisualStudio.17.Release --add Microsoft.VisualStudio.Component.WinXP
+        run: "%ProgramFiles(x86)%/Microsoft Visual Studio/Installer/setup.exe" modify --quiet --productId Microsoft.VisualStudio.Product.Enterprise --channelId VisualStudio.17.Release --add Microsoft.VisualStudio.Component.WinXP
 
       - name: Build project
         working-directory: ./
