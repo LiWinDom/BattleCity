@@ -1,7 +1,6 @@
-#ifndef BATTLECITY_ITANK_H
-#define BATTLECITY_ITANK_H
+#pragma once
 
-#include "../IObject.h"
+#include "IObject.h"
 
 class ITank : public IObject {
  public:
@@ -10,8 +9,8 @@ class ITank : public IObject {
   uint8_t getState() const override;
 
  protected:
-    uint8_t _rotation = 0;
+   void snap(float& cordinate);
+
+   uint8_t _rotation = 0;
+   bool _wheelState = false;
 };
-
-
-#endif //BATTLECITY_ITANK_H

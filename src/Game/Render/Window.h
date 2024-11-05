@@ -1,12 +1,11 @@
-#ifndef BATTLECITY_WINDOW_H
-#define BATTLECITY_WINDOW_H
+#pragma once
 
 #include "SFML/Graphics.hpp"
 #include <memory>
 #include <vector>
 
 #include "../Event.h"
-#include "Drawable.h"
+#include "Drawables/IDrawable.h"
 
 class Window final {
  public:
@@ -18,7 +17,7 @@ class Window final {
   void clear() const;
   void display() const;
 
-  void draw(const Drawable& object);
+  void draw(const IDrawable& object);
 
  private:
   std::unique_ptr<sf::RenderWindow> _window;
@@ -27,6 +26,3 @@ class Window final {
   uint8_t _scale = 1;
   sf::Transform _transform;
 };
-
-
-#endif // BATTLECITY_WINDOW_H

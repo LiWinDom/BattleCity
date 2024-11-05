@@ -1,5 +1,4 @@
-#ifndef BATTLECITY_LOG_H
-#define BATTLECITY_LOG_H
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -40,6 +39,12 @@ namespace Log {
     Log::message("[INFO] " + message, options);
   }
 
+  static void debug(const std::string& message, const LogOptions options = LogOptions::Console | LogOptions::File) {
+#ifdef DEBUG
+    Log::message("[DEBUG] " + message, options);
+#endif
+  }
+
   static void warning(const std::string& message, const LogOptions options = LogOptions::Console | LogOptions::File) {
     Log::message("[WARNING] " + message, options);
   }
@@ -48,6 +53,3 @@ namespace Log {
     Log::message("[ERROR] " + message, options);
   }
 }
-
-
-#endif // BATTLECITY_LOG_H

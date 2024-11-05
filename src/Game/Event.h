@@ -1,5 +1,4 @@
-#ifndef BATTLECITY_EVENT_H
-#define BATTLECITY_EVENT_H
+#pragma once
 
 struct Event {
   bool up = false;
@@ -9,5 +8,3 @@ struct Event {
   bool shoot = false;
   bool esc = false;
 };
-
-#endif //BATTLECITY_EVENT_H

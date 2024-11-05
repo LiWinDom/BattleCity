@@ -3,8 +3,8 @@ set(CLIENT_PROJECT_NAME BattleCity-client)
 set(SERVER_PROJECT_NAME BattleCity-server)
 project(BattleCity LANGUAGES CXX)
 
-set(CLIENT_VERSION "2024.603.1")
-set(SERVER_VERSION "2024.603.1")
+set(CLIENT_VERSION "2024.1010.0")
+set(SERVER_VERSION "2024.1010.0")
 
 add_compile_definitions(CLIENT_VERSION="${CLIENT_VERSION}")
 add_compile_definitions(SERVER_VERSION="${SERVER_VERSION}")
@@ -19,21 +19,27 @@ endif ()
 # Executables
 set (
     CLIENT_EXECUTABLES ./src/Client.cpp
-    ./src/Path.h ./src/Path.cpp
-    ./src/Log.h ./src/Game/Event.h
-    src/Game/IObject.h src/Game/IObject.cpp
+    src/Other/Path.h src/Other/Path.cpp
+    src/Other/Log.h ./src/Game/Event.h
+    src/Game/Objects/IObject.h src/Game/Objects/IObject.cpp
     src/Game/Objects/ITank.h src/Game/Objects/ITank.cpp
     src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp
+    src/Game/Objects/IBlock.h src/Game/Objects/IBlock.cpp
+    src/Game/Objects/Block.h src/Game/Objects/Block.cpp
     src/Game/Render/Window.h src/Game/Render/Window.cpp
-    src/Game/Render/Drawable.h src/Game/Render/Drawable.cpp
+    src/Game/Render/Drawables/IDrawable.h src/Game/Render/Drawables/IDrawable.cpp
+    src/Game/Render/Drawables/TankDrawable.h src/Game/Render/Drawables/TankDrawable.cpp
+    src/Game/Render/Drawables/BlockDrawable.h src/Game/Render/Drawables/BlockDrawable.cpp
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp
-    ./src/Path.h ./src/Path.cpp
-    ./src/Log.h ./src/Game/Event.h
-    src/Game/IObject.h src/Game/IObject.cpp
+    src/Other/Path.h src/Other/Path.cpp
+    src/Other/Log.h ./src/Game/Event.h
+    src/Game/Objects/IObject.h src/Game/Objects/IObject.cpp
     src/Game/Objects/ITank.h src/Game/Objects/ITank.cpp
     src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp
+    src/Game/Objects/IBlock.h src/Game/Objects/IBlock.cpp
+    src/Game/Objects/Block.h src/Game/Objects/Block.cpp
 )
 
 # Adding icon and other resources

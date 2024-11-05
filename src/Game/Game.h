@@ -1,11 +1,7 @@
-#ifndef BATTLECITY_GAME_H
-#define BATTLECITY_GAME_H
+#pragma once
 
 class Game {
  public:
 
  private:
 };
-
-
-#endif // BATTLECITY_GAME_H

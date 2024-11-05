@@ -1,7 +1,11 @@
-#include "Log.h"
+#include "Other/Log.h"
 #include "Game/Render/Window.h"
 
 #include "Game/Objects/PlayerTank.h"
+#include "Game/Objects/Block.h"
+
+#include "Game/Render/Drawables/TankDrawable.h"
+#include "Game/Render/Drawables/BlockDrawable.h"
 
 int main(int argc, char* argv[]) {
   Log::message("Started client");
@@ -13,19 +17,35 @@ int main(int argc, char* argv[]) {
     auto window = std::make_unique<Window>();
 
     std::vector<std::shared_ptr<IObject>> objects;
-    std::vector<std::shared_ptr<Drawable>> drawables;
+    std::vector<std::shared_ptr<IDrawable>> drawables;
     objects.push_back(std::make_shared<PlayerTank>(sf::Vector2f(0, 0)));
+    objects.push_back(std::make_shared<Block>(sf::Vector2f(16, 16)));
+    objects.push_back(std::make_shared<Block>(sf::Vector2f(40, 16)));
+    objects.push_back(std::make_shared<Block>(sf::Vector2f(16, 40)));
+    objects.push_back(std::make_shared<Block>(sf::Vector2f(40, 40)));
 
     while (window->isOpen()) {
       window->clear();
       for (size_t i = 0; i < std::max(objects.size(), drawables.size()); ++i) {
         if (i < objects.size()) {
-          if (i < drawables.size()) {
-            drawables[i]->update(*objects[i]);
+          if (objects[i]->isDestroyed()) {
+            objects.erase(objects.begin() + i);
+            drawables.erase(drawables.begin() + i);
+            --i;
+            continue;
           }
-          else {
-            drawables.emplace_back(std::make_shared<Drawable>(*objects[i]));
+          if (i >= drawables.size()) {
+            switch (objects[i]->getType()) {
+              case ObjectType::PlayerTank:
+              case ObjectType::EnemyTank:
+                drawables.push_back(std::make_shared<TankDrawable>());
+                break;
+              case ObjectType::Block:
+                drawables.push_back(std::make_shared<BlockDrawable>());
+                break;
+                }
           }
+          drawables[i]->update(objects[i]);
           window->draw(*drawables[i]);
         }
         else {

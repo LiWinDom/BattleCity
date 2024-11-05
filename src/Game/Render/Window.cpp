@@ -3,8 +3,8 @@
 #include <cmath>
 #include <memory>
 
-#include "../../Log.h"
-#include "Drawable.h"
+#include "../../Other/Log.h"
+#include "Drawables/IDrawable.h"
 
 Window::Window() {
   auto screen = sf::VideoMode::getDesktopMode();
@@ -17,7 +17,7 @@ Window::Window() {
   _window->setVerticalSyncEnabled(true);
 
   _transform.scale(_scale, _scale);
-  Log::info("Window created (" + std::to_string(_window->getSize().x) + "x" + std::to_string(_window->getSize().y) +
+  Log::debug("Window created (" + std::to_string(_window->getSize().x) + "x" + std::to_string(_window->getSize().y) +
     " scale=" + std::to_string(_scale) + ")");
 }
 
@@ -31,7 +31,7 @@ Event Window::pollEvent() {
     switch (SFMLevent.type) {
       case sf::Event::Closed:
         _window->close();
-        Log::info("Window closed");
+        Log::debug("Window closed");
         break;
 
       case sf::Event::Resized:
@@ -46,7 +46,7 @@ Event Window::pollEvent() {
         _window->setView(sf::View(sf::FloatRect(0, 0, _window->getSize().x, _window->getSize().y)));
 
         _transform.scale((double) _scale / oldScale, (double) _scale / oldScale);
-        Log::info(
+        Log::debug(
             "Window resized to " + std::to_string(_window->getSize().x) + "x" + std::to_string(_window->getSize().y) +
             " (scale=" + std::to_string(_scale) + ")");
     }
@@ -78,7 +78,7 @@ void Window::display() const {
   _window->display();
 }
 
-void Window::draw(const Drawable& object) {
+void Window::draw(const IDrawable& object) {
   for (const auto& sprite : object.getSprites()) {
     _window->draw(sprite, _transform);
   }

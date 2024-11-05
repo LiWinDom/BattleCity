@@ -1,5 +1,4 @@
-#ifndef BATTLECITY_PLAYERTANK_H
-#define BATTLECITY_PLAYERTANK_H
+#pragma
 
 #include "ITank.h"
 
@@ -9,6 +8,3 @@ class PlayerTank : public ITank {
 
   void think(const std::vector<std::shared_ptr<IObject>>& objects, uint16_t index, const sf::Clock& globalClock, const Event& event) override;
 };
-
-
-#endif //BATTLECITY_PLAYERTANK_H

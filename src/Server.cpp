@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Path.h"
+#include "Other/Path.h"
 
 int main(int argc, char* argv[]) {
   std::cout << Path::getExecutableDir() << std::endl;
