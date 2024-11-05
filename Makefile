@@ -6,28 +6,29 @@ CMAKE_BUILD_WINDOWS = cmake-build-windows
 CMAKE_BUILD_LINUX = cmake-build-linux
 CMAKE_BUILD_DARWIN = cmake-build-darwin
 
-copy:
-	rm -rf ./$(BIN)/$(DEBUG)/$(RESOURCES)
-	cp -r ./$(RESOURCES) ./$(BIN)/$(DEBUG)
-	rm -rf ./$(BIN)/$(RELEASE)/$(RESOURCES)
-	cp -r ./$(RESOURCES) ./$(BIN)/$(RELEASE)
+dirs:
+	mkdir -p ./$(BIN)/$(DEBUG)/$(RESOURCES)
+	mkdir -p ./$(BIN)/$(RELEASE)/$(RESOURCES)
 
-win32:
+copy: dirs
+	rm -rf ./$(BIN)/$(DEBUG)/$(RESOURCES)/*
+	rm -rf ./$(BIN)/$(RELEASE)/$(RESOURCES)/*
+	cp -r ./$(RESOURCES) ./$(BIN)/$(DEBUG)/$(RESOURCES)
+	cp -r ./$(RESOURCES) ./$(BIN)/$(RELEASE)/$(RESOURCES)
+
+win32: copy
 	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_ARCHITECTURE=Win32 -S ./ -B ./${CMAKE_BUILD_WINDOWS}-Win32 -A Win32 -T v141_xp
 	cmake --build ./${CMAKE_BUILD_WINDOWS}-Win32 --config Release
-	copy
 
-win64:
+win64: copy
 	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_ARCHITECTURE=x64 -S ./ -B ./${CMAKE_BUILD_WINDOWS}-x64 -A x64 -T v141_xp
 	cmake --build ./${CMAKE_BUILD_WINDOWS}-x64 --config Release
-	copy
 
 win: win32 win64
 
-linux:
+linux: copy
 	cmake -DCMAKE_BUILD_TYPE=${RELEASE} -S ./ -B ./${CMAKE_BUILD_LINUX}
 	cmake --build ./${CMAKE_BUILD_LINUX}
-	copy
 
 darwin:
 	cmake -DCMAKE_BUILD_TYPE=${RELEASE} -S ./ -B ./${CMAKE_BUILD_DARWIN}
