@@ -31,7 +31,9 @@ jobs:
 
       - name: Installing dependencies
         working-directory: ./
-        run: "%ProgramFiles(x86)%/Microsoft Visual Studio/Installer/setup.exe" modify --quiet --productId Microsoft.VisualStudio.Product.Enterprise --channelId VisualStudio.17.Release --add Microsoft.VisualStudio.Component.WinXP
+        run: |
+          choco install visualstudio2017buildtools --version 15.9.28307.1038 --params "'/Install /NoWeb /Add Microsoft.VisualStudio.Workload.VCTools /IncludeRecommended /IncludeOptional /Add Microsoft.VisualStudio.Component.Windows10SDK.17134'"
+          "C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/Installer/vs_install.exe" --add Microsoft.VisualStudio.Component.VC.v141.xp --quiet --wait --norestart
 
       - name: Build project
         working-directory: ./
