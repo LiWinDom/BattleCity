@@ -14,10 +14,10 @@ jobs:
 
       - name: Installing dependencies
         working-directory: ./
-        run: sudo apt -y install \
-          build-essential make cmake \
-          libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev \
-          libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev \
+        run: sudo apt -y install
+          build-essential make cmake
+          libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev
+          libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev
           libfreetype-dev
 
       - name: Build project
@@ -31,8 +31,7 @@ jobs:
 
       - name: Installing dependencies
         run: |
-          choco install visualstudio2017buildtools --params "'/NoRestart /NoUpdate'" -y
-          set "PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Tools\MSVC\14.16.27023\bin\Hostx86\x86"
+          "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\setup.exe" modify --quiet --productId Microsoft.VisualStudio.Product.Enterprise --channelId VisualStudio.17.Release --add Microsoft.VisualStudio.Component.WinXP
 
       - name: Build project
         working-directory: ./
