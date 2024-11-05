@@ -83,13 +83,15 @@ endif ()
 # Checking ethernet connection to be able to compile offline
 if (WIN32)
   execute_process(
-      COMMAND ping google.com -n 2
+      COMMAND ping github.com -n 2
+      OUTPUT_QUIET
       ERROR_QUIET
       RESULT_VARIABLE NO_CONNECTION
   )
 else ()
   execute_process(
-      COMMAND ping google.com -c 2
+      COMMAND ping github.com -c 2
+      OUTPUT_QUIET
       ERROR_QUIET
       RESULT_VARIABLE NO_CONNECTION
   )
