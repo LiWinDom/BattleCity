@@ -13,30 +13,22 @@ copy:
 	cp -r ./$(RESOURCES) ./$(BIN)/$(RELEASE)
 
 win32:
-	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_ARCHITECTURE=Win32 -S ./ -B ./${CMAKE_BUILD_WINDOWS}-Win32 -A Win32 -T v141_xp
+	cmake -DFORCE_FETCH=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_ARCHITECTURE=Win32 -S ./ -B ./${CMAKE_BUILD_WINDOWS}-Win32 -A Win32 -T v141_xp
 	cmake --build ./${CMAKE_BUILD_WINDOWS}-Win32 --config Release
 	copy
 
 win64:
-	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_ARCHITECTURE=x64 -S ./ -B ./${CMAKE_BUILD_WINDOWS}-x64 -A x64 -T v141_xp
+	cmake -DFORCE_FETCH=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_ARCHITECTURE=x64 -S ./ -B ./${CMAKE_BUILD_WINDOWS}-x64 -A x64 -T v141_xp
 	cmake --build ./${CMAKE_BUILD_WINDOWS}-x64 --config Release
 	copy
 
 win: win32 win64
 
 linux:
-	cmake -DCMAKE_BUILD_TYPE=${RELEASE} -S ./ -B ./${CMAKE_BUILD_LINUX}
+	cmake -DFORCE_FETCH=1 -DCMAKE_BUILD_TYPE=${RELEASE} -S ./ -B ./${CMAKE_BUILD_LINUX}
 	cmake --build ./${CMAKE_BUILD_LINUX}
 	copy
 
 darwin:
-	cmake -DCMAKE_BUILD_TYPE=${RELEASE} -S ./ -B ./${CMAKE_BUILD_DARWIN}
+	cmake -DFORCE_FETCH=1 -DCMAKE_BUILD_TYPE=${RELEASE} -S ./ -B ./${CMAKE_BUILD_DARWIN}
 	cmake --build ./${CMAKE_BUILD_DARWIN}
-
-clean:
-	rm -rf ./$(BIN)
-
-reload: clean
-	rm -rf ./$(CMAKE_BUILD_WINDOWS)
-	rm -rf ./$(CMAKE_BUILD_LINUX)
-	rm -rf ./$(CMAKE_BUILD_DARWIN)
