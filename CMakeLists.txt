@@ -82,7 +82,7 @@ elseif (APPLE)
 endif ()
 
 # Checking ethernet connection to be able to compile offline
-if ($ENV{FORCE_FETCH_CONTENT} GREATER 0)
+if (EXISTS $ENV{FORCE_FETCH_CONTENT} AND $ENV{FORCE_FETCH_CONTENT} GREATER 0)
   SET(NO_CONNECTION 0)
 else  ()
   if (WIN32)
@@ -135,17 +135,9 @@ elseif (WIN32)
   else ()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:CONSOLE")
   endif ()
-
-  if(POLICY CMP0091)
-    cmake_policy(SET CMP0091 NEW)
-  endif()
-  set_property(TARGET ${CLIENT_PROJECT_NAME}} PROPERTY
-      MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-  set_property(TARGET ${SERVER_PROJECT_NAME}}} PROPERTY
-      MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-
   set(SFML_STATIC_LIBRARIES TRUE)
   set(SFML_USE_STATIC_STD_LIBS TRUE)
+  set(LINK_FLAGS "${LINK_FLAGS} SFML_STATIC")
 endif ()
 
 # Set linked SFML libraries
