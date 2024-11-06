@@ -82,9 +82,9 @@ elseif (APPLE)
 endif ()
 
 # Checking ethernet connection to be able to compile offline
-if (EXISTS $ENV{FORCE_FETCH_CONTENT} AND $ENV{FORCE_FETCH_CONTENT} GREATER 0)
+if ((EXISTS $ENV{FORCE_FETCH_CONTENT}) AND ($ENV{FORCE_FETCH_CONTENT} GREATER 0))
   SET(NO_CONNECTION 0)
-else  ()
+else ()
   if (WIN32)
     execute_process(
         COMMAND ping google.com -n 2
