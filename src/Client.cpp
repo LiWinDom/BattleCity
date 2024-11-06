@@ -1,3 +1,5 @@
+#include <map>
+
 #include "Other/Log.h"
 #include "Game/Render/Window.h"
 
@@ -17,7 +19,7 @@ int main(int argc, char* argv[]) {
     auto window = std::make_unique<Window>();
 
     std::vector<std::shared_ptr<IObject>> objects;
-    std::vector<std::shared_ptr<IDrawable>> drawables;
+    std::map<uint16_t, std::shared_ptr<IDrawable>> drawables;
     objects.push_back(std::make_shared<PlayerTank>(sf::Vector2f(0, 0)));
     objects.push_back(std::make_shared<Block>(sf::Vector2f(16, 16)));
     objects.push_back(std::make_shared<Block>(sf::Vector2f(40, 16)));
@@ -26,31 +28,29 @@ int main(int argc, char* argv[]) {
 
     while (window->isOpen()) {
       window->clear();
-      for (size_t i = 0; i < std::max(objects.size(), drawables.size()); ++i) {
-        if (i < objects.size()) {
-          if (objects[i]->isDestroyed()) {
-            objects.erase(objects.begin() + i);
-            drawables.erase(drawables.begin() + i);
-            --i;
-            continue;
-          }
-          if (i >= drawables.size()) {
-            switch (objects[i]->getType()) {
-              case ObjectType::PlayerTank:
-              case ObjectType::EnemyTank:
-                drawables.push_back(std::make_shared<TankDrawable>());
-                break;
-              case ObjectType::Block:
-                drawables.push_back(std::make_shared<BlockDrawable>());
-                break;
-                }
-          }
-          drawables[i]->update(objects[i]);
-          window->draw(*drawables[i]);
+
+      for (size_t i = 0; i < objects.size(); ++i) {
+        const auto object = objects[i];
+        if (object->isDestroyed()) {
+          drawables.erase(object->getId());
+          objects.erase(objects.begin() + i);
+          --i;
+          continue;
         }
-        else {
-          drawables.erase(drawables.begin() + (i--));
+
+        if (!drawables.contains(object->getId())) {
+          switch (object->getType()) {
+            case ObjectType::PlayerTank:
+            case ObjectType::EnemyTank:
+              drawables[object->getId()] = std::make_shared<TankDrawable>();
+              break;
+            case ObjectType::Block:
+              drawables[object->getId()] = std::make_shared<BlockDrawable>();
+              break;
+          }
         }
+        drawables[object->getId()]->update(object);
+        window->draw(*drawables[object->getId()]);
       }
       window->display();
 
