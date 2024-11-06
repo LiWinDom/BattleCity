@@ -52,6 +52,7 @@ foreach (FILE ${RESOURCES})
 endforeach()
 include(AddIconToBinary.cmake)
 AddIconToBinary(RESOURCES ICONS ./resources/Icon.ico ./resources/Icon.icns)
+
 if (WIN32)
   add_executable(${CLIENT_PROJECT_NAME} WIN32 ${CLIENT_EXECUTABLES} ${RESOURCES})
   add_executable(${SERVER_PROJECT_NAME} WIN32 ${SERVER_EXECUTABLES})
@@ -138,7 +139,9 @@ elseif (WIN32)
   if(POLICY CMP0091)
     cmake_policy(SET CMP0091 NEW)
   endif()
-  set_property(TARGET MyVtkAppOrLibName PROPERTY
+  set_property(TARGET ${CLIENT_PROJECT_NAME}} PROPERTY
+      MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  set_property(TARGET ${SERVER_PROJECT_NAME}}} PROPERTY
       MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
   set(SFML_STATIC_LIBRARIES TRUE)
