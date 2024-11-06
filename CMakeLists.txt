@@ -112,7 +112,6 @@ set(FETCHCONTENT_QUIET OFF)
 include(FetchContent)
 
 # Fetching SFML
-set(BUILD_SHARED_LIBS OFF)
 FetchContent_Declare(
     SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
@@ -120,6 +119,7 @@ FetchContent_Declare(
 )
 
 # Linking options
+set(BUILD_SHARED_LIBS OFF)
 if (APPLE)
   set(SFML_BUILD_FRAMEWORKS OFF)
   set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES
@@ -134,7 +134,13 @@ elseif (WIN32)
   else ()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:CONSOLE")
   endif ()
-  set(LINK_FLAGS -static)
+
+  if(POLICY CMP0091)
+    cmake_policy(SET CMP0091 NEW)
+  endif()
+  set_property(TARGET MyVtkAppOrLibName PROPERTY
+      MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
   set(SFML_STATIC_LIBRARIES TRUE)
   set(SFML_USE_STATIC_STD_LIBS TRUE)
 endif ()
