@@ -17,11 +17,11 @@ copy: dirs
 	cp -r ./$(RESOURCES) ./$(BIN)/$(RELEASE)/$(RESOURCES)
 
 win32: copy
-	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_ARCHITECTURE=Win32 -S ./ -B ./${CMAKE_BUILD_WINDOWS}-Win32 -A Win32
+	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_ARCHITECTURE=Win32 -S ./ -B ./${CMAKE_BUILD_WINDOWS}-Win32 -A Win32 -T v141_xp
 	cmake --build ./${CMAKE_BUILD_WINDOWS}-Win32 --config Release
 
 win64: copy
-	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_ARCHITECTURE=x64 -S ./ -B ./${CMAKE_BUILD_WINDOWS}-x64 -A x64
+	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_ARCHITECTURE=x64 -S ./ -B ./${CMAKE_BUILD_WINDOWS}-x64 -A x64 -T v141_xp
 	cmake --build ./${CMAKE_BUILD_WINDOWS}-x64 --config Release
 
 win: win32 win64

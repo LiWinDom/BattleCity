@@ -29,6 +29,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Installing dependencies
+        working-directory: ./
+        run: |
+          & "C:/Program Files (x86)/Microsoft Visual Studio/Installer/vs_installer.exe" --add Microsoft.VisualStudio.Component.VC.v141.xp --quiet --wait --norestart
+
       - name: Build project
         working-directory: ./
         run: make win -e FORCE_FETCH_CONTENT=1
