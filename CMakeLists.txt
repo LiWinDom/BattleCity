@@ -135,9 +135,14 @@ elseif (WIN32)
   else ()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:CONSOLE")
   endif ()
-  set(SFML_STATIC)
   set(SFML_STATIC_LIBRARIES TRUE)
   set(SFML_USE_STATIC_STD_LIBS TRUE)
+
+  # Fixing some bugs
+  if (POLICY CMP0091)
+    cmake_policy(SET CMP0091 NEW)
+  endif()
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif ()
 
 # Set linked SFML libraries
