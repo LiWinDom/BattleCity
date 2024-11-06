@@ -35,7 +35,7 @@ class IObject {
 
   void setPosition(const sf::Vector2f& position);
 
-  std::vector<std::shared_ptr<IObject>> findIntersection(const std::vector<std::shared_ptr<IObject>>& objects) const;
+  std::vector<std::shared_ptr<IObject>> findCollisions(const std::vector<std::shared_ptr<IObject>>& objects) const;
   virtual void think(const std::vector<std::shared_ptr<IObject>>& objects, uint16_t index, const sf::Clock& globalClock, const Event& event) = 0;
 
  protected:

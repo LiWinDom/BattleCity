@@ -34,7 +34,7 @@ void IObject::setPosition(const sf::Vector2f &position) {
   _position = position;
 }
 
-std::vector<std::shared_ptr<IObject>> IObject::findIntersection(const std::vector<std::shared_ptr<IObject>>& objects) const {
+std::vector<std::shared_ptr<IObject>> IObject::findCollisions(const std::vector<std::shared_ptr<IObject>>& objects) const {
   std::vector<std::shared_ptr<IObject>> intersects;
 
   for (const auto& object : objects) {
