@@ -27,6 +27,7 @@ class IObject {
   // Intersection check
   bool operator|(const IObject& other) const;
 
+  uint16_t getId() const;
   ObjectType getType() const;
   sf::Vector2f getPosition() const;
   sf::Vector2f getSize() const;

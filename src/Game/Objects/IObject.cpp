@@ -14,6 +14,10 @@ bool IObject::operator|(const IObject &other) const {
   );
 }
 
+uint16_t IObject::getId() const {
+  return _id;
+}
+
 ObjectType IObject::getType() const {
   return _type;
 }
