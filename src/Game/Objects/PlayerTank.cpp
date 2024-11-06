@@ -30,7 +30,7 @@ void PlayerTank::think(const std::vector<std::shared_ptr<IObject>> &objects, uin
         _rotation = 3;
         ++_position.x;
       }
-      if (!findIntersection(objects).empty()) {
+      if (!findCollisions(objects).empty()) {
         _position = oldPosition;
       }
     }
