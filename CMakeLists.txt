@@ -82,8 +82,8 @@ elseif (APPLE)
 endif ()
 
 # Checking ethernet connection to be able to compile offline
-if ((EXISTS $ENV{FORCE_FETCH_CONTENT}) AND ($ENV{FORCE_FETCH_CONTENT} GREATER 0))
-  SET(NO_CONNECTION 0)
+if ("$ENV{FORCE_FETCH_CONTENT}" GREATER 0)
+  set(NO_CONNECTION 0)
 else ()
   if (WIN32)
     execute_process(
