@@ -82,8 +82,8 @@ elseif (APPLE)
 endif ()
 
 # Checking ethernet connection to be able to compile offline
-if ((EXISTS $ENV{FORCE_FETCH_CONTENT}) AND ($ENV{FORCE_FETCH_CONTENT} GREATER 0))
-  SET(NO_CONNECTION 0)
+if ("$ENV{FORCE_FETCH_CONTENT}" GREATER 0)
+  set(NO_CONNECTION 0)
 else ()
   if (WIN32)
     execute_process(
@@ -131,10 +131,13 @@ if (APPLE)
   )
 elseif (WIN32)
   if (RELEASE)
-    set(CLIENT_LINK_FLAGS "/ENTRY:mainCRTStartup") # Hiding console
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ENTRY:mainCRTStartup") # Hiding console
+  else ()
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:CONSOLE")
   endif ()
+  set(SFML_STATIC)
   set(SFML_STATIC_LIBRARIES TRUE)
-  set(LINK_FLAGS SFML_STATIC)
+  set(SFML_USE_STATIC_STD_LIBS TRUE)
 endif ()
 
 # Set linked SFML libraries
@@ -164,14 +167,14 @@ if (WIN32)
 endif()
 
 target_compile_features(${CLIENT_PROJECT_NAME} PRIVATE cxx_std_17)
-target_link_libraries(${CLIENT_PROJECT_NAME} PRIVATE ${CLIENT_SFML_LIBRARIES} ${CLIENT_LINK_FLAGS} ${LINK_FLAGS})
+target_link_libraries(${CLIENT_PROJECT_NAME} PRIVATE ${CLIENT_SFML_LIBRARIES} ${CLIENT_LINK_FLAGS})
 set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES
     OUTPUT_NAME "${CLIENT_PROJECT_NAME}-${CMAKE_SYSTEM_NAME}${ARCHITECTURE}"
     CLEAN_DIRECT_OUTPUT 1
 )
 
 target_compile_features(${SERVER_PROJECT_NAME} PRIVATE cxx_std_17)
-target_link_libraries(${SERVER_PROJECT_NAME} PRIVATE ${SERVER_SFML_LIBRARIES} ${LINK_FLAGS})
+target_link_libraries(${SERVER_PROJECT_NAME} PRIVATE ${SERVER_SFML_LIBRARIES})
 set_target_properties(${SERVER_PROJECT_NAME} PROPERTIES
     OUTPUT_NAME "${SERVER_PROJECT_NAME}-${CMAKE_SYSTEM_NAME}${ARCHITECTURE}"
     CLEAN_DIRECT_OUTPUT 1
