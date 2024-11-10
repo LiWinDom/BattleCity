@@ -4,11 +4,13 @@
 #include "Game/Render/Window.h"
 
 #include "Game/Objects/PlayerTank.h"
-#include "Game/Objects/Border.h"
 #include "Game/Objects/Block.h"
+#include "Game/Objects/Border.h"
+#include "Game/Objects/Bush.h"
 
 #include "Game/Render/Drawables/TankDrawable.h"
 #include "Game/Render/Drawables/BlockDrawable.h"
+#include "Game/Render/Drawables/BushDrawable.h"
 
 int main(int argc, char* argv[]) {
   Log::message("Started client");
@@ -32,10 +34,16 @@ int main(int argc, char* argv[]) {
     objects.push_back(std::make_shared<Block>(sf::Vector2f(40, 40)));
 
     objects.push_back(std::make_shared<PlayerTank>(sf::Vector2f(0, 0)));
+
     objects.push_back(std::make_shared<Block>(sf::Vector2f(16, 16)));
     objects.push_back(std::make_shared<Block>(sf::Vector2f(40, 16)));
     objects.push_back(std::make_shared<Block>(sf::Vector2f(16, 40)));
     objects.push_back(std::make_shared<Block>(sf::Vector2f(40, 40)));
+
+    objects.push_back(std::make_shared<Bush>(sf::Vector2f(24, 24)));
+    objects.push_back(std::make_shared<Bush>(sf::Vector2f(32, 24)));
+    objects.push_back(std::make_shared<Bush>(sf::Vector2f(24, 32)));
+    objects.push_back(std::make_shared<Bush>(sf::Vector2f(32, 32)));
 
     while (window->isOpen()) {
       window->clear();
@@ -58,6 +66,9 @@ int main(int argc, char* argv[]) {
             case ObjectType::Block:
             case ObjectType::Border:
               drawables[object->getId()] = std::make_shared<BlockDrawable>();
+              break;
+            case ObjectType::Bush:
+              drawables[object->getId()] = std::make_shared<BushDrawable>();
               break;
           }
         }

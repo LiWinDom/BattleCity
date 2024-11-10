@@ -32,6 +32,10 @@ set (
     src/Game/Render/Drawables/BlockDrawable.h src/Game/Render/Drawables/BlockDrawable.cpp
     src/Game/Objects/Border.cpp
     src/Game/Objects/Border.h
+    src/Game/Objects/Bush.cpp
+    src/Game/Objects/Bush.h
+    src/Game/Render/Drawables/BushDrawable.cpp
+    src/Game/Render/Drawables/BushDrawable.h
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp
@@ -44,6 +48,8 @@ set (
     src/Game/Objects/Block.h src/Game/Objects/Block.cpp
     src/Game/Objects/Border.cpp
     src/Game/Objects/Border.h
+    src/Game/Objects/Bush.cpp
+    src/Game/Objects/Bush.h
 )
 
 # Adding icon and other resources
