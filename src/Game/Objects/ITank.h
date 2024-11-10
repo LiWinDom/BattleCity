@@ -11,6 +11,6 @@ class ITank : public IObject {
  protected:
    void snap(float& coordinate);
 
-   uint8_t _rotation = 0;
+   ObjectRotation _rotation = ObjectRotation::Up;
    bool _wheelState = false;
 };
