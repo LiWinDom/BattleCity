@@ -13,25 +13,25 @@ void PlayerTank::think(const std::vector<std::shared_ptr<IObject>> &objects, uin
       if (event.up) {
         snap(_position.x);
         snap(oldPosition.x);
-        _rotation = 0;
+        _rotation = ObjectRotation::Up;
         --_position.y;
       }
       else if (event.left) {
         snap(_position.y);
         snap(oldPosition.y);
-        _rotation = 1;
+        _rotation = ObjectRotation::Left;
         --_position.x;
       }
       else if (event.down) {
         snap(_position.x);
         snap(oldPosition.x);
-        _rotation = 2;
+        _rotation = ObjectRotation::Down;
         ++_position.y;
       }
       else {
         snap(_position.y);
         snap(oldPosition.y);
-        _rotation = 3;
+        _rotation = ObjectRotation::Right;
         ++_position.x;
       }
       if (!findCollisions(objects).empty()) {

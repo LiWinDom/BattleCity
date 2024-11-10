@@ -20,6 +20,13 @@ enum class ObjectType : uint8_t {
   EnemyTank = 12,
 };
 
+enum class ObjectRotation : uint8_t {
+  Up = 0,
+  Left = 1,
+  Down = 2,
+  Right = 3,
+};
+
 class IObject {
  public:
   IObject(ObjectType type, const sf::Vector2f& position, const sf::Vector2f& size);
