@@ -10,7 +10,7 @@
 
 enum class ObjectType : uint8_t {
   None = 0,
-  Air = 1,
+  Border = 1,
   Brick = 2,
   Block = 3,
   Bush = 4,

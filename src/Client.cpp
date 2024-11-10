@@ -4,6 +4,7 @@
 #include "Game/Render/Window.h"
 
 #include "Game/Objects/PlayerTank.h"
+#include "Game/Objects/Border.h"
 #include "Game/Objects/Block.h"
 
 #include "Game/Render/Drawables/TankDrawable.h"
@@ -20,6 +21,16 @@ int main(int argc, char* argv[]) {
 
     std::vector<std::shared_ptr<IObject>> objects;
     std::map<uint16_t, std::shared_ptr<IDrawable>> drawables;
+
+    objects.push_back(std::make_shared<Border>(0));
+    objects.push_back(std::make_shared<Border>(1));
+    objects.push_back(std::make_shared<Border>(2));
+    objects.push_back(std::make_shared<Border>(3));
+
+    objects.push_back(std::make_shared<Block>(sf::Vector2f(40, 16)));
+    objects.push_back(std::make_shared<Block>(sf::Vector2f(16, 40)));
+    objects.push_back(std::make_shared<Block>(sf::Vector2f(40, 40)));
+
     objects.push_back(std::make_shared<PlayerTank>(sf::Vector2f(0, 0)));
     objects.push_back(std::make_shared<Block>(sf::Vector2f(16, 16)));
     objects.push_back(std::make_shared<Block>(sf::Vector2f(40, 16)));
@@ -45,6 +56,7 @@ int main(int argc, char* argv[]) {
               drawables[object->getId()] = std::make_shared<TankDrawable>();
               break;
             case ObjectType::Block:
+            case ObjectType::Border:
               drawables[object->getId()] = std::make_shared<BlockDrawable>();
               break;
           }

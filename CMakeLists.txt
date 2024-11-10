@@ -30,6 +30,8 @@ set (
     src/Game/Render/Drawables/IDrawable.h src/Game/Render/Drawables/IDrawable.cpp
     src/Game/Render/Drawables/TankDrawable.h src/Game/Render/Drawables/TankDrawable.cpp
     src/Game/Render/Drawables/BlockDrawable.h src/Game/Render/Drawables/BlockDrawable.cpp
+    src/Game/Objects/Border.cpp
+    src/Game/Objects/Border.h
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp
@@ -40,6 +42,8 @@ set (
     src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp
     src/Game/Objects/IBlock.h src/Game/Objects/IBlock.cpp
     src/Game/Objects/Block.h src/Game/Objects/Block.cpp
+    src/Game/Objects/Border.cpp
+    src/Game/Objects/Border.h
 )
 
 # Adding icon and other resources
