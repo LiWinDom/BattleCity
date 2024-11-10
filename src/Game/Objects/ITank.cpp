@@ -6,7 +6,9 @@ uint8_t ITank::getState() const {
   return _wheelState << 2 | _rotation;
 }
 
-void ITank::snap(float& cordinate) {
-  if ((int)cordinate % 8 > 4) cordinate += 8;
-  cordinate -= (int)cordinate % 8;
+void ITank::snap(float& coordinate) {
+  if ((int)coordinate % 8 > 4) {
+    coordinate += 8;
+  }
+  coordinate -= (int)coordinate % 8;
 }
