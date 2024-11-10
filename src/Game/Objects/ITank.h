@@ -9,7 +9,7 @@ class ITank : public IObject {
   uint8_t getState() const override;
 
  protected:
-   void snap(float& cordinate);
+   void snap(float& coordinate);
 
    uint8_t _rotation = 0;
    bool _wheelState = false;
