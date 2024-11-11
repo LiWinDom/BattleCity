@@ -4,14 +4,18 @@ IObject::IObject(ObjectType type, const sf::Vector2f& position, const sf::Vector
   _id(std::rand()), _type(type), _position(position), _size(size) {}
 
 bool IObject::operator|(const IObject &other) const {
-  if (!_collistion || !other._collistion) return false;
-
   return !(
       _position.x + _size.x <= other._position.x ||  // right side is left of other left side
       _position.x >= other._position.x + other._size.x ||  // left side is right of other right side
       _position.y + _size.y <= other._position.y ||  // bottom side is above other top side
       _position.y >= other._position.y + other._size.y  // top side is below other bottom side
   );
+}
+
+bool IObject::operator&(const IObject &other) const {
+  if (!_collistion || !other._collistion) return false;
+
+  return operator|(other);
 }
 
 uint16_t IObject::getId() const {
@@ -45,7 +49,7 @@ std::vector<std::shared_ptr<IObject>> IObject::findCollisions(const std::vector<
     if (_id == object->_id) {
       continue;
     }
-    if (*this | *object) {
+    if (*this & *object) {
       intersects.push_back(object);
     }
   }

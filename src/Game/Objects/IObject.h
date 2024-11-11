@@ -31,8 +31,9 @@ class IObject {
  public:
   IObject(ObjectType type, const sf::Vector2f& position, const sf::Vector2f& size);
 
-  // Intersection check
+  // Collision check
   bool operator|(const IObject& other) const;
+  bool operator&(const IObject& other) const;
 
   uint16_t getId() const;
   ObjectType getType() const;
