@@ -13,4 +13,6 @@ class ITank : public IObject {
 
    ObjectRotation _rotation = ObjectRotation::Up;
    bool _wheelState = false;
+
+  double lastMoveTime = -1;
 };
