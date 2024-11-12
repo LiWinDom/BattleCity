@@ -44,16 +44,30 @@ void IObject::setPosition(const sf::Vector2f &position) {
   _position = position;
 }
 
-std::vector<std::shared_ptr<IObject>> IObject::findCollisions(const std::vector<std::shared_ptr<IObject>>& objects) const {
-  std::vector<std::shared_ptr<IObject>> intersects;
+std::vector<std::shared_ptr<IObject>> IObject::getSoftCollisions(const std::vector<std::shared_ptr<IObject>>& objects) const {
+  std::vector<std::shared_ptr<IObject>> colliders;
+
+  for (const auto& object : objects) {
+    if (_id == object->_id) {
+      continue;
+    }
+    if (*this | *object) {
+      colliders.push_back(object);
+    }
+  }
+  return colliders;
+};
+
+std::vector<std::shared_ptr<IObject>> IObject::getHardCollisions(const std::vector<std::shared_ptr<IObject>>& objects) const {
+  std::vector<std::shared_ptr<IObject>> colliders;
 
   for (const auto& object : objects) {
     if (_id == object->_id) {
       continue;
     }
     if (*this & *object) {
-      intersects.push_back(object);
+      colliders.push_back(object);
     }
   }
-  return intersects;
+  return colliders;
 };
