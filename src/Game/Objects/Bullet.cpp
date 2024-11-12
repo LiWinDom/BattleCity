@@ -1,9 +1,14 @@
 #include "Bullet.h"
 
 Bullet::Bullet(const sf::Vector2f& position, const ObjectRotation& rotation, const bool isFast) :
-IObject(ObjectType::Bullet, position, sf::Vector2f(4, 4)), _rotation(rotation), _isFast(isFast) {
+IObject(ObjectType::Bullet, position, sf::Vector2f(4, 4)), _rotation(rotation) {
   _collistion = false;
-  _speed = 120;
+  if (isFast) {
+    _speed = 240;
+  }
+  else {
+    _speed = 120;
+  }
 }
 
 uint8_t Bullet::getState() const {
@@ -12,7 +17,9 @@ uint8_t Bullet::getState() const {
 
 void Bullet::think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Clock &globalClock, const Event &event) {
   // Movement
-  static double lastMoveTime = globalClock.getElapsedTime().asSeconds();
+  if (lastMoveTime == -1) {
+    lastMoveTime = globalClock.getElapsedTime().asSeconds();
+  }
   while (globalClock.getElapsedTime().asSeconds() >= lastMoveTime + 1 / _speed) {
     lastMoveTime += 1 / _speed;
 

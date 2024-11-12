@@ -12,5 +12,5 @@ class Bullet : public IObject {
 
  protected:
   ObjectRotation _rotation;
-  bool _isFast;
+  double lastMoveTime = -1;
 };

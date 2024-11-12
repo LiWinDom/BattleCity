@@ -6,7 +6,9 @@ PlayerTank::PlayerTank(const sf::Vector2f& position) : ITank(ObjectType::PlayerT
 
 void PlayerTank::think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Clock& globalClock, const Event& event) {
   // Movement
-  static double lastMoveTime = globalClock.getElapsedTime().asSeconds();
+  if (lastMoveTime == -1) {
+    lastMoveTime = globalClock.getElapsedTime().asSeconds();
+  }
   if (event.up || event.down || event.left || event.right) {
     while (globalClock.getElapsedTime().asSeconds() >= lastMoveTime + 1 / _speed) {
       lastMoveTime += 1 / _speed;
