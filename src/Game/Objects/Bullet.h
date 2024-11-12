@@ -4,7 +4,7 @@
 
 class Bullet : public IObject {
  public:
-  Bullet(const sf::Vector2f& position, const ObjectRotation& rotation, const bool isFast = false);
+  Bullet(const sf::Vector2f& tankPosition, const ObjectRotation& rotation, const bool isFast = false);
 
   uint8_t getState() const override;
 

@@ -50,6 +50,6 @@ void PlayerTank::think(std::vector<std::shared_ptr<IObject>> &objects, const sf:
 
   // Shooting
   if (event.shoot) {
-    objects.push_back(std::make_shared<Bullet>(_position + sf::Vector2f(6, -4), _rotation));
+    objects.push_back(std::make_shared<Bullet>(_position, _rotation));
   }
 }

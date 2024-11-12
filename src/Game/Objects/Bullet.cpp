@@ -1,7 +1,21 @@
 #include "Bullet.h"
 
-Bullet::Bullet(const sf::Vector2f& position, const ObjectRotation& rotation, const bool isFast) :
-IObject(ObjectType::Bullet, position, sf::Vector2f(4, 4)), _rotation(rotation) {
+Bullet::Bullet(const sf::Vector2f& tankPosition, const ObjectRotation& rotation, const bool isFast) :
+IObject(ObjectType::Bullet, {0, 0}, {4, 4}), _rotation(rotation) {
+  switch (rotation) {
+    case ObjectRotation::Up:
+      _position = tankPosition + sf::Vector2f(6, -4);
+      break;
+    case ObjectRotation::Left:
+      _position = tankPosition + sf::Vector2f(-4, 6);
+      break;
+    case ObjectRotation::Down:
+      _position = tankPosition + sf::Vector2f(6, 16);
+      break;
+    case ObjectRotation::Right:
+      _position = tankPosition + sf::Vector2f(16, 6);
+  }
+
   _collistion = false;
   if (isFast) {
     _speed = 240;
