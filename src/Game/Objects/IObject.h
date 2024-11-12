@@ -25,8 +25,10 @@ class IObject {
 
   void setPosition(const sf::Vector2f& position);
 
-  std::vector<std::shared_ptr<IObject>> findCollisions(const std::vector<std::shared_ptr<IObject>>& objects) const;
-  virtual void think(const std::vector<std::shared_ptr<IObject>>& objects, const sf::Clock& globalClock, const Event& event) = 0;
+  std::vector<std::shared_ptr<IObject>> getSoftCollisions(const std::vector<std::shared_ptr<IObject>>& objects) const;
+  std::vector<std::shared_ptr<IObject>> getHardCollisions(const std::vector<std::shared_ptr<IObject>>& objects) const;
+
+  virtual void think(std::vector<std::shared_ptr<IObject>>& objects, const sf::Clock& globalClock, const Event& event) = 0;
 
  protected:
   uint16_t _id;
@@ -37,4 +39,6 @@ class IObject {
 
   bool _collistion = true;
   bool _desytroyed = false;
+
+  double _speed = 0;
 };

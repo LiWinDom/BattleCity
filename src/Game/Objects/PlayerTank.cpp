@@ -1,12 +1,15 @@
 #include "PlayerTank.h"
 
+#include "Bullet.h"
+
 PlayerTank::PlayerTank(const sf::Vector2f& position) : ITank(ObjectType::PlayerTank, position) {}
 
-void PlayerTank::think(const std::vector<std::shared_ptr<IObject>> &objects, const sf::Clock& globalClock, const Event& event) {
-  static float holdTime = globalClock.getElapsedTime().asSeconds();
+void PlayerTank::think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Clock& globalClock, const Event& event) {
+  // Movement
+  static double lastMoveTime = globalClock.getElapsedTime().asSeconds();
   if (event.up || event.down || event.left || event.right) {
-    while (globalClock.getElapsedTime().asSeconds() >= holdTime + 1 / 45.0) {
-      holdTime += 1 / 45.0;
+    while (globalClock.getElapsedTime().asSeconds() >= lastMoveTime + 1 / _speed) {
+      lastMoveTime += 1 / _speed;
       _wheelState = !_wheelState;
 
       auto oldPosition = _position;
@@ -34,12 +37,17 @@ void PlayerTank::think(const std::vector<std::shared_ptr<IObject>> &objects, con
         _rotation = ObjectRotation::Right;
         ++_position.x;
       }
-      if (!findCollisions(objects).empty()) {
+      if (!getHardCollisions(objects).empty()) {
         _position = oldPosition;
       }
     }
   }
   else {
-    holdTime = globalClock.getElapsedTime().asSeconds();
+    lastMoveTime = globalClock.getElapsedTime().asSeconds();
+  }
+
+  // Shooting
+  if (event.shoot) {
+    objects.push_back(std::make_shared<Bullet>(_position + sf::Vector2f(6, -4), _rotation));
   }
 }
