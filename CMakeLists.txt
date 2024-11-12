@@ -20,36 +20,33 @@ endif ()
 set (
     CLIENT_EXECUTABLES ./src/Client.cpp
     src/Other/Path.h src/Other/Path.cpp
-    src/Other/Log.h ./src/Game/Event.h
+    src/Other/Log.h ./src/Game/Enums.h ./src/Game/Event.h
+    src/Game/GameField.h ./src/Game/GameField.cpp
     src/Game/Objects/IObject.h src/Game/Objects/IObject.cpp
     src/Game/Objects/ITank.h src/Game/Objects/ITank.cpp
     src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp
     src/Game/Objects/IBlock.h src/Game/Objects/IBlock.cpp
     src/Game/Objects/Block.h src/Game/Objects/Block.cpp
+    src/Game/Objects/Border.h src/Game/Objects/Border.cpp
+    src/Game/Objects/Bush.h src/Game/Objects/Bush.cpp
     src/Game/Render/Window.h src/Game/Render/Window.cpp
     src/Game/Render/Drawables/IDrawable.h src/Game/Render/Drawables/IDrawable.cpp
     src/Game/Render/Drawables/TankDrawable.h src/Game/Render/Drawables/TankDrawable.cpp
     src/Game/Render/Drawables/BlockDrawable.h src/Game/Render/Drawables/BlockDrawable.cpp
-    src/Game/Objects/Border.cpp
-    src/Game/Objects/Border.h
-    src/Game/Objects/Bush.cpp
-    src/Game/Objects/Bush.h
-    src/Game/Render/Drawables/BushDrawable.cpp
-    src/Game/Render/Drawables/BushDrawable.h
+    src/Game/Render/Drawables/BushDrawable.h src/Game/Render/Drawables/BushDrawable.cpp
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp
     src/Other/Path.h src/Other/Path.cpp
-    src/Other/Log.h ./src/Game/Event.h
+    src/Other/Log.h ./src/Game/Enums.h ./src/Game/Event.h
+    src/Game/GameField.h ./src/Game/GameField.cpp
     src/Game/Objects/IObject.h src/Game/Objects/IObject.cpp
     src/Game/Objects/ITank.h src/Game/Objects/ITank.cpp
     src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp
     src/Game/Objects/IBlock.h src/Game/Objects/IBlock.cpp
     src/Game/Objects/Block.h src/Game/Objects/Block.cpp
-    src/Game/Objects/Border.cpp
-    src/Game/Objects/Border.h
-    src/Game/Objects/Bush.cpp
-    src/Game/Objects/Bush.h
+    src/Game/Objects/Border.h src/Game/Objects/Border.cpp
+    src/Game/Objects/Bush.h src/Game/Objects/Bush.cpp
 )
 
 # Adding icon and other resources

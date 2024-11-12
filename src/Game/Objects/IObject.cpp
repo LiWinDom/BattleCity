@@ -4,6 +4,8 @@ IObject::IObject(ObjectType type, const sf::Vector2f& position, const sf::Vector
   _id(std::rand()), _type(type), _position(position), _size(size) {}
 
 bool IObject::operator|(const IObject &other) const {
+  if (_desytroyed || other._desytroyed) return false;
+
   return !(
       _position.x + _size.x <= other._position.x ||  // right side is left of other left side
       _position.x >= other._position.x + other._size.x ||  // left side is right of other right side

@@ -8,6 +8,6 @@ uint8_t Border::getState() const {
   return 0;
 }
 
-void Border::think(const std::vector<std::shared_ptr<IObject>> &objects, uint16_t index, const sf::Clock &globalClock, const Event &event) {
+void Border::think(const std::vector<std::shared_ptr<IObject>> &objects, const sf::Clock &globalClock, const Event &event) {
   return;
 }

@@ -1,31 +1,12 @@
 #pragma once
 
-#include <cstdint>
 #include <memory>
 #include <vector>
 
 #include "SFML/System.hpp"
 
+#include "../Enums.h"
 #include "../Event.h"
-
-enum class ObjectType : uint8_t {
-  None = 0,
-  Border = 1,
-  Brick = 2,
-  Block = 3,
-  Bush = 4,
-  Water = 5,
-  Tank = 10,
-  PlayerTank = 11,
-  EnemyTank = 12,
-};
-
-enum class ObjectRotation : uint8_t {
-  Up = 0,
-  Left = 1,
-  Down = 2,
-  Right = 3,
-};
 
 class IObject {
  public:
@@ -45,7 +26,7 @@ class IObject {
   void setPosition(const sf::Vector2f& position);
 
   std::vector<std::shared_ptr<IObject>> findCollisions(const std::vector<std::shared_ptr<IObject>>& objects) const;
-  virtual void think(const std::vector<std::shared_ptr<IObject>>& objects, uint16_t index, const sf::Clock& globalClock, const Event& event) = 0;
+  virtual void think(const std::vector<std::shared_ptr<IObject>>& objects, const sf::Clock& globalClock, const Event& event) = 0;
 
  protected:
   uint16_t _id;
