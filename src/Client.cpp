@@ -7,6 +7,7 @@
 #include "Game/Render/Window.h"
 #include "Game/Render/Drawables/TankDrawable.h"
 #include "Game/Render/Drawables/BlockDrawable.h"
+#include "Game/Render/Drawables/BorderDrawable.h"
 #include "Game/Render/Drawables/BulletDrawable.h"
 #include "Game/Render/Drawables/BushDrawable.h"
 
@@ -36,8 +37,10 @@ int main(int argc, char* argv[]) {
               drawables[object->getId()] = std::make_shared<TankDrawable>();
               break;
             case ObjectType::Block:
-            case ObjectType::Border:
               drawables[object->getId()] = std::make_shared<BlockDrawable>();
+              break;
+            case ObjectType::Border:
+              drawables[object->getId()] = std::make_shared<BorderDrawable>();
               break;
             case ObjectType::Bullet:
               drawables[object->getId()] = std::make_shared<BulletDrawable>();

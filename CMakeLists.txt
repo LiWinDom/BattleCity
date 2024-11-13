@@ -40,6 +40,8 @@ set (
     src/Game/Render/Drawables/BulletDrawable.h
     src/Game/Objects/IMovable.cpp
     src/Game/Objects/IMovable.h
+    src/Game/Render/Drawables/BorderDrawable.cpp
+    src/Game/Render/Drawables/BorderDrawable.h
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp
