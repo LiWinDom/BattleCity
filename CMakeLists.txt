@@ -38,6 +38,8 @@ set (
     src/Game/Objects/Bullet.h
     src/Game/Render/Drawables/BulletDrawable.cpp
     src/Game/Render/Drawables/BulletDrawable.h
+    src/Game/Objects/IMovable.cpp
+    src/Game/Objects/IMovable.h
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp
@@ -53,6 +55,8 @@ set (
     src/Game/Objects/Bush.h src/Game/Objects/Bush.cpp
     src/Game/Objects/Bullet.cpp
     src/Game/Objects/Bullet.h
+    src/Game/Objects/IMovable.cpp
+    src/Game/Objects/IMovable.h
 )
 
 # Adding icon and other resources
