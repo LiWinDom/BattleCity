@@ -39,6 +39,4 @@ class IObject {
 
   bool _collistion = true;
   bool _desytroyed = false;
-
-  double _speed = 0;
 };
