@@ -34,14 +34,10 @@ set (
     src/Game/Render/Drawables/TankDrawable.h src/Game/Render/Drawables/TankDrawable.cpp
     src/Game/Render/Drawables/BlockDrawable.h src/Game/Render/Drawables/BlockDrawable.cpp
     src/Game/Render/Drawables/BushDrawable.h src/Game/Render/Drawables/BushDrawable.cpp
-    src/Game/Objects/Bullet.cpp
-    src/Game/Objects/Bullet.h
-    src/Game/Render/Drawables/BulletDrawable.cpp
-    src/Game/Render/Drawables/BulletDrawable.h
-    src/Game/Objects/IMovable.cpp
-    src/Game/Objects/IMovable.h
-    src/Game/Render/Drawables/BorderDrawable.cpp
-    src/Game/Render/Drawables/BorderDrawable.h
+    src/Game/Objects/Bullet.h src/Game/Objects/Bullet.cpp
+    src/Game/Render/Drawables/BulletDrawable.h src/Game/Render/Drawables/BulletDrawable.cpp
+    src/Game/Objects/IMovable.cpp src/Game/Objects/IMovable.h
+    src/Game/Render/Drawables/BorderDrawable.cpp src/Game/Render/Drawables/BorderDrawable.h
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp
@@ -55,10 +51,8 @@ set (
     src/Game/Objects/Block.h src/Game/Objects/Block.cpp
     src/Game/Objects/Border.h src/Game/Objects/Border.cpp
     src/Game/Objects/Bush.h src/Game/Objects/Bush.cpp
-    src/Game/Objects/Bullet.cpp
-    src/Game/Objects/Bullet.h
-    src/Game/Objects/IMovable.cpp
-    src/Game/Objects/IMovable.h
+    src/Game/Objects/Bullet.cpp src/Game/Objects/Bullet.h
+    src/Game/Objects/IMovable.cpp src/Game/Objects/IMovable.h
 )
 
 # Adding icon and other resources
