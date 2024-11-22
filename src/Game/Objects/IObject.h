@@ -20,6 +20,7 @@ class IObject {
   ObjectType getType() const;
   sf::Vector2f getPosition() const;
   sf::Vector2f getSize() const;
+  uint8_t getCollisionLayer() const;
   bool isDestroyed() const;
   virtual uint8_t getState() const = 0;
 
@@ -37,6 +38,7 @@ class IObject {
   sf::Vector2f _position;
   sf::Vector2f _size;
 
-  bool _collistion = true;
+  bool _collision = true;
+  uint8_t _collisionLayer = 0;
   bool _desytroyed = false;
 };

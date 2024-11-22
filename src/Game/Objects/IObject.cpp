@@ -5,6 +5,7 @@ IObject::IObject(ObjectType type, const sf::Vector2f& position, const sf::Vector
 
 bool IObject::operator|(const IObject &other) const {
   if (_desytroyed || other._desytroyed) return false;
+  if (!_collision || !other._collision) return false;
 
   return !(
       _position.x + _size.x <= other._position.x ||  // right side is left of other left side
@@ -15,7 +16,7 @@ bool IObject::operator|(const IObject &other) const {
 }
 
 bool IObject::operator&(const IObject &other) const {
-  if (!_collistion || !other._collistion) return false;
+  if (_collisionLayer < other._collisionLayer) return false;
 
   return operator|(other);
 }

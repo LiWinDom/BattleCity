@@ -1,7 +1,7 @@
 #include "Bush.h"
 
 Bush::Bush(const sf::Vector2f& position) : IBlock(ObjectType::Bush, position) {
-  _collistion = false;
+  _collision = false;
 }
 
 uint8_t Bush::getState() const {

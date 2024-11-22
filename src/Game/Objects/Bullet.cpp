@@ -2,6 +2,7 @@
 
 Bullet::Bullet(const sf::Vector2f& tankPosition, const ObjectRotation& rotation, const bool isFast) :
 IMovable(ObjectType::Bullet, {0, 0}, {4, 4}, rotation, isFast ? 240 : 120) {
+  _collisionLayer = 2;
   switch (rotation) {
     case ObjectRotation::Up:
       _position = tankPosition + sf::Vector2f(6, -4);
@@ -15,7 +16,6 @@ IMovable(ObjectType::Bullet, {0, 0}, {4, 4}, rotation, isFast ? 240 : 120) {
     case ObjectRotation::Right:
       _position = tankPosition + sf::Vector2f(16, 6);
   }
-  _collistion = false;
 }
 
 uint8_t Bullet::getState() const {
