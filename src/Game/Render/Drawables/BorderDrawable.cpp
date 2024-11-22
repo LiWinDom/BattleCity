@@ -7,6 +7,7 @@ BorderDrawable::BorderDrawable() {
     throw std::runtime_error(R"(Cannot load "resources/graphics/StatsBackground.png" texture)");
   }
   _sprites.emplace_back(_texture);
+  _layer = 2;
   Log::debug(R"(Drawable "Border" created)");
 }
 

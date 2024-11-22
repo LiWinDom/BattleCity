@@ -51,7 +51,20 @@ int main(int argc, char* argv[]) {
           }
         }
         drawables[object->getId()]->update(object);
-        window->draw(*drawables[object->getId()]);
+      }
+
+      // Render objects
+      std::vector<std::shared_ptr<IDrawable>> drawablesPointers;
+      drawablesPointers.reserve(drawables.size());
+      for (const auto& drawable : drawables) {
+        drawablesPointers.push_back(drawable.second);
+      }
+      // Sorting by layers
+      std::sort(drawablesPointers.begin(), drawablesPointers.end(), [](const std::shared_ptr<IDrawable>& a, const std::shared_ptr<IDrawable>& b) -> bool {
+        return a->getLayer() < b->getLayer();
+      });
+      for (const auto& drawable : drawablesPointers) {
+        window->draw(*drawable);
       }
       window->display();
 
