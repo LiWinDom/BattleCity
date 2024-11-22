@@ -7,6 +7,7 @@ BushDrawable::BushDrawable() {
     throw std::runtime_error(R"(Cannot load "resources/graphics/Blocks.png" texture)");
   }
   _sprites.emplace_back(_texture);
+  _layer = 1;
   Log::debug(R"(Drawable "Bush" created)");
 }
 
