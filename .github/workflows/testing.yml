@@ -7,12 +7,18 @@ on:
     branches: [main]
 
 jobs:
-  linux:
-    runs-on: ubuntu-latest
+  testing:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Installing dependencies
+        if: runner.os == 'Linux'
         working-directory: ./
         run: sudo apt -y install
           build-essential make cmake
@@ -22,22 +28,4 @@ jobs:
 
       - name: Build project
         working-directory: ./
-        run: make linux -e FORCE_FETCH_CONTENT=1
-
-  windows:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Build project
-        working-directory: ./
-        run: make win -e FORCE_FETCH_CONTENT=1
-
-  macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Configure project
-        working-directory: ./
-        run: make darwin -e FORCE_FETCH_CONTENT=1
+        run: make ${{ runner.os }} -e FORCE_FETCH_CONTENT=1
