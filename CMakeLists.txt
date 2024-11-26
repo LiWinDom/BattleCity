@@ -125,6 +125,8 @@ endif ()
 set(FETCHCONTENT_QUIET OFF)
 include(FetchContent)
 
+set(BUILD_SHARED_LIBS OFF)
+
 # Fetching SFML
 FetchContent_Declare(
     SFML
@@ -133,7 +135,6 @@ FetchContent_Declare(
 )
 
 # Linking options
-set(BUILD_SHARED_LIBS OFF)
 if (APPLE)
   set(SFML_BUILD_FRAMEWORKS OFF)
   set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES
@@ -179,7 +180,7 @@ if (WIN32)
 endif()
 
 target_compile_features(${CLIENT_PROJECT_NAME} PRIVATE cxx_std_20)
-target_link_libraries(${CLIENT_PROJECT_NAME} PRIVATE ${CLIENT_SFML_LIBRARIES} ${CLIENT_LINK_FLAGS})
+target_link_libraries(${CLIENT_PROJECT_NAME} PRIVATE ${CLIENT_SFML_LIBRARIES})
 set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES
     OUTPUT_NAME "${CLIENT_PROJECT_NAME}-${CMAKE_SYSTEM_NAME}${ARCHITECTURE}"
     CLEAN_DIRECT_OUTPUT 1
