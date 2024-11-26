@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Installing dependencies
+        if: runner.os == 'Linux'
+        working-directory: ./
+        run: sudo apt -y install
+          build-essential make cmake
+          libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev
+          libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev
+          libfreetype-dev
+
+      - name: Build project
+        working-directory: ./
+        run: make ${{ runner.os }} -e FORCE_FETCH_CONTENT=1
+
+      - name: Set Release Variables
+        id: vars
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          RELEASE_NAME="${TAG_NAME}"
+          if [ -f CHANGELOG.md ]; then
+            CHANGELOG=$(cat CHANGELOG.md)
+          else
+            CHANGELOG="No changelog provided."
+          fi
+          echo "::set-output name=tag_name::${TAG_NAME}"
+          echo "::set-output name=release_name::${RELEASE_NAME}"
+          echo "::set-output name=changelog::${CHANGELOG}"
+          shell: bash
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.vars.outputs.tag_name }}
+          release_name: ${{ steps.vars.outputs.release_name }}
+          body: ${{ steps.vars.outputs.changelog }}
+          draft: false
+          prerelease: false
