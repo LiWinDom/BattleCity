@@ -12,8 +12,15 @@ TankDrawable::TankDrawable() {
 
 void TankDrawable::update(const std::shared_ptr<IObject> &object) {
   uint8_t state = object->getState();
-  uint8_t rotation = state & 3;
+  // [type][type][hasBonus/playerNum][livesNum][livesNum][wheelState][rotation][rotation]
+  uint8_t tankType = state >> 6;
+  bool hasBonus = state >> 5 & 1;
+  uint8_t livesNum = state >> 3 & 3;
   bool wheelState = state >> 2 & 1;
-  _sprites[0].setTextureRect(sf::IntRect(rotation * 32 + wheelState * 16, 0, 16, 16));
-  _sprites[0].setPosition(object->getPosition());
+  uint8_t rotation = state & 3;
+
+  if (object->getType() == ObjectType::PlayerTank) {
+    _sprites[0].setTextureRect(sf::IntRect(hasBonus * 128 + rotation * 32 + wheelState * 16, tankType * 16, 16, 16));
+    _sprites[0].setPosition(object->getPosition());
+  }
 }

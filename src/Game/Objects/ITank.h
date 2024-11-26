@@ -16,7 +16,9 @@ class ITank : public IMovable {
  protected:
   static void snap(float& coordinate);
 
+  uint8_t _tankType = 0;
+  bool _hasBonus = false;
+  uint8_t _livesNum = 0;
   bool _wheelState = false;
-  uint8_t _maxBullets = 1;
   std::vector<std::shared_ptr<IObject>> _bullets;
 };

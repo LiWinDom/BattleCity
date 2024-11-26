@@ -5,24 +5,42 @@ ITank::ITank(ObjectType type, const sf::Vector2f& position) : IMovable(type, pos
 }
 
 uint8_t ITank::getState() const {
-  return _wheelState << 2 | (uint8_t)_rotation;
+  return _tankType << 6
+    | _hasBonus << 5
+    | _livesNum << 3
+    | _wheelState << 2
+    | (uint8_t)_rotation; // [type][type][hasBonus/playerNum][livesNum][livesNum][wheelState][rotation][rotation]
 }
 
 void ITank::think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Clock &globalClock, const Event &event) {
+  // Getting pressed keys
+  PressedButtons pressed;
+  if (_type == ObjectType::PlayerTank) {
+    if (_hasBonus == 0) {
+      pressed = event.player1;
+    }
+    else {
+      pressed = event.player2;
+    }
+  }
+  else {
+    pressed;
+  }
+
   // Movement
-  if (event.up || event.down || event.left || event.right) {
+  if (pressed.up || pressed.down || pressed.left || pressed.right) {
     auto oldPosition = _position;
 
     // Rotating and snapping
-    if (event.up) {
+    if (pressed.up) {
       snap(_position.x);
       snap(oldPosition.x);
       _rotation = ObjectRotation::Up;
-    } else if (event.left) {
+    } else if (pressed.left) {
       snap(_position.y);
       snap(oldPosition.y);
       _rotation = ObjectRotation::Left;
-    } else if (event.down) {
+    } else if (pressed.down) {
       snap(_position.x);
       snap(oldPosition.x);
       _rotation = ObjectRotation::Down;
@@ -45,7 +63,7 @@ void ITank::think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Cloc
   }
 
   // Shooting
-  if (event.shoot) {
+  if (pressed.shoot) {
     shoot(objects);
   }
 
@@ -59,7 +77,13 @@ void ITank::think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Cloc
 }
 
 void ITank::shoot(std::vector<std::shared_ptr<IObject>> &objects) {
-  if (_bullets.size() >= _maxBullets) {
+  uint8_t maxBullets = 1;
+  if (_type == ObjectType::PlayerTank) {
+    if (_tankType >= 2) {
+      maxBullets = 2;
+    }
+  }
+  if (_bullets.size() >= maxBullets) {
     // Too many bullets
     return;
   }
