@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
       - name: Checkout repository
@@ -29,87 +29,88 @@ jobs:
         working-directory: ./
         run: make ${{ runner.os }} -e FORCE_FETCH_CONTENT=1
 
-      - name: Archive build files
+      - name: Archive build files (Linux and macOS)
         if: runner.os == 'Linux' || runner.os == 'macOS'
         working-directory: ./bin/Release
         run: |
-          tar -czvf BattleCity-${{runner.os}}.tar.gz ./*
-          echo "::set-output name=artifact_name::$ARCHIVE_NAME"
+          ARCHIVE_NAME="BattleCity-${{ runner.os }}.tar.gz"
+          tar -czvf $ARCHIVE_NAME ./*
+          echo "artifact_name=$ARCHIVE_NAME" >> $GITHUB_ENV
 
-      - name: Archive build files
+      - name: Archive build files (Windows)
         if: runner.os == 'Windows'
         working-directory: ./bin/Release
         run: |
-          Compress-Archive -Path .\* -DestinationPath BattleCity-${{runner.os}}.zip
-          echo "::set-output name=artifact_name::$ARCHIVE_NAME"
+          ARCHIVE_NAME="BattleCity-${{ runner.os }}.zip"
+          Compress-Archive -Path .\* -DestinationPath $ARCHIVE_NAME
+          echo "artifact_name=$ARCHIVE_NAME" >> $GITHUB_ENV
 
-      - name: Upload build artifacts
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.archive.outputs.artifact_name }}
-          path: ${{ runner.os == 'Windows' && 'BattleCity-${runner.os}.zip' || 'BattleCity-${runner.os}.tar.gz' }}
+          name: ${{ env.artifact_name }}
+          path: ${{ runner.os == 'Windows' && 'BattleCity-Windows.zip' || 'BattleCity-${{ runner.os }}.tar.gz' }}
 
   release:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Download build artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: ${{ needs.build.outputs.artifact_name }}
-        path: ./artifact
+      - name: Download build artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.artifact_name }}
+          path: ./artifact
 
-    - name: Set Release Variables
-      id: set_vars
-      run: |
-        TAG_NAME=${GITHUB_REF#refs/tags/}
-        RELEASE_NAME="${TAG_NAME}"
-        if [ -f CHANGELOG.md ]; then
-          CHANGELOG=$(cat CHANGELOG.md)
-        else
-          CHANGELOG="No changelog provided."
-        fi
-        echo "::set-output name=tag_name::${TAG_NAME}"
-        echo "::set-output name=release_name::${RELEASE_NAME}"
-        echo "::set-output name=changelog::${CHANGELOG}"
-      shell: bash
+      - name: Set Release Variables
+        id: set_vars
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          RELEASE_NAME="${TAG_NAME}"
+          if [ -f CHANGELOG.md ]; then
+            CHANGELOG=$(cat CHANGELOG.md)
+          else
+            CHANGELOG="No changelog provided."
+          fi
+          echo "tag_name=$TAG_NAME" >> $GITHUB_ENV
+          echo "release_name=$RELEASE_NAME" >> $GITHUB_ENV
+          echo "changelog=$CHANGELOG" >> $GITHUB_ENV
 
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.set_vars.outputs.tag_name }}
-        release_name: ${{ steps.set_vars.outputs.release_name }}
-        body: ${{ steps.set_vars.outputs.changelog }}
-        draft: false
-        prerelease: false
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.tag_name }}
+          release_name: ${{ env.release_name }}
+          body: ${{ env.changelog }}
+          draft: false
+          prerelease: false
 
-    - name: Upload Linux build to Release
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifact/BattleCity-Linux.tar.gz
-        asset_name: BattleCity-Linux.tar.gz
-        asset_content_type: application/gzip
+      - name: Upload Linux build to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifact/BattleCity-Linux.tar.gz
+          asset_name: BattleCity-Linux.tar.gz
+          asset_content_type: application/gzip
 
-    - name: Upload Windows build to Release
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifact/BattleCity-Windows.zip
-        asset_name: bBattleCity-Windows.zip
-        asset_content_type: application/zip
+      - name: Upload Windows build to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifact/BattleCity-Windows.zip
+          asset_name: BattleCity-Windows.zip
+          asset_content_type: application/zip
 
-    - name: Upload macOS build to Release
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifact/BattleCity-macOS.tar.gz
-        asset_name: BattleCity-macOS.tar.gz
-        asset_content_type: application/gzip
+      - name: Upload macOS build to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifact/BattleCity-macOS.tar.gz
+          asset_name: BattleCity-macOS.tar.gz
+          asset_content_type: application/gzip
