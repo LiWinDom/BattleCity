@@ -45,10 +45,6 @@ jobs:
           Compress-Archive -Path .\* -DestinationPath $ARCHIVE_NAME
           echo "artifact_name=$ARCHIVE_NAME" | Out-File -Append -FilePath $Env:GITHUB_ENV
 
-      - name: test
-        if: runner.os == 'Windows'
-        run: echo ${{ env.artifact_name }}
-
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
@@ -67,7 +63,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.artifact_name }}
-          path: ./artifact
+          path: ./
 
       - name: Set Release Variables
         id: set_vars
@@ -99,7 +95,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifact/BattleCity-Linux.tar.gz
+          asset_path: ./BattleCity-Linux.tar.gz
           asset_name: BattleCity-Linux.tar.gz
           asset_content_type: application/gzip
 
@@ -107,7 +103,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifact/BattleCity-Windows.zip
+          asset_path: ./BattleCity-Windows.zip
           asset_name: BattleCity-Windows.zip
           asset_content_type: application/zip
 
@@ -115,6 +111,6 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifact/BattleCity-macOS.tar.gz
+          asset_path: ./BattleCity-macOS.tar.gz
           asset_name: BattleCity-macOS.tar.gz
           asset_content_type: application/gzip
