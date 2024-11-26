@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  testing:
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Installing dependencies
         if: runner.os == 'Linux'
