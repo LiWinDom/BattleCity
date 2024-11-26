@@ -200,9 +200,9 @@ set_target_properties(${SERVER_PROJECT_NAME} PROPERTIES
 
 # Copying resources folder
 if (WIN32)
-  file(COPY ./resources/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/resources/)
+  file(COPY ./resources/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/)
 elseif (LINUX)
-  file(COPY ./resources/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/)
+  file(COPY ./resources/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/)
 endif()
 # Copying OpenAL on Windows
 if (WIN32)

@@ -10,17 +10,11 @@ dirs:
 	mkdir -p ./$(BIN)/$(DEBUG)/$(RESOURCES)
 	mkdir -p ./$(BIN)/$(RELEASE)/$(RESOURCES)
 
-copy: dirs
-	rm -rf ./$(BIN)/$(DEBUG)/$(RESOURCES)/*
-	rm -rf ./$(BIN)/$(RELEASE)/$(RESOURCES)/*
-	cp -r ./$(RESOURCES) ./$(BIN)/$(DEBUG)/$(RESOURCES)
-	cp -r ./$(RESOURCES) ./$(BIN)/$(RELEASE)/$(RESOURCES)
-
-win32: copy
+win32:
 	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_ARCHITECTURE=Win32 -S ./ -B ./${CMAKE_BUILD_WINDOWS}-Win32 -A Win32
 	cmake --build ./${CMAKE_BUILD_WINDOWS}-Win32 --config Release
 
-win64: copy
+win64:
 	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_ARCHITECTURE=x64 -S ./ -B ./${CMAKE_BUILD_WINDOWS}-x64 -A x64
 	cmake --build ./${CMAKE_BUILD_WINDOWS}-x64 --config Release
 
@@ -28,7 +22,7 @@ win: win32 win64
 
 Windows : win
 
-linux: copy
+linux:
 	cmake -DCMAKE_BUILD_TYPE=${RELEASE} -S ./ -B ./${CMAKE_BUILD_LINUX}
 	cmake --build ./${CMAKE_BUILD_LINUX}
 
