@@ -44,13 +44,10 @@ jobs:
           $ARCHIVE_NAME="BattleCity-${{ runner.os }}.zip"
           Compress-Archive -Path .\* -DestinationPath $ARCHIVE_NAME
           echo "artifact_name=$ARCHIVE_NAME" >> $GITHUB_ENV
-        shell: pwsh
 
       - name: test
         if: runner.os == 'Windows'
-        working-directory: ./bin/Release
-        run: tree ./ /f
-        shell: pwsh
+        run: echo ${{ env.artifact_name }}
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
