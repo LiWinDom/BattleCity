@@ -43,7 +43,7 @@ jobs:
         run: |
           $ARCHIVE_NAME="BattleCity-${{ runner.os }}.zip"
           Compress-Archive -Path .\* -DestinationPath $ARCHIVE_NAME
-          echo "variable=value" | Out-File -Append -FilePath $Env:GITHUB_ENV
+          echo "artifact_name=$ARCHIVE_NAME" | Out-File -Append -FilePath $Env:GITHUB_ENV
 
       - name: test
         if: runner.os == 'Windows'
