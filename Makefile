@@ -26,13 +26,19 @@ win64: copy
 
 win: win32 win64
 
+Windows : win
+
 linux: copy
 	cmake -DCMAKE_BUILD_TYPE=${RELEASE} -S ./ -B ./${CMAKE_BUILD_LINUX}
 	cmake --build ./${CMAKE_BUILD_LINUX}
 
+Linux: linux
+
 darwin:
 	cmake -DCMAKE_BUILD_TYPE=${RELEASE} -S ./ -B ./${CMAKE_BUILD_DARWIN}
 	cmake --build ./${CMAKE_BUILD_DARWIN}
+
+macOS: darwin
 
 clean:
 	rm -rf ./$(BIN)
