@@ -53,19 +53,19 @@ Event Window::pollEvent() {
   }
   Event event;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-    event.up = true;
+    event.player1.up = true;
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-    event.left = true;
+    event.player1.left = true;
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-    event.down = true;
+    event.player1.down = true;
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-    event.right = true;
+    event.player1.right = true;
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) {
-    event.shoot = true;
+    event.player1.shoot = true;
   }
   return event;
 }

@@ -2,7 +2,9 @@
 
 #include "Bullet.h"
 
-PlayerTank::PlayerTank(const sf::Vector2f& position) : ITank(ObjectType::PlayerTank, position) {}
+PlayerTank::PlayerTank(const sf::Vector2f& position, const bool playerNum) : ITank(ObjectType::PlayerTank, position) {
+  _hasBonus = playerNum;
+}
 
 void PlayerTank::think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Clock& globalClock, const Event& event) {
   // Base think
