@@ -21,6 +21,9 @@ void TankDrawable::update(const std::shared_ptr<IObject> &object) {
 
   if (object->getType() == ObjectType::PlayerTank) {
     _sprites[0].setTextureRect(sf::IntRect(hasBonus * 128 + rotation * 32 + wheelState * 16, tankType * 16, 16, 16));
-    _sprites[0].setPosition(object->getPosition());
   }
+  else {
+    _sprites[0].setTextureRect(sf::IntRect(3 * 128 + rotation * 32 + wheelState * 16, 64 + tankType * 16, 16, 16));
+  }
+  _sprites[0].setPosition(object->getPosition());
 }
