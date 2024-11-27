@@ -63,7 +63,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.artifact_name }}
-          path: ./
+          path: ./artifact
 
       - name: Set Release Variables
         id: set_vars
@@ -93,24 +93,30 @@ jobs:
 
       - name: Upload Linux build to Release
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./BattleCity-Linux.tar.gz
+          asset_path: ./artifact/BattleCity-Linux.tar.gz/BattleCity-Linux.tar.gz
           asset_name: BattleCity-Linux.tar.gz
           asset_content_type: application/gzip
 
       - name: Upload Windows build to Release
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./BattleCity-Windows.zip
+          asset_path: ./artifact/BattleCity-Windows.zip/BattleCity-Windows.zip
           asset_name: BattleCity-Windows.zip
           asset_content_type: application/zip
 
       - name: Upload macOS build to Release
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./BattleCity-macOS.tar.gz
+          asset_path: ./artifact/BattleCity-macOS.tar.gz/BattleCity-macOS.tar.gz
           asset_name: BattleCity-macOS.tar.gz
           asset_content_type: application/gzip
