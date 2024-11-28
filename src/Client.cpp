@@ -2,7 +2,7 @@
 
 #include "Other/Log.h"
 
-#include "Game/GameField.h"
+#include "Game/Game.h"
 
 #include "Game/Render/Window.h"
 #include "Game/Render/Drawables/TankDrawable.h"
@@ -18,13 +18,41 @@ int main(int argc, char* argv[]) {
 
   try {
     auto window = std::make_unique<Window>();
-    GameField field(std::vector<std::shared_ptr<IObject>>(0), {});
+    const std::vector<std::string> field = {
+        "s           s           s ",
+        "                          ",
+        "  bb  bb  bb  bb  bb  bb  ",
+        "  bb  bb  bb  bb  bb  bb  ",
+        "  bb  bb  bb  bb  bb  bb  ",
+        "  bb  bb  bb  bb  bb  bb  ",
+        "  bb  bb  bbwwbb  bb  bb  ",
+        "  bb  bb  bbwwbb  bb  bb  ",
+        "  bb  bb  bb  bb  bb  bb  ",
+        "  bb  bb          bb  bb  ",
+        "  bb  bb          bb  bb  ",
+        "          bb  bb          ",
+        "          bb  bb          ",
+        "bb  bbbb          bbbb  bb",
+        "ww  bbbb          bbbb  ww",
+        "          bb  bb          ",
+        "          bbbbbb          ",
+        "  bb  bb  bbbbbb  bb  bb  ",
+        "  bb  bb  bb  bb  bb  bb  ",
+        "  bb  bb  bb  bb  bb  bb  ",
+        "  bb  bb  bb  bb  bb  bb  ",
+        "  bb  bb          bb  bb  ",
+        "  bb  bb          bb  bb  ",
+        "  bb  bb   pppp   bb  bb  ",
+        "        1  pe p 2         ",
+        "           p  p           ",
+    };
+    Game game(field, {});
     std::map<uint16_t, std::shared_ptr<IDrawable>> drawables;
 
     while (window->isOpen()) {
       window->clear();
 
-      for (const auto object : field.getObjects()) {
+      for (const auto object : game.getObjects()) {
         if (object->isDestroyed()) {
           drawables.erase(object->getId());
           continue;
@@ -69,7 +97,7 @@ int main(int argc, char* argv[]) {
       window->display();
 
       auto event = window->pollEvent();
-      field.think(event);
+      game.think(event);
     }
   }
   catch (const std::runtime_error& error) {

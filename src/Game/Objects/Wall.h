@@ -2,9 +2,9 @@
 
 #include "IBlock.h"
 
-class Block : public IBlock {
+class Wall : public IBlock {
  public:
-  Block(const sf::Vector2f& position);
+  Wall(const sf::Vector2f& position);
 
   uint8_t getState() const override;
 
