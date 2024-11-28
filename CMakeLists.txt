@@ -21,12 +21,12 @@ set (
     CLIENT_EXECUTABLES ./src/Client.cpp
     src/Other/Path.h src/Other/Path.cpp
     src/Other/Log.h ./src/Game/Enums.h ./src/Game/Event.h
-    src/Game/GameField.h ./src/Game/GameField.cpp
+    src/Game/Game.h src/Game/Game.cpp
     src/Game/Objects/IObject.h src/Game/Objects/IObject.cpp
     src/Game/Objects/ITank.h src/Game/Objects/ITank.cpp
     src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp
     src/Game/Objects/IBlock.h src/Game/Objects/IBlock.cpp
-    src/Game/Objects/Block.h src/Game/Objects/Block.cpp
+    src/Game/Objects/Wall.h src/Game/Objects/Wall.cpp
     src/Game/Objects/Border.h src/Game/Objects/Border.cpp
     src/Game/Objects/Bush.h src/Game/Objects/Bush.cpp
     src/Game/Render/Window.h src/Game/Render/Window.cpp
@@ -43,12 +43,12 @@ set (
     SERVER_EXECUTABLES ./src/Server.cpp
     src/Other/Path.h src/Other/Path.cpp
     src/Other/Log.h ./src/Game/Enums.h ./src/Game/Event.h
-    src/Game/GameField.h ./src/Game/GameField.cpp
+    src/Game/Game.h src/Game/Game.cpp
     src/Game/Objects/IObject.h src/Game/Objects/IObject.cpp
     src/Game/Objects/ITank.h src/Game/Objects/ITank.cpp
     src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp
     src/Game/Objects/IBlock.h src/Game/Objects/IBlock.cpp
-    src/Game/Objects/Block.h src/Game/Objects/Block.cpp
+    src/Game/Objects/Wall.h src/Game/Objects/Wall.cpp
     src/Game/Objects/Border.h src/Game/Objects/Border.cpp
     src/Game/Objects/Bush.h src/Game/Objects/Bush.cpp
     src/Game/Objects/Bullet.cpp src/Game/Objects/Bullet.h
