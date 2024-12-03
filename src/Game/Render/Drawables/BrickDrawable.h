@@ -2,9 +2,9 @@
 
 #include "IDrawable.h"
 
-class BlockDrawable : public IDrawable {
+class BrickDrawable : public IDrawable {
  public:
-  BlockDrawable();
+  BrickDrawable();
 
   void update(const std::shared_ptr<IObject>& object) override;
 };

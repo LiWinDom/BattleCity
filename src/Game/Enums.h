@@ -13,7 +13,7 @@ enum class ObjectType : uint8_t {
   None = 0,
   Border = 1,
   Brick = 2,
-  Block = 3,
+  Wall = 3,
   Bush = 4,
   Water = 5,
   Tank = 10,
