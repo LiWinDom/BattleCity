@@ -7,7 +7,3 @@ Border::Border(uint8_t borderNum) : IObject(ObjectType::Border, positions[border
 uint8_t Border::getState() const {
   return 0;
 }
-
-void Border::think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Clock &globalClock, const Event &event) {
-  return;
-}
