@@ -41,6 +41,10 @@ bool IObject::isDestroyed() const {
   return _desytroyed;
 }
 
+uint8_t IObject::getState() const {
+  return 0;
+}
+
 void IObject::setPosition(const sf::Vector2f &position) {
   _position = position;
 }
@@ -72,3 +76,11 @@ std::vector<std::shared_ptr<IObject>> IObject::getHardCollisions(const std::vect
   }
   return colliders;
 };
+
+void IObject::think(std::vector<std::shared_ptr<IObject>>& objects, const sf::Clock& globalClock, const Event& event) {
+  return;
+}
+
+void IObject::destroy(std::vector<std::shared_ptr<IObject>>& objects, const sf::Clock& globalClock, const ObjectRotation bulletRotation) {
+  return;
+}

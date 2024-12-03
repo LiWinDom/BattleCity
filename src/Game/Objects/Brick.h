@@ -9,4 +9,7 @@ class Brick : public IBlock {
   uint8_t getState() const override;
 
   void think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Clock &globalClock, const Event &event) override;
+
+ private:
+  uint8_t _state = 15;
 };

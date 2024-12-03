@@ -22,14 +22,15 @@ class IObject {
   sf::Vector2f getSize() const;
   uint8_t getCollisionLayer() const;
   bool isDestroyed() const;
-  virtual uint8_t getState() const = 0;
+  virtual uint8_t getState() const;
 
   void setPosition(const sf::Vector2f& position);
 
   std::vector<std::shared_ptr<IObject>> getSoftCollisions(const std::vector<std::shared_ptr<IObject>>& objects) const;
   std::vector<std::shared_ptr<IObject>> getHardCollisions(const std::vector<std::shared_ptr<IObject>>& objects) const;
 
-  virtual void think(std::vector<std::shared_ptr<IObject>>& objects, const sf::Clock& globalClock, const Event& event) = 0;
+  virtual void think(std::vector<std::shared_ptr<IObject>>& objects, const sf::Clock& globalClock, const Event& event);
+  virtual void destroy(std::vector<std::shared_ptr<IObject>>& objects, const sf::Clock& globalClock, const ObjectRotation bulletRotation);
 
  protected:
   uint16_t _id;
