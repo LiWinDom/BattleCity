@@ -1,9 +1,10 @@
 #include "Game.h"
 
+#include "Objects/Border.h"
+#include "Objects/Brick.h"
+#include "Objects/Bush.h"
 #include "Objects/PlayerTank.h"
 #include "Objects/Wall.h"
-#include "Objects/Border.h"
-#include "Objects/Bush.h"
 
 Game::Game(const std::vector<std::shared_ptr<IObject>>& objects, const std::vector<uint8_t>& tanks, const bool homebrewChanges) :
 _objects(objects), _tanks(tanks), _homebrew(homebrewChanges) {
@@ -26,7 +27,7 @@ Game(std::vector<std::shared_ptr<IObject>>(0), {}, homebrewChanges) {
       const sf::Vector2f pos(j * 8, i * 8);
       switch (objects[i][j]) {
         case 'b':
-          // TODO: brick
+          _objects.push_back(std::make_shared<Brick>(pos));
           break;
         case 'w':
           _objects.push_back(std::make_shared<Wall>(pos));

@@ -1,6 +1,6 @@
 #include "Wall.h"
 
-Wall::Wall(const sf::Vector2f& position) : IBlock(ObjectType::Block, position) {}
+Wall::Wall(const sf::Vector2f& position) : IBlock(ObjectType::Wall, position) {}
 
 uint8_t Wall::getState() const {
   return 0;
