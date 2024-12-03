@@ -31,7 +31,7 @@ void Bullet::think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Clo
     return;
   }
   for (const auto object: collisions) {
-
+    object->destroy(objects, globalClock, _rotation);
   }
   _desytroyed = true;
 }
