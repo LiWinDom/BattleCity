@@ -22,16 +22,16 @@ uint8_t Bullet::getState() const {
   return (uint8_t)_rotation;
 }
 
-void Bullet::think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Clock &globalClock, const Event &event) {
+void Bullet::think(Game& game, const Event &event) {
   // Movement
-  move(globalClock);
+  move(game);
 
-  const auto collisions = getSoftCollisions(objects);
+  const auto collisions = getSoftCollisions(game.getObjects());
   if (collisions.empty()) {
     return;
   }
   for (const auto object: collisions) {
-    object->destroy(objects, globalClock, _rotation);
+    object->destroy(game, _rotation);
   }
   _desytroyed = true;
 }

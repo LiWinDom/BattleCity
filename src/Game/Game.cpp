@@ -62,6 +62,14 @@ std::vector<std::shared_ptr<IObject>> Game::getObjects() const {
   return _objects;
 }
 
+void Game::addObject(std::shared_ptr<IObject> object) {
+  _objects.push_back(object);
+}
+
+float Game::getTime() const {
+  return _globalClock.getElapsedTime().asSeconds();
+}
+
 void Game::think(const Event &event) {
   for (size_t i = 0; i < _objects.size(); ++i) {
     auto object = _objects[i];
@@ -70,6 +78,6 @@ void Game::think(const Event &event) {
       --i;
       continue;
     }
-    object->think(_objects, _globalClock, event);
+    object->think(*this, event);
   }
 }

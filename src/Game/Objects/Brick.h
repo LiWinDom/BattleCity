@@ -8,7 +8,7 @@ class Brick : public IBlock {
 
   uint8_t getState() const override;
 
-  void destroy(std::vector<std::shared_ptr<IObject>> &objects, const sf::Clock &globalClock, const ObjectRotation bulletRotation) override;
+  void destroy(Game& game, const ObjectRotation bulletRotation) override;
 
  private:
   uint8_t _state = 15;

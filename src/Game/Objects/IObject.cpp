@@ -77,10 +77,10 @@ std::vector<std::shared_ptr<IObject>> IObject::getHardCollisions(const std::vect
   return colliders;
 };
 
-void IObject::think(std::vector<std::shared_ptr<IObject>>& objects, const sf::Clock& globalClock, const Event& event) {
+void IObject::think(Game& game, const Event &event) {
   return;
 }
 
-void IObject::destroy(std::vector<std::shared_ptr<IObject>>& objects, const sf::Clock& globalClock, const ObjectRotation bulletRotation) {
+void IObject::destroy(Game& game, const ObjectRotation bulletRotation) {
   return;
 }

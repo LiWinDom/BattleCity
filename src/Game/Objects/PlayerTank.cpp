@@ -6,7 +6,7 @@ PlayerTank::PlayerTank(const sf::Vector2f& position, const bool playerNum) : ITa
   _hasBonus = playerNum;
 }
 
-void PlayerTank::think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Clock& globalClock, const Event& event) {
+void PlayerTank::think(Game& game, const Event& event) {
   // Base think
-  ITank::think(objects, globalClock, event);
+  ITank::think(game, event);
 }

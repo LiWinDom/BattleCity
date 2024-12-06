@@ -9,9 +9,9 @@ class ITank : public IMovable {
 
   uint8_t getState() const override;
 
-  void think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Clock& globalClock, const Event& event) override;
+  void think(Game& game, const Event& event) override;
 
-  void shoot(std::vector<std::shared_ptr<IObject>> &objects);
+  void shoot(Game& game);
 
  protected:
   static void snap(float& coordinate);
@@ -20,5 +20,6 @@ class ITank : public IMovable {
   bool _hasBonus = false;
   uint8_t _livesNum = 0;
   bool _wheelState = false;
+  float _lastShotTime = 1;
   std::vector<std::shared_ptr<IObject>> _bullets;
 };
