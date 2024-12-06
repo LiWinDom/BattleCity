@@ -3,8 +3,11 @@
 #include <string>
 #include <vector>
 
+#include <SFML/System.hpp>
+
 #include "Event.h"
-#include "Objects/IObject.h"
+
+class IObject;
 
 class Game {
  public:
@@ -12,6 +15,8 @@ class Game {
   Game(const std::vector<std::string>& objects, const std::string& tanks, const bool homebrewChanges = true);
 
   std::vector<std::shared_ptr<IObject>> getObjects() const;
+  void addObject(std::shared_ptr<IObject> object);
+  float getTime() const;
   void think(const Event& event);
 
  private:

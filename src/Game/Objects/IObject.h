@@ -7,6 +7,7 @@
 
 #include "../Enums.h"
 #include "../Event.h"
+#include "../Game.h"
 
 class IObject {
  public:
@@ -29,8 +30,8 @@ class IObject {
   std::vector<std::shared_ptr<IObject>> getSoftCollisions(const std::vector<std::shared_ptr<IObject>>& objects) const;
   std::vector<std::shared_ptr<IObject>> getHardCollisions(const std::vector<std::shared_ptr<IObject>>& objects) const;
 
-  virtual void think(std::vector<std::shared_ptr<IObject>>& objects, const sf::Clock& globalClock, const Event& event);
-  virtual void destroy(std::vector<std::shared_ptr<IObject>>& objects, const sf::Clock& globalClock, const ObjectRotation bulletRotation);
+  virtual void think(Game& game, const Event &event);
+  virtual void destroy(Game& game, const ObjectRotation bulletRotation);
 
  protected:
   uint16_t _id;

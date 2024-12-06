@@ -12,7 +12,7 @@ uint8_t ITank::getState() const {
     | (uint8_t)_rotation; // [type][type][hasBonus/playerNum][livesNum][livesNum][wheelState][rotation][rotation]
 }
 
-void ITank::think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Clock &globalClock, const Event &event) {
+void ITank::think(Game& game, const Event &event) {
   // Getting pressed keys
   PressedButtons pressed;
   if (_type == ObjectType::PlayerTank) {
@@ -50,21 +50,21 @@ void ITank::think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Cloc
       _rotation = ObjectRotation::Right;
     }
 
-    const auto movedTiles = move(globalClock);
+    const auto movedTiles = move(game);
     if (movedTiles % 2) {
       _wheelState = !_wheelState;
     }
-    if (!getHardCollisions(objects).empty()) {
+    if (!getHardCollisions(game.getObjects()).empty()) {
       _position = oldPosition;
     }
   }
   else {
-    move(globalClock, false);
+    move(game, false);
   }
 
   // Shooting
   if (pressed.shoot) {
-    shoot(objects);
+    shoot(game);
   }
 
   // Deleting destroyed bullets
@@ -76,7 +76,7 @@ void ITank::think(std::vector<std::shared_ptr<IObject>> &objects, const sf::Cloc
   }
 }
 
-void ITank::shoot(std::vector<std::shared_ptr<IObject>> &objects) {
+void ITank::shoot(Game& game) {
   uint8_t maxBullets = 1;
   if (_type == ObjectType::PlayerTank) {
     if (_tankType >= 2) {
@@ -89,7 +89,7 @@ void ITank::shoot(std::vector<std::shared_ptr<IObject>> &objects) {
   }
 
   const auto bullet = std::make_shared<Bullet>(_position, _rotation);
-  objects.push_back(bullet);
+  game.addObject(bullet);
   _bullets.push_back(bullet);
 }
 
