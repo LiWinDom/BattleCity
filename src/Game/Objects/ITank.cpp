@@ -9,7 +9,7 @@ uint8_t ITank::getState() const {
     | _hasBonus << 5
     | _livesNum << 3
     | _wheelState << 2
-    | (uint8_t)_rotation; // [type][type][hasBonus/playerNum][livesNum][livesNum][wheelState][rotation][rotation]
+    | (uint8_t)_rotation; // [type][type][playerNum][color][color][wheelState][rotation][rotation]
 }
 
 void ITank::think(Game& game, const Event &event) {
@@ -87,6 +87,17 @@ void ITank::shoot(Game& game) {
     // Too many bullets
     return;
   }
+
+  if (_lastShotTime == -1) {
+    _lastShotTime = game.getTime();
+    return;
+  }
+  double cooldown = 0.2;
+  if (_lastShotTime + cooldown > game.getTime()) {
+    // Cooldown
+    return;
+  }
+  _lastShotTime = game.getTime();
 
   const auto bullet = std::make_shared<Bullet>(_position, _rotation);
   game.addObject(bullet);

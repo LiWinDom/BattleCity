@@ -16,6 +16,8 @@ enum class ObjectType : uint8_t {
   Wall = 3,
   Bush = 4,
   Water = 5,
+  Eagle = 6,
+  Protection = 7,
   Tank = 10,
   PlayerTank = 11,
   EnemyTank = 12,
