@@ -20,6 +20,6 @@ class ITank : public IMovable {
   bool _hasBonus = false;
   uint8_t _livesNum = 0;
   bool _wheelState = false;
-  float _lastShotTime = 1;
+  float _lastShotTime = -1;
   std::vector<std::shared_ptr<IObject>> _bullets;
 };
