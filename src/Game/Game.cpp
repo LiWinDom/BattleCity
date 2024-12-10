@@ -3,6 +3,7 @@
 #include "Objects/Border.h"
 #include "Objects/Brick.h"
 #include "Objects/Bush.h"
+#include "Objects/EnemyTank.h"
 #include "Objects/PlayerTank.h"
 #include "Objects/Wall.h"
 
@@ -46,6 +47,7 @@ Game(std::vector<std::shared_ptr<IObject>>(0), {}, homebrewChanges) {
           break;
         case 's':
           // TODO: spawn pos
+          _objects.push_back(std::make_shared<EnemyTank>(pos));
           break;
         case '1':
           _objects.push_back(std::make_shared<PlayerTank>(pos));
@@ -71,11 +73,19 @@ float Game::getTime() const {
 }
 
 void Game::think(const Event &event) {
+  // Removing destroyed objects
   for (size_t i = 0; i < _objects.size(); ++i) {
     auto object = _objects[i];
     if (object->isDestroyed()) {
       _objects.erase(_objects.begin() + i);
       --i;
+      continue;
+    }
+  }
+  // Only then thinking
+  for (size_t i = 0; i < _objects.size(); ++i) {
+    auto object = _objects[i];
+    if (object->isDestroyed()) {
       continue;
     }
     object->think(*this, event);
