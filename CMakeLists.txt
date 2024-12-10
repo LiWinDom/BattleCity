@@ -26,6 +26,7 @@ set (
     src/Game/Objects/IObject.h src/Game/Objects/IObject.cpp
     src/Game/Objects/IMovable.cpp src/Game/Objects/IMovable.h
     src/Game/Objects/ITank.h src/Game/Objects/ITank.cpp
+    src/Game/Objects/EnemyTank.h src/Game/Objects/EnemyTank.cpp
     src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp
     src/Game/Objects/IBlock.h src/Game/Objects/IBlock.cpp
     src/Game/Objects/Brick.h src/Game/Objects/Brick.cpp
@@ -54,6 +55,7 @@ set (
     src/Game/Objects/IObject.h src/Game/Objects/IObject.cpp
     src/Game/Objects/IMovable.cpp src/Game/Objects/IMovable.h
     src/Game/Objects/ITank.h src/Game/Objects/ITank.cpp
+    src/Game/Objects/EnemyTank.h src/Game/Objects/EnemyTank.cpp
     src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp
     src/Game/Objects/IBlock.h src/Game/Objects/IBlock.cpp
     src/Game/Objects/Brick.h src/Game/Objects/Brick.cpp

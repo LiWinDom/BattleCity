@@ -16,7 +16,9 @@ class Game {
 
   std::vector<std::shared_ptr<IObject>> getObjects() const;
   void addObject(std::shared_ptr<IObject> object);
+
   float getTime() const;
+
   void think(const Event& event);
 
  private:
