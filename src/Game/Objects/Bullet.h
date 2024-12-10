@@ -9,4 +9,6 @@ class Bullet : public IMovable {
   uint8_t getState() const override;
 
   void think(Game& game, const Event& event) override;
+
+  void destroy(Game& game, const ObjectRotation bulletRotation) override;
 };

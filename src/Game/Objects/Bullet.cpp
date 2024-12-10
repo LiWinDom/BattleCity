@@ -28,7 +28,7 @@ void Bullet::think(Game& game, const Event &event) {
   // Movement
   move(game);
 
-  const auto collisions = getSoftCollisions(game.getObjects());
+  const auto collisions = getHardCollisions(game.getObjects());
   if (collisions.empty()) {
     return;
   }
@@ -37,4 +37,8 @@ void Bullet::think(Game& game, const Event &event) {
   }
   _desytroyed = true;
   game.addObject(std::make_shared<Explosion>(_position + sf::Vector2f(_size.x / 2, _size.y / 2), false));
+}
+
+void Bullet::destroy(Game &game, const ObjectRotation bulletRotation) {
+  _desytroyed = true;
 }
