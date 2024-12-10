@@ -3,6 +3,14 @@
 #include "Explosion.h"
 
 ITank::ITank(ObjectType type, const sf::Vector2f& position) : IMovable(type, position, sf::Vector2f(16, 16), 45) {
+  if (_type == ObjectType::EnemyTank) {
+    if (_tankType == 1) {
+      _speed = 60;
+    }
+    else {
+      _speed = 30;
+    }
+  }
   _collisionLayer = 1;
 }
 
@@ -108,7 +116,7 @@ void ITank::shoot(Game& game) {
   }
   _lastShotTime = game.getTime();
 
-  const auto bullet = std::make_shared<Bullet>(_position, _rotation);
+  const auto bullet = std::make_shared<Bullet>(_position, _rotation, _type == ObjectType::EnemyTank, false, false); // TODO: add speed and powerful modificators
   game.addObject(bullet);
   _bullets.push_back(bullet);
 }
