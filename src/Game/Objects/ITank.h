@@ -11,6 +11,8 @@ class ITank : public IMovable {
 
   void think(Game& game, const Event& event) override;
 
+  void destroy(Game& game, const ObjectRotation bulletRotation) override;
+
   void shoot(Game& game);
 
  protected:

@@ -11,6 +11,7 @@
 #include "Game/Render/Drawables/BorderDrawable.h"
 #include "Game/Render/Drawables/BulletDrawable.h"
 #include "Game/Render/Drawables/BushDrawable.h"
+#include "Game/Render/Drawables/ExplosionDrawable.h"
 
 int main(int argc, char* argv[]) {
   Log::message("Started client");
@@ -79,6 +80,8 @@ int main(int argc, char* argv[]) {
               break;
             case ObjectType::Bush:
               drawables[object->getId()] = std::make_shared<BushDrawable>();
+            case ObjectType::Explosion:
+              drawables[object->getId()] = std::make_shared<ExplosionDrawable>();
               break;
           }
         }
