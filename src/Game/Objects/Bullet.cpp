@@ -1,5 +1,7 @@
 #include "Bullet.h"
 
+#include "Explosion.h"
+
 Bullet::Bullet(const sf::Vector2f& tankPosition, const ObjectRotation& rotation, const bool isFast) :
 IMovable(ObjectType::Bullet, {0, 0}, {4, 4}, rotation, isFast ? 240 : 120) {
   _collisionLayer = 2;
@@ -34,4 +36,5 @@ void Bullet::think(Game& game, const Event &event) {
     object->destroy(game, _rotation);
   }
   _desytroyed = true;
+  game.addObject(std::make_shared<Explosion>(_position + sf::Vector2f(_size.x / 2, _size.y / 2), false));
 }

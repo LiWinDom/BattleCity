@@ -1,5 +1,7 @@
 #include "ITank.h"
 
+#include "Explosion.h"
+
 ITank::ITank(ObjectType type, const sf::Vector2f& position) : IMovable(type, position, sf::Vector2f(16, 16), 45) {
   _collisionLayer = 1;
 }
@@ -76,6 +78,11 @@ void ITank::think(Game& game, const Event &event) {
   }
 }
 
+void ITank::destroy(Game &game, const ObjectRotation bulletRotation) {
+  IObject::destroy(game, bulletRotation);
+  game.addObject(std::make_shared<Explosion>(_position + sf::Vector2f(_size.x / 2, _size.y / 2), true));
+}
+
 void ITank::shoot(Game& game) {
   uint8_t maxBullets = 1;
   if (_type == ObjectType::PlayerTank) {
@@ -88,10 +95,6 @@ void ITank::shoot(Game& game) {
     return;
   }
 
-  if (_lastShotTime == -1) {
-    _lastShotTime = game.getTime();
-    return;
-  }
   double cooldown = 0.2;
   if (_lastShotTime + cooldown > game.getTime()) {
     // Cooldown

@@ -8,7 +8,7 @@ BorderDrawable::BorderDrawable() {
   }
   _sprites.emplace_back(_texture);
   _sprites[0].setTextureRect(sf::IntRect(0, 0, 32, 208));
-  _layer = 2;
+  _layer = 3;
   Log::debug(R"(Drawable "Border" created)");
 }
 

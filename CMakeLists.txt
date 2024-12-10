@@ -33,6 +33,7 @@ set (
     src/Game/Objects/Border.h src/Game/Objects/Border.cpp
     src/Game/Objects/Bush.h src/Game/Objects/Bush.cpp
     src/Game/Objects/Bullet.h src/Game/Objects/Bullet.cpp
+    src/Game/Objects/Explosion.h src/Game/Objects/Explosion.cpp
 
     src/Game/Render/Window.h src/Game/Render/Window.cpp
     src/Game/Render/Drawables/IDrawable.h src/Game/Render/Drawables/IDrawable.cpp
@@ -42,6 +43,7 @@ set (
     src/Game/Render/Drawables/BulletDrawable.h src/Game/Render/Drawables/BulletDrawable.cpp
     src/Game/Render/Drawables/BorderDrawable.cpp src/Game/Render/Drawables/BorderDrawable.h
     src/Game/Render/Drawables/BrickDrawable.cpp src/Game/Render/Drawables/BrickDrawable.h
+    src/Game/Render/Drawables/ExplosionDrawable.cpp src/Game/Render/Drawables/ExplosionDrawable.h
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp
@@ -59,6 +61,7 @@ set (
     src/Game/Objects/Border.h src/Game/Objects/Border.cpp
     src/Game/Objects/Bush.h src/Game/Objects/Bush.cpp
     src/Game/Objects/Bullet.cpp src/Game/Objects/Bullet.h
+    src/Game/Objects/Explosion.h src/Game/Objects/Explosion.cpp
 )
 
 # Adding icon and other resources
