@@ -2,8 +2,8 @@
 
 #include "Explosion.h"
 
-Bullet::Bullet(const sf::Vector2f& tankPosition, const ObjectRotation& rotation, const bool isFast) :
-IMovable(ObjectType::Bullet, {0, 0}, {4, 4}, rotation, isFast ? 240 : 120) {
+Bullet::Bullet(const sf::Vector2f& tankPosition, const ObjectRotation& rotation, const bool belongsToEnemy, const bool isFast, const bool isPowerful) :
+IMovable(ObjectType::Bullet, {0, 0}, {4, 4}, rotation, isFast ? 240 : 120), _belongsToEnemy(belongsToEnemy), _isPowerful(isPowerful) {
   _collisionLayer = 2;
   switch (rotation) {
     case ObjectRotation::Up:
@@ -33,6 +33,17 @@ void Bullet::think(Game& game, const Event &event) {
     return;
   }
   for (const auto object: collisions) {
+    if (_belongsToEnemy) {
+      if (object->getType() == ObjectType::EnemyTank) {
+        continue;
+      }
+    }
+    else {
+      if (object->getType() == ObjectType::PlayerTank) {
+        // TODO: freezing
+        continue;
+      }
+    }
     object->destroy(game, _rotation);
   }
   _desytroyed = true;
