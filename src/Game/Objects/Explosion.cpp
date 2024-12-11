@@ -17,7 +17,7 @@ void Explosion::think(Game &game, const Event &event) {
   }
 
   double frameTime = _isBig ? 0.1 : 0.05;
-  uint totalFrames = _isBig ? 6 : 3;
+  uint8_t totalFrames = _isBig ? 6 : 3;
 
   while (game.getTime() >= _lastFrameChange + frameTime) {
     _lastFrameChange += frameTime;
