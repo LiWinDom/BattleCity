@@ -47,7 +47,7 @@ Game(std::vector<std::shared_ptr<IObject>>(0), {}, homebrewChanges) {
           break;
         case 's':
           // TODO: spawn pos
-          _objects.push_back(std::make_shared<EnemyTank>(pos));
+          _objects.push_back(std::make_shared<EnemyTank>(pos, 0));
           break;
         case '1':
           _objects.push_back(std::make_shared<PlayerTank>(pos));
@@ -82,12 +82,16 @@ void Game::think(const Event &event) {
       continue;
     }
   }
-  // Only then thinking
-  for (size_t i = 0; i < _objects.size(); ++i) {
-    auto object = _objects[i];
-    if (object->isDestroyed()) {
-      continue;
+
+  // Simulating 60 fps
+  while (getTime() + 1.0/60 > _lastThink) {
+    _lastThink += 1.0/60;
+    for (size_t i = 0; i < _objects.size(); ++i) {
+      auto object = _objects[i];
+      if (object->isDestroyed()) {
+        continue;
+      }
+      object->think(*this, event);
     }
-    object->think(*this, event);
   }
 }

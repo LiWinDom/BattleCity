@@ -16,12 +16,17 @@ class ITank : public IMovable {
   void shoot(Game& game);
 
  protected:
-  static void snap(float& coordinate);
-
   uint8_t _tankType = 0;
   bool _hasBonus = false;
   uint8_t _livesNum = 0;
-  bool _wheelState = false;
   float _lastShotTime = -1;
   std::vector<std::shared_ptr<IObject>> _bullets;
+
+ protected:
+  bool _failedToMove = false;
+
+ private:
+  static void snap(float& coordinate);
+
+  bool _wheelState = false;
 };

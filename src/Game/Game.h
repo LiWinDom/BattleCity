@@ -27,4 +27,5 @@ class Game {
   bool _homebrew;
 
   sf::Clock _globalClock;
+  float _lastThink = 0;
 };

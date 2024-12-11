@@ -67,15 +67,17 @@ void ITank::think(Game& game, const Event &event) {
     }
 
     const auto movedTiles = move(game);
+    _failedToMove = false;
     if (movedTiles % 2) {
       _wheelState = !_wheelState;
     }
     if (!getHardCollisions(game.getObjects()).empty()) {
       _position = oldPosition;
+      _failedToMove = true;
     }
   }
   else {
-    move(game, false);
+    auto movedTiles = move(game, false);
   }
 
   // Shooting
