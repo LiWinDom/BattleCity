@@ -29,25 +29,32 @@ void Bullet::think(Game& game, const Event &event) {
   move(game);
 
   const auto collisions = getHardCollisions(game.getObjects());
-  if (collisions.empty()) {
-    return;
-  }
+  bool needToDestroy = false;
   for (const auto object: collisions) {
-    if (_belongsToEnemy) {
-      if (object->getType() == ObjectType::EnemyTank) {
-        continue;
-      }
-    }
-    else {
-      if (object->getType() == ObjectType::PlayerTank) {
-        // TODO: freezing
-        continue;
-      }
+    switch (object->getType()) {
+      case ObjectType::EnemyTank:
+        if (_belongsToEnemy) {
+          continue;
+        }
+        break;
+      case ObjectType::PlayerTank:
+        if (!_belongsToEnemy) {
+          continue;
+        }
+        break;
+      case ObjectType::Bullet:
+        if (dynamic_cast<Bullet*>(object.get())->_belongsToEnemy == _belongsToEnemy) {
+          continue;
+        }
+        break;
     }
     object->destroy(game, _rotation);
+    needToDestroy = true;
   }
-  _desytroyed = true;
-  game.addObject(std::make_shared<Explosion>(_position + sf::Vector2f(_size.x / 2, _size.y / 2), false));
+  if (needToDestroy) {
+    _desytroyed = true;
+    game.addObject(std::make_shared<Explosion>(_position + sf::Vector2f(_size.x / 2, _size.y / 2), false));
+  }
 }
 
 void Bullet::destroy(Game &game, const ObjectRotation bulletRotation) {
