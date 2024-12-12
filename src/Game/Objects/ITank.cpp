@@ -95,8 +95,12 @@ void ITank::think(Game& game, const Event &event) {
 }
 
 void ITank::destroy(Game &game, const ObjectRotation bulletRotation) {
-  IObject::destroy(game, bulletRotation);
-  game.addObject(std::make_shared<Explosion>(_position + sf::Vector2f(_size.x / 2, _size.y / 2), true));
+  if (_livesNum == 0) {
+    game.addObject(std::make_shared<Explosion>(_position + sf::Vector2f(_size.x / 2, _size.y / 2), true));
+    _desytroyed = true;
+    return;
+  }
+  --_livesNum;
 }
 
 void ITank::shoot(Game& game) {
