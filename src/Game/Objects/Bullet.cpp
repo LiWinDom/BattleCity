@@ -30,6 +30,8 @@ void Bullet::think(Game& game, const Event &event) {
 
   const auto collisions = getHardCollisions(game.getObjects());
   bool needToDestroy = false;
+  bool destroyWithExplosion = false;
+
   for (const auto object: collisions) {
     switch (object->getType()) {
       case ObjectType::EnemyTank:
@@ -50,10 +52,15 @@ void Bullet::think(Game& game, const Event &event) {
     }
     object->destroy(game, _rotation);
     needToDestroy = true;
+    if (object->getType() != ObjectType::Bullet) {
+      destroyWithExplosion = true;
+    }
   }
   if (needToDestroy) {
     _desytroyed = true;
-    game.addObject(std::make_shared<Explosion>(_position + sf::Vector2f(_size.x / 2, _size.y / 2), false));
+    if (destroyWithExplosion) {
+      game.addObject(std::make_shared<Explosion>(_position + sf::Vector2f(_size.x / 2, _size.y / 2), false));
+    }
   }
 }
 
