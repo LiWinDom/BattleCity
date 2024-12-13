@@ -18,7 +18,7 @@ endif ()
 
 # Executables
 set (
-    CLIENT_EXECUTABLES ./src/Client.cpp
+    SHARED_EXECUTABLES
     src/Other/Path.h src/Other/Path.cpp
     src/Other/Log.h ./src/Game/Enums.h ./src/Game/Event.h
     src/Game/Game.h src/Game/Game.cpp
@@ -35,35 +35,23 @@ set (
     src/Game/Objects/Bush.h src/Game/Objects/Bush.cpp
     src/Game/Objects/Bullet.h src/Game/Objects/Bullet.cpp
     src/Game/Objects/Explosion.h src/Game/Objects/Explosion.cpp
-
+)
+set (
+    CLIENT_EXECUTABLES ./src/Client.cpp
+    ${SHARED_EXECUTABLES}
     src/Game/Render/Window.h src/Game/Render/Window.cpp
     src/Game/Render/Drawables/IDrawable.h src/Game/Render/Drawables/IDrawable.cpp
     src/Game/Render/Drawables/TankDrawable.h src/Game/Render/Drawables/TankDrawable.cpp
     src/Game/Render/Drawables/WallDrawable.h src/Game/Render/Drawables/WallDrawable.cpp
     src/Game/Render/Drawables/BushDrawable.h src/Game/Render/Drawables/BushDrawable.cpp
     src/Game/Render/Drawables/BulletDrawable.h src/Game/Render/Drawables/BulletDrawable.cpp
-    src/Game/Render/Drawables/BorderDrawable.cpp src/Game/Render/Drawables/BorderDrawable.h
-    src/Game/Render/Drawables/BrickDrawable.cpp src/Game/Render/Drawables/BrickDrawable.h
-    src/Game/Render/Drawables/ExplosionDrawable.cpp src/Game/Render/Drawables/ExplosionDrawable.h
+    src/Game/Render/Drawables/BorderDrawable.h src/Game/Render/Drawables/BorderDrawable.cpp
+    src/Game/Render/Drawables/BrickDrawable.h src/Game/Render/Drawables/BrickDrawable.cpp
+    src/Game/Render/Drawables/ExplosionDrawable.h src/Game/Render/Drawables/ExplosionDrawable.cpp
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp
-    src/Other/Path.h src/Other/Path.cpp
-    src/Other/Log.h ./src/Game/Enums.h ./src/Game/Event.h
-    src/Game/Game.h src/Game/Game.cpp
-
-    src/Game/Objects/IObject.h src/Game/Objects/IObject.cpp
-    src/Game/Objects/IMovable.cpp src/Game/Objects/IMovable.h
-    src/Game/Objects/ITank.h src/Game/Objects/ITank.cpp
-    src/Game/Objects/EnemyTank.h src/Game/Objects/EnemyTank.cpp
-    src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp
-    src/Game/Objects/IBlock.h src/Game/Objects/IBlock.cpp
-    src/Game/Objects/Brick.h src/Game/Objects/Brick.cpp
-    src/Game/Objects/Wall.h src/Game/Objects/Wall.cpp
-    src/Game/Objects/Border.h src/Game/Objects/Border.cpp
-    src/Game/Objects/Bush.h src/Game/Objects/Bush.cpp
-    src/Game/Objects/Bullet.cpp src/Game/Objects/Bullet.h
-    src/Game/Objects/Explosion.h src/Game/Objects/Explosion.cpp
+    ${SHARED_EXECUTABLES}
 )
 
 # Adding icon and other resources
