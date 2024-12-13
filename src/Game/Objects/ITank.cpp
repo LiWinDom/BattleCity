@@ -115,7 +115,7 @@ void ITank::shoot(Game& game) {
     return;
   }
 
-  double cooldown = 0.2;
+  double cooldown = 1.06 / 4;
   if (_lastShotTime + cooldown > game.getTime()) {
     // Cooldown
     return;
