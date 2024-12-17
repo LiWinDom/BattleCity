@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 
   try {
     auto window = std::make_unique<Window>();
-    Game game(0, false);
+    Game game(1, false);
     std::map<uint16_t, std::shared_ptr<IDrawable>> drawables;
 
     while (window->isOpen()) {
@@ -46,6 +46,7 @@ int main(int argc, char* argv[]) {
               break;
             case ObjectType::Bush:
               drawables[object->getId()] = std::make_shared<BushDrawable>();
+              break;
             case ObjectType::Explosion:
               drawables[object->getId()] = std::make_shared<ExplosionDrawable>();
               break;
