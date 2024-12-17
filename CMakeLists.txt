@@ -49,6 +49,7 @@ set (
     src/Game/Render/Drawables/BorderDrawable.h src/Game/Render/Drawables/BorderDrawable.cpp
     src/Game/Render/Drawables/BrickDrawable.h src/Game/Render/Drawables/BrickDrawable.cpp
     src/Game/Render/Drawables/ExplosionDrawable.h src/Game/Render/Drawables/ExplosionDrawable.cpp
+    src/Game/Render/Drawables/TankSpawnerDrawable.h src/Game/Render/Drawables/TankSpawnerDrawable.cpp
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp
