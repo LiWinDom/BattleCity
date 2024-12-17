@@ -83,6 +83,9 @@ int main(int argc, char* argv[]) {
             case ObjectType::Explosion:
               drawables[object->getId()] = std::make_shared<ExplosionDrawable>();
               break;
+            default:
+              Log::warning("No drawable assigned to object");
+              continue;
           }
         }
         drawables[object->getId()]->update(object);
