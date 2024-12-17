@@ -20,35 +20,7 @@ int main(int argc, char* argv[]) {
 
   try {
     auto window = std::make_unique<Window>();
-    const std::vector<std::string> field = {
-        "s           s           s ",
-        "                          ",
-        "  bb  bb  bb  bb  bb  bb  ",
-        "  bb  bb  bb  bb  bb  bb  ",
-        "  bb  bb  bb  bb  bb  bb  ",
-        "  bb  bb  bb  bb  bb  bb  ",
-        "  bb  bb  bbwwbb  bb  bb  ",
-        "  bb  bb  bbwwbb  bb  bb  ",
-        "  bb  bb  bb  bb  bb  bb  ",
-        "  bb  bb          bb  bb  ",
-        "  bb  bb          bb  bb  ",
-        "          bb  bb          ",
-        "          bb  bb          ",
-        "bb  bbbb          bbbb  bb",
-        "ww  bbbb          bbbb  ww",
-        "          bb  bb          ",
-        "          bbbbbb          ",
-        "  bb  bb  bbbbbb  bb  bb  ",
-        "  bb  bb  bb  bb  bb  bb  ",
-        "  bb  bb  bb  bb  bb  bb  ",
-        "  bb  bb  bb  bb  bb  bb  ",
-        "  bb  bb          bb  bb  ",
-        "  bb  bb          bb  bb  ",
-        "  bb  bb   pppp   bb  bb  ",
-        "        1  pe p 2         ",
-        "           p  p           ",
-    };
-    Game game(field, {});
+    Game game(0, false);
     std::map<uint16_t, std::shared_ptr<IDrawable>> drawables;
 
     while (window->isOpen()) {
@@ -114,11 +86,6 @@ int main(int argc, char* argv[]) {
     Log::message("");
     Log::error("Something critical went wrong :(");
     Log::error(error.what());
-  }
-  catch (...) {
-    Log::message("");
-    Log::error("Something critical went wrong :(");
-    Log::error("...and we don't know what is it");
   }
 
   Log::message("");

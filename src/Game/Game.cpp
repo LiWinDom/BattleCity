@@ -1,5 +1,8 @@
 #include "Game.h"
 
+#include <fstream>
+
+#include "../Other/Path.h"
 #include "Enums.h"
 #include "Objects/Border.h"
 #include "Objects/Brick.h"
@@ -8,26 +11,27 @@
 #include "Objects/TankSpawner.h"
 #include "Objects/Wall.h"
 
-Game::Game(const std::vector<std::shared_ptr<IObject>>& objects, const std::vector<uint8_t>& tanks, const bool homebrewChanges) :
-_objects(objects), _tanks(tanks), _homebrew(homebrewChanges) {
-  _objects.push_back(std::make_shared<Border>(0));
-  _objects.push_back(std::make_shared<Border>(1));
-  _objects.push_back(std::make_shared<Border>(2));
-  _objects.push_back(std::make_shared<Border>(3));
-}
+Game::Game(const uint8_t stage, const bool twoPlayers, const bool homebrewChanges) :
+_stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
+  // Trying to load stage info
+  const auto path = Path::getAbsolutePath(std::format("resources/stages/stage{}.layout", _stage));
+  std::ifstream layoutFile(Path::getAbsolutePath(std::format("resources/stages/stage{}.layout", _stage)));
+  std::ifstream tanksFile(Path::getAbsolutePath(std::format("resources/stages/stage{}.tanks", _stage)));
 
-Game::Game(const std::vector<std::string>& objects, const std::string& tanks, const bool homebrewChanges) :
-Game(std::vector<std::shared_ptr<IObject>>(0), {}, homebrewChanges) {
-  if (objects.size() != 26) {
-    throw std::invalid_argument("Objects matrix must be 26x26");
+  if (!layoutFile.is_open() || !tanksFile.is_open()) {
+    throw std::runtime_error(std::format("Failed to load data for stage {}", _stage));
   }
-  for (auto i = 0; i < objects.size(); ++i) {
-    if (objects[i].size() != 26) {
-      throw std::invalid_argument("Objects matrix must be 26x26");
+
+  for (size_t i = 0; i < 26; ++i) {
+    std::string row;
+    std::getline(layoutFile, row);
+
+    if (row.size() != 26) {
+      throw std::invalid_argument("Layout matrix must be 26x26");
     }
-    for (auto j = 0; j < objects[i].size(); ++j) {
+    for (auto j = 0; j < row.size(); ++j) {
       const sf::Vector2f pos(j * 8, i * 8);
-      switch (objects[i][j]) {
+      switch (row[j]) {
         case 'b':
           _objects.push_back(std::make_shared<Brick>(pos));
           break;
@@ -54,11 +58,28 @@ Game(std::vector<std::shared_ptr<IObject>>(0), {}, homebrewChanges) {
           _objects.push_back(std::make_shared<TankSpawner>(pos, ObjectType::PlayerTank, 0));
           break;
         case '2':
-          _objects.push_back(std::make_shared<TankSpawner>(pos, ObjectType::PlayerTank, 1));
+          if (_twoPlayers) {
+            _objects.push_back(std::make_shared<TankSpawner>(pos, ObjectType::PlayerTank, 1));
+          }
           break;
       }
     }
   }
+
+  std::string tanks;
+  std::getline(tanksFile, tanks);
+  for (const auto tank : tanks) {
+    _tanks.push_back(std::atoi(&tank));
+  }
+
+  layoutFile.close();
+  tanksFile.close();
+
+  // Adding borders
+  _objects.push_back(std::make_shared<Border>(0));
+  _objects.push_back(std::make_shared<Border>(1));
+  _objects.push_back(std::make_shared<Border>(2));
+  _objects.push_back(std::make_shared<Border>(3));
 }
 
 std::vector<std::shared_ptr<IObject>> Game::getObjects() const {
@@ -71,6 +92,10 @@ void Game::addObject(std::shared_ptr<IObject> object) {
 
 float Game::getTime() const {
   return _globalClock.getElapsedTime().asSeconds();
+}
+
+float Game::getPeriod() const {
+  return 190 - _stage * 4 - (_twoPlayers ? 2 : 1 - 1) * 20;
 }
 
 void Game::think(const Event &event) {
