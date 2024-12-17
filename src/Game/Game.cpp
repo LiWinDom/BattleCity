@@ -1,10 +1,11 @@
 #include "Game.h"
 
+#include "Enums.h"
 #include "Objects/Border.h"
 #include "Objects/Brick.h"
 #include "Objects/Bush.h"
 #include "Objects/EnemyTank.h"
-#include "Objects/PlayerTank.h"
+#include "Objects/TankSpawner.h"
 #include "Objects/Wall.h"
 
 Game::Game(const std::vector<std::shared_ptr<IObject>>& objects, const std::vector<uint8_t>& tanks, const bool homebrewChanges) :
@@ -50,10 +51,10 @@ Game(std::vector<std::shared_ptr<IObject>>(0), {}, homebrewChanges) {
           _objects.push_back(std::make_shared<EnemyTank>(pos, 0));
           break;
         case '1':
-          _objects.push_back(std::make_shared<PlayerTank>(pos));
+          _objects.push_back(std::make_shared<TankSpawner>(pos, ObjectType::PlayerTank, 0));
           break;
         case '2':
-          _objects.push_back(std::make_shared<PlayerTank>(pos, true));
+          _objects.push_back(std::make_shared<TankSpawner>(pos, ObjectType::PlayerTank, 1));
           break;
       }
     }

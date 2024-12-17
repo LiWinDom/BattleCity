@@ -35,6 +35,7 @@ set (
     src/Game/Objects/Bush.h src/Game/Objects/Bush.cpp
     src/Game/Objects/Bullet.h src/Game/Objects/Bullet.cpp
     src/Game/Objects/Explosion.h src/Game/Objects/Explosion.cpp
+    src/Game/Objects/TankSpawner.h src/Game/Objects/TankSpawner.cpp
 )
 set (
     CLIENT_EXECUTABLES ./src/Client.cpp
