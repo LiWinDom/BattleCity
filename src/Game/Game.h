@@ -17,6 +17,7 @@ class Game {
   std::vector<std::shared_ptr<IObject>> getObjects() const;
   void addObject(std::shared_ptr<IObject> object);
 
+  bool isTwoPlayers() const;
   float getTime() const;
   float getPeriod() const;
 
