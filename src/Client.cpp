@@ -4,14 +4,8 @@
 
 #include "Game/Game.h"
 
+#include "Game/Render/Drawables.h"
 #include "Game/Render/Window.h"
-#include "Game/Render/Drawables/TankDrawable.h"
-#include "Game/Render/Drawables/WallDrawable.h"
-#include "Game/Render/Drawables/BrickDrawable.h"
-#include "Game/Render/Drawables/BorderDrawable.h"
-#include "Game/Render/Drawables/BulletDrawable.h"
-#include "Game/Render/Drawables/BushDrawable.h"
-#include "Game/Render/Drawables/ExplosionDrawable.h"
 
 int main(int argc, char* argv[]) {
   Log::message("Started client");
@@ -54,6 +48,9 @@ int main(int argc, char* argv[]) {
               drawables[object->getId()] = std::make_shared<BushDrawable>();
             case ObjectType::Explosion:
               drawables[object->getId()] = std::make_shared<ExplosionDrawable>();
+              break;
+            case ObjectType::Spawner:
+              drawables[object->getId()] = std::make_shared<TankSpawnerDrawable>();
               break;
             default:
               Log::warning("No drawable assigned to object");
