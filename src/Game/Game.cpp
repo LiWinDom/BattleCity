@@ -26,9 +26,6 @@ _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
     std::string row;
     std::getline(layoutFile, row);
 
-    if (row.size() != 26) {
-      throw std::invalid_argument("Layout matrix must be 26x26");
-    }
     for (auto j = 0; j < row.size(); ++j) {
       const sf::Vector2f pos(j * 8, i * 8);
       switch (row[j]) {
