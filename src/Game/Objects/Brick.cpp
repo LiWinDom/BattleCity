@@ -41,7 +41,7 @@ void Brick::destroy(Game& game, const ObjectRotation bulletRotation) {
       }
       break;
   }
-
+  
   if (_state == 0) {
     _desytroyed = true;
   }

@@ -87,6 +87,10 @@ void Game::addObject(std::shared_ptr<IObject> object) {
   _objects.push_back(object);
 }
 
+bool Game::isTwoPlayers() const {
+  return _twoPlayers;
+}
+
 float Game::getTime() const {
   return _globalClock.getElapsedTime().asSeconds();
 }

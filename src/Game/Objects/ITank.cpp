@@ -32,8 +32,11 @@ void ITank::think(Game& game, const Event &event) {
   // Getting pressed keys
   PressedButtons pressed;
   if (_type == ObjectType::PlayerTank) {
-    if (_hasBonus == 0) {
+    if (_hasBonus == 0 || !game.isTwoPlayers()) {
       pressed = event.player1;
+      if (!game.isTwoPlayers()) {
+        pressed = pressed | event.player2;
+      }
     }
     else {
       pressed = event.player2;

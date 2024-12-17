@@ -7,6 +7,17 @@ struct PressedButtons {
   bool right = false;
   bool shoot = false;
   bool esc = false;
+
+  PressedButtons operator| (PressedButtons other) const {
+    other.up |= up;
+    other.down |= down;
+    other.left |= left;
+    other.right |= right;
+    other.shoot |= shoot;
+    other.esc |= esc;
+
+    return other;
+  }
 };
 
 struct Event {
