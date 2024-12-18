@@ -4,6 +4,23 @@
 
 EnemyTank::EnemyTank(const sf::Vector2f& position, const uint8_t tankType) : ITank(ObjectType::EnemyTank, position) {
   _tankType = tankType;
+  switch (_tankType) {
+    case 0:
+      // Simple tank
+      break;
+    case 1:
+      // Fast tank
+      _speed = 60;
+      break;
+    case 2:
+      // Fast bullet tank
+      _fastBullets = true;
+      break;
+    case 3:
+      // Heavy tank
+      _livesNum = 3;
+      break;
+  }
   // Random initial direction
   switch (std::rand() % 4) {
     case 0:

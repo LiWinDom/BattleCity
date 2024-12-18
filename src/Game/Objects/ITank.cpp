@@ -107,13 +107,7 @@ void ITank::destroy(Game &game, const ObjectRotation bulletRotation) {
 }
 
 void ITank::shoot(Game& game) {
-  uint8_t maxBullets = 1;
-  if (_type == ObjectType::PlayerTank) {
-    if (_tankType >= 2) {
-      maxBullets = 2;
-    }
-  }
-  if (_bullets.size() >= maxBullets) {
+  if (_bullets.size() >= _maxBullets) {
     // Too many bullets
     return;
   }
@@ -125,7 +119,7 @@ void ITank::shoot(Game& game) {
   }
   _lastShotTime = game.getTime();
 
-  const auto bullet = std::make_shared<Bullet>(_position, _rotation, _type == ObjectType::EnemyTank, false, false); // TODO: add speed and powerful modificators
+  const auto bullet = std::make_shared<Bullet>(_position, _rotation, _type == ObjectType::EnemyTank, _fastBullets, _powerfulBulltets);
   game.addObject(bullet);
   _bullets.push_back(bullet);
 }

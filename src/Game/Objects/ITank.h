@@ -19,10 +19,14 @@ class ITank : public IMovable {
   uint8_t _tankType = 0;
   bool _hasBonus = false;
   uint8_t _livesNum = 0;
+
+  uint8_t _maxBullets = 1;
+  bool _fastBullets = false;
+  bool _powerfulBulltets = false;
   float _lastShotTime = -1;
   std::vector<std::shared_ptr<IObject>> _bullets;
 
- protected:
+  // For enemy tank
   bool _failedToMove = false;
 
  private:
