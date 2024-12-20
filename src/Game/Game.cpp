@@ -7,7 +7,6 @@
 #include "Objects/Border.h"
 #include "Objects/Brick.h"
 #include "Objects/Bush.h"
-#include "Objects/EnemyTank.h"
 #include "Objects/TankSpawner.h"
 #include "Objects/Wall.h"
 
@@ -26,6 +25,7 @@ _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
     std::string row;
     std::getline(layoutFile, row);
 
+    uint8_t enemySpawnerNum = 0;
     for (auto j = 0; j < row.size(); ++j) {
       const sf::Vector2f pos(j * 8, i * 8);
       switch (row[j]) {
@@ -48,8 +48,7 @@ _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
           // TODO: eagle
           break;
         case 's':
-          // TODO: spawn pos
-          _objects.push_back(std::make_shared<EnemyTank>(pos, 0));
+          _objects.push_back(std::make_shared<TankSpawner>(pos, ObjectType::EnemyTank, enemySpawnerNum++));
           break;
         case '1':
           _objects.push_back(std::make_shared<TankSpawner>(pos, ObjectType::PlayerTank, 0));
@@ -87,6 +86,10 @@ void Game::addObject(std::shared_ptr<IObject> object) {
   _objects.push_back(object);
 }
 
+std::vector<uint8_t> Game::getTanks() const {
+  return _tanks;
+}
+
 bool Game::isTwoPlayers() const {
   return _twoPlayers;
 }
@@ -96,7 +99,7 @@ float Game::getTime() const {
 }
 
 float Game::getPeriod() const {
-  return 190 - _stage * 4 - (_twoPlayers ? 2 : 1 - 1) * 20;
+  return (190 - _stage * 4 - (_twoPlayers ? 2 : 1 - 1) * 20) / 60.0;
 }
 
 void Game::think(const Event &event) {
