@@ -17,11 +17,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Updating repository
+        if: runner.os == 'Linux'
+        working-directory: ./
+        run: sudo apt update
+
       - name: Installing dependencies
         if: runner.os == 'Linux'
         working-directory: ./
         run: sudo apt -y install
-          build-essential make cmake
+          build-essential make cmake g++-11
           libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev
           libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev
           libfreetype-dev
