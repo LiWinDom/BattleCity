@@ -184,7 +184,6 @@ if (WIN32)
   set(ARCHITECTURE -${CMAKE_BUILD_ARCHITECTURE})
 endif()
 
-
 target_compile_features(${CLIENT_PROJECT_NAME} PRIVATE cxx_std_20)
 target_link_libraries(${CLIENT_PROJECT_NAME} PRIVATE ${CLIENT_SFML_LIBRARIES})
 set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES
