@@ -20,12 +20,11 @@ jobs:
       - name: Installing dependencies
         if: runner.os == 'Linux'
         working-directory: ./
-        run: sudo apt update |
-          sudo apt -y install
-          build-essential make cmake g++-11 libstdc++-11-dev
-          libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev
-          libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev
-          libfreetype-dev
+        run: |
+          sudo apt update
+          sudo apt -y install g++-11 build-essential make cmake libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev libfreetype-dev
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 60
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 60
 
       - name: Build project
         working-directory: ./
