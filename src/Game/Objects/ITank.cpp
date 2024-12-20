@@ -16,14 +16,7 @@ ITank::ITank(ObjectType type, const sf::Vector2f& position) : IMovable(type, pos
 
 uint8_t ITank::getState() const {
   // [type][type][][color][color][wheelState][rotation][rotation]
-  if (_type == ObjectType::PlayerTank) {
-    return _tankType << 6
-      | _hasBonus << 3
-      | _wheelState << 2
-      | (uint8_t)_rotation;
-  }
   return _tankType << 6
-    | 0b10 << 3
     | _wheelState << 2
     | (uint8_t)_rotation;
 }

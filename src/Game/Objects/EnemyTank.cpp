@@ -21,6 +21,7 @@ EnemyTank::EnemyTank(const sf::Vector2f& position, const uint8_t tankType) : ITa
       _livesNum = 3;
       break;
   }
+
   // Random initial direction
   switch (std::rand() % 4) {
     case 0:
@@ -35,6 +36,26 @@ EnemyTank::EnemyTank(const sf::Vector2f& position, const uint8_t tankType) : ITa
     case 3:
       _event.player1.right = true;
       break;
+  }
+}
+
+uint8_t EnemyTank::getState() const {
+  auto baseState = ITank::getState();
+
+  if (_livesNum == 0) {
+    return baseState | 0b10 << 3;
+  }
+  else if (_livesNum == 1) {
+    // Yellow - Green
+  }
+  else if (_livesNum == 2) {
+    // White - Yellow
+  }
+  else if (_livesNum == 3) {
+    // White - Green
+  }
+  else {
+    // White - Red
   }
 }
 
