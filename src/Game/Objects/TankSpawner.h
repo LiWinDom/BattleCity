@@ -13,11 +13,14 @@ class TankSpawner : public IObject {
 
  private:
   ObjectType _spawnObject;
+  float _animationStartTime = -1;
   uint8_t _spawnerNum;
   uint8_t _currentFrame;
 
   // Only for players
   uint8_t _spawnsLeft = 4;
   std::shared_ptr<ITank> _spawnedTank;
-  float _animationStartTime = -1;
+
+  // Only for enemies
+  uint8_t _nextTankNum;
 };

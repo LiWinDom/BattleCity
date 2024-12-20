@@ -2,6 +2,7 @@
 
 #include <exception>
 
+#include "EnemyTank.h"
 #include "PlayerTank.h"
 
 TankSpawner::TankSpawner(const sf::Vector2f& position, const ObjectType spawnObject, const uint8_t spawnerNum) :
@@ -10,6 +11,7 @@ IObject(ObjectType::Spawner, position, {16, 16}), _spawnObject(spawnObject), _sp
     throw std::invalid_argument("spawnObject expected to be PlayerTank or EnemyTank");
   }
   _collision = false;
+  _nextTankNum = _spawnerNum;
 }
 
 uint8_t TankSpawner::getState() const {
@@ -19,29 +21,38 @@ uint8_t TankSpawner::getState() const {
 void TankSpawner::think(Game& game, const Event &event) {
   if (_animationStartTime == -1) {
     // Game start
-    _animationStartTime = game.getTime();
+    if (_spawnObject == ObjectType::PlayerTank) {
+      _animationStartTime = game.getTime();
+    }
+    else {
+      _animationStartTime = game.getTime() + game.getPeriod() * _spawnerNum;
+    }
   }
 
-  // Delay, animation
+  // Waiting for next spawn
   if (_animationStartTime > game.getTime()) {
-    // Waiting
     return;
   }
-  else if (_animationStartTime + 64.0 / 60 > game.getTime()) {
+  // Animation
+  if (_animationStartTime + 64.0 / 60 > game.getTime()) {
     // TODO: animation calculation
     return;
   }
-  else {
-    // Spawning
-    if (_spawnObject == ObjectType::PlayerTank) {
-      if (_spawnedTank == nullptr && _spawnsLeft > 0) {
-        _spawnedTank = std::make_shared<PlayerTank>(_position, _spawnerNum);
-        game.addObject(_spawnedTank);
-        --_spawnsLeft;
-      }
+
+  // Spawning
+  if (_spawnObject == ObjectType::PlayerTank) {
+    if (_spawnedTank == nullptr && _spawnsLeft > 0) {
+      _spawnedTank = std::make_shared<PlayerTank>(_position, _spawnerNum);
+      game.addObject(_spawnedTank);
+      --_spawnsLeft;
     }
-    else {
-      return;
+  }
+  else {
+    game.addObject(std::make_shared<EnemyTank>(_position, game.getTanks()[_nextTankNum]));
+    _animationStartTime += game.getPeriod() * 3;
+    _nextTankNum += 3;
+    if (_nextTankNum >= game.getTanks().size()) {
+      _animationStartTime = MAXFLOAT;
     }
   }
 
