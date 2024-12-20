@@ -43,7 +43,7 @@ uint8_t EnemyTank::getState() const {
   auto baseState = ITank::getState();
 
   if (_livesNum == 0) {
-    return baseState | 0b10 << 3;
+    baseState |= 0b10 << 3;
   }
   else if (_livesNum == 1) {
     // Yellow - Green
@@ -57,6 +57,7 @@ uint8_t EnemyTank::getState() const {
   else {
     // White - Red
   }
+  return baseState;
 }
 
 void EnemyTank::think(Game& game, const Event& event) {
