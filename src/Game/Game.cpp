@@ -26,7 +26,7 @@ _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
     std::string row;
     std::getline(layoutFile, row);
 
-    uint8_t enemySpawnerNum = 0;
+    uint8_t enemySpawnerNum = 1;
     for (auto j = 0; j < row.size(); ++j) {
       const sf::Vector2f pos(j * 8, i * 8);
       switch (row[j]) {
@@ -49,7 +49,7 @@ _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
           // TODO: eagle
           break;
         case 's':
-          _objects.push_back(std::make_shared<TankSpawner>(pos, ObjectType::EnemyTank, enemySpawnerNum++));
+          _objects.push_back(std::make_shared<TankSpawner>(pos, ObjectType::EnemyTank, enemySpawnerNum = (enemySpawnerNum + 1) % 3));
           break;
         case '1':
           _objects.push_back(std::make_shared<TankSpawner>(pos, ObjectType::PlayerTank, 0));
