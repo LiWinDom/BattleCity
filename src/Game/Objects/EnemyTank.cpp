@@ -2,8 +2,9 @@
 
 #include "Bullet.h"
 
-EnemyTank::EnemyTank(const sf::Vector2f& position, const uint8_t tankType) : ITank(ObjectType::EnemyTank, position) {
+EnemyTank::EnemyTank(const sf::Vector2f& position, const uint8_t tankType, const bool hasBonus) : ITank(ObjectType::EnemyTank, position) {
   _tankType = tankType;
+  _hasBonus = hasBonus;
   switch (_tankType) {
     case 0:
       // Simple tank

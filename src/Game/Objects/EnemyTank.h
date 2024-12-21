@@ -4,7 +4,7 @@
 
 class EnemyTank : public ITank {
  public:
-  EnemyTank(const sf::Vector2f& position, const uint8_t tankType);
+  EnemyTank(const sf::Vector2f& position, const uint8_t tankType, const bool hasBonus = false);
 
   uint8_t getState() const override;
 
