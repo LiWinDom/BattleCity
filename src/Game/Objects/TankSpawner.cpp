@@ -49,7 +49,11 @@ void TankSpawner::think(Game& game, const Event &event) {
     }
   }
   else {
-    game.addObject(std::make_shared<EnemyTank>(_position, game.getTanks()[_nextTankNum]));
+    bool hasBonus = false;
+    if (_nextTankNum == 3 || _nextTankNum == 10 || _nextTankNum == 17) {
+      hasBonus = true;
+    }
+    game.addObject(std::make_shared<EnemyTank>(_position, game.getTanks()[_nextTankNum], hasBonus));
     _animationStartTime += game.getPeriod() * 3;
     _nextTankNum += 3;
     if (_nextTankNum >= game.getTanks().size()) {
