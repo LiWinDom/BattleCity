@@ -179,19 +179,31 @@ set(SFML_BUILD_NETWORK FALSE)
 FetchContent_MakeAvailable(SFML)
 include_directories(${SFML_INCLUDE_DIR})
 
+# Fetching fmt library
+FetchContent_Declare(
+    fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+    GIT_TAG 8.1.1
+)
+FetchContent_MakeAvailable(fmt)
+
+# Linking fmt library
+target_link_libraries(${CLIENT_PROJECT_NAME} PRIVATE fmt::fmt)
+target_link_libraries(${SERVER_PROJECT_NAME} PRIVATE fmt::fmt)
+
 # Configuring executable
 if (WIN32)
   set(ARCHITECTURE -${CMAKE_BUILD_ARCHITECTURE})
 endif()
 
-target_compile_features(${CLIENT_PROJECT_NAME} PRIVATE cxx_std_20)
+target_compile_features(${CLIENT_PROJECT_NAME} PRIVATE cxx_std_17)
 target_link_libraries(${CLIENT_PROJECT_NAME} PRIVATE ${CLIENT_SFML_LIBRARIES})
 set_target_properties(${CLIENT_PROJECT_NAME} PROPERTIES
     OUTPUT_NAME "${CLIENT_PROJECT_NAME}-${CMAKE_SYSTEM_NAME}${ARCHITECTURE}"
     CLEAN_DIRECT_OUTPUT 1
 )
 
-target_compile_features(${SERVER_PROJECT_NAME} PRIVATE cxx_std_20)
+target_compile_features(${SERVER_PROJECT_NAME} PRIVATE cxx_std_17)
 target_link_libraries(${SERVER_PROJECT_NAME} PRIVATE ${SERVER_SFML_LIBRARIES})
 set_target_properties(${SERVER_PROJECT_NAME} PROPERTIES
     OUTPUT_NAME "${SERVER_PROJECT_NAME}-${CMAKE_SYSTEM_NAME}${ARCHITECTURE}"

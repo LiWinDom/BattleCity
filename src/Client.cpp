@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
           continue;
         }
 
-        if (!drawables.contains(object->getId())) {
+        if (drawables.count(object->getId()) <= 0) {
           switch (object->getType()) {
             case ObjectType::PlayerTank:
             case ObjectType::EnemyTank:
