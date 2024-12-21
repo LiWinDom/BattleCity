@@ -1,6 +1,6 @@
 #include "Game.h"
 
-#include <format>
+#include <fmt/format.h>
 #include <fstream>
 
 #include "../Other/Path.h"
@@ -14,12 +14,12 @@
 Game::Game(const uint8_t stage, const bool twoPlayers, const bool homebrewChanges) :
 _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
   // Trying to load stage info
-  const auto path = Path::getAbsolutePath(std::format("resources/stages/stage{}.layout", _stage));
-  std::ifstream layoutFile(Path::getAbsolutePath(std::format("resources/stages/stage{}.layout", _stage)));
-  std::ifstream tanksFile(Path::getAbsolutePath(std::format("resources/stages/stage{}.tanks", _stage)));
+  const auto path = Path::getAbsolutePath(fmt::format("resources/stages/stage{}.layout", _stage));
+  std::ifstream layoutFile(Path::getAbsolutePath(fmt::format("resources/stages/stage{}.layout", _stage)));
+  std::ifstream tanksFile(Path::getAbsolutePath(fmt::format("resources/stages/stage{}.tanks", _stage)));
 
   if (!layoutFile.is_open() || !tanksFile.is_open()) {
-    throw std::runtime_error(std::format("Failed to load data for stage {}", _stage));
+    throw std::runtime_error(fmt::format("Failed to load data for stage {}", _stage));
   }
 
   for (size_t i = 0; i < 26; ++i) {
