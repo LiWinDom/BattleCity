@@ -1,6 +1,7 @@
 #include "TankSpawner.h"
 
 #include <exception>
+#include <limits>
 
 #include "EnemyTank.h"
 #include "PlayerTank.h"
@@ -52,7 +53,7 @@ void TankSpawner::think(Game& game, const Event &event) {
     _animationStartTime += game.getPeriod() * 3;
     _nextTankNum += 3;
     if (_nextTankNum >= game.getTanks().size()) {
-      _animationStartTime = MAXFLOAT;
+      _animationStartTime = std::numeric_limits<float>::max();
     }
   }
 
