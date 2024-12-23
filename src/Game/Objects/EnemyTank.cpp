@@ -23,21 +23,7 @@ EnemyTank::EnemyTank(const sf::Vector2f& position, const uint8_t tankType, const
       break;
   }
 
-  // Random initial direction
-  switch (std::rand() % 4) {
-    case 0:
-      _event.player1.up = true;
-      break;
-    case 1:
-      _event.player1.left = true;
-      break;
-    case 2:
-      _event.player1.down = true;
-      break;
-    case 3:
-      _event.player1.right = true;
-      break;
-  }
+  _event.player1.down = true;
 }
 
 uint8_t EnemyTank::getState() const {
