@@ -1,4 +1,4 @@
-#pragma
+#pragma once
 
 #include "ITank.h"
 
