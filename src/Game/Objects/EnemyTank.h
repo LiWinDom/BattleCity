@@ -8,6 +8,7 @@ class EnemyTank : public ITank {
 
   uint8_t getState() const override;
 
+  void changeColor(const Game& game);
   void think(Game& game, const Event& event) override;
 
  private:
@@ -16,4 +17,7 @@ class EnemyTank : public ITank {
   void rotateCounterClockwise();
 
   Event _event;
+
+  uint8_t _color = 0b10;
+  float _bonusBlinkTime = -1;
 };
