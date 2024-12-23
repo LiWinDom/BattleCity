@@ -27,24 +27,57 @@ EnemyTank::EnemyTank(const sf::Vector2f& position, const uint8_t tankType, const
 }
 
 uint8_t EnemyTank::getState() const {
-  auto baseState = ITank::getState();
+  return ITank::getState() | _color << 3;
+}
 
-  if (_livesNum == 0) {
-    baseState |= 0b10 << 3;
+void EnemyTank::changeColor(const Game& game) {
+  if (_bonusBlinkTime == -1) {
+    _bonusBlinkTime = game.getTime();
   }
-  else if (_livesNum == 1) {
-    // Yellow - Green
+
+  if (_hasBonus) {
+    while (_bonusBlinkTime + 1.0 / 6 < game.getTime()) {
+      if (_color == 0b11) {
+        _color = 0b10;
+      } else {
+        _color = 0b11;
+      }
+      _bonusBlinkTime += 1.0 / 6;
+    }
   }
-  else if (_livesNum == 2) {
-    // White - Yellow
+
+  if (_color != 0b11) {
+    if (_livesNum == 0) {
+      _color = 0b10;
+    }
+    else if (_livesNum == 1) {
+      // Yellow - Green
+      if (_color == 0b00) {
+        _color = 0b01;
+      }
+      else {
+        _color = 0b00;
+      }
+    }
+    else if (_livesNum == 2) {
+      // White - Yellow
+      if (_color == 0b10) {
+        _color = 0b00;
+      }
+      else {
+        _color = 0b10;
+      }
+    }
+    else {
+      // White - Green
+      if (_color == 0b10) {
+        _color = 0b01;
+      }
+      else {
+        _color = 0b10;
+      }
+    }
   }
-  else if (_livesNum == 3) {
-    // White - Green
-  }
-  else {
-    // White - Red
-  }
-  return baseState;
 }
 
 void EnemyTank::think(Game& game, const Event& event) {
@@ -68,9 +101,12 @@ void EnemyTank::think(Game& game, const Event& event) {
       _event.player1.shoot = true;
     }
   }
+
   // Base think
   ITank::think(game, _event);
   _event.player1.shoot = false;
+
+  changeColor(game);
 }
 
 void EnemyTank::changeDirection(Game &game) {
