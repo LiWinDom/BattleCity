@@ -1,6 +1,6 @@
 #include "BorderDrawable.h"
 
-#include "../../../Other/Log.h"
+#include "../../../../Other/Log.h"
 
 BorderDrawable::BorderDrawable() {
   if (!_texture.loadFromFile(Path::getAbsolutePath("resources/graphics/StatsBackground.png"))) {

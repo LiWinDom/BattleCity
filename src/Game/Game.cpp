@@ -5,11 +5,11 @@
 
 #include "../Other/Path.h"
 #include "Enums.h"
-#include "Objects/Border.h"
-#include "Objects/Brick.h"
-#include "Objects/Bush.h"
-#include "Objects/TankSpawner.h"
-#include "Objects/Wall.h"
+#include "Objects/Playfield/Border.h"
+#include "Objects/Playfield/Brick.h"
+#include "Objects/Playfield/Bush.h"
+#include "Objects/Playfield/TankSpawner.h"
+#include "Objects/Playfield/Wall.h"
 
 Game::Game(const uint8_t stage, const bool twoPlayers, const bool homebrewChanges) :
 _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {

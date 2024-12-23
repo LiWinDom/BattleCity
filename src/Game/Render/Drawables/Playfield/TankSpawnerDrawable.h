@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IDrawable.h"
+#include "../IDrawable.h"
 
 class TankSpawnerDrawable : public IDrawable {
  public:

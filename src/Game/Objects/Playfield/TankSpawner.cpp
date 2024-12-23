@@ -3,8 +3,8 @@
 #include <exception>
 #include <limits>
 
-#include "EnemyTank.h"
-#include "PlayerTank.h"
+#include "../EnemyTank.h"
+#include "../PlayerTank.h"
 
 TankSpawner::TankSpawner(const sf::Vector2f& position, const ObjectType spawnObject, const uint8_t spawnerNum) :
 IObject(ObjectType::Spawner, position, {16, 16}), _spawnObject(spawnObject), _spawnerNum(spawnerNum) {
@@ -36,11 +36,21 @@ void TankSpawner::think(Game& game, const Event &event) {
   }
   // Animation
   if (_animationStartTime + 64.0 / 60 > game.getTime()) {
-    // TODO: animation calculation
+    if (_frameChangeTime == -1) {
+      _frameChangeTime = game.getTime();
+      _currentFrame = 0;
+    }
+    while (_frameChangeTime + 1.0 / 12 < game.getTime()) {
+      _currentFrame = (_currentFrame + 1) % 6;
+      _frameChangeTime += 1.0 / 12;
+    }
     return;
   }
 
   // Spawning
+  _frameChangeTime = -1;
+  _currentFrame = -1;
+
   if (_spawnObject == ObjectType::PlayerTank) {
     if (_spawnedTank == nullptr && _spawnsLeft > 0) {
       _spawnedTank = std::make_shared<PlayerTank>(_position, _spawnerNum);
