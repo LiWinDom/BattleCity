@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Drawables/BorderDrawable.h"
-#include "Drawables/BrickDrawable.h"
+#include "Drawables/Playfield/BorderDrawable.h"
+#include "Drawables/Playfield/BrickDrawable.h"
 #include "Drawables/BulletDrawable.h"
-#include "Drawables/BushDrawable.h"
+#include "Drawables/Playfield/BushDrawable.h"
 #include "Drawables/ExplosionDrawable.h"
 #include "Drawables/TankDrawable.h"
-#include "Drawables/TankSpawnerDrawable.h"
-#include "Drawables/WallDrawable.h"
+#include "Drawables/Playfield/TankSpawnerDrawable.h"
+#include "Drawables/Playfield/WallDrawable.h"

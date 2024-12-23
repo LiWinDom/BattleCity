@@ -1,6 +1,6 @@
 #include "BushDrawable.h"
 
-#include "../../../Other/Log.h"
+#include "../../../../Other/Log.h"
 
 BushDrawable::BushDrawable() {
   if (!_texture.loadFromFile(Path::getAbsolutePath("resources/graphics/Blocks.png"))) {

@@ -1,6 +1,6 @@
 #include "WallDrawable.h"
 
-#include "../../../Other/Log.h"
+#include "../../../../Other/Log.h"
 
 WallDrawable::WallDrawable() {
   if (!_texture.loadFromFile(Path::getAbsolutePath("resources/graphics/Blocks.png"))) {

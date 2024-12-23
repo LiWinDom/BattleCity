@@ -1,10 +1,10 @@
 #pragma once
 
-#include "IDrawable.h"
+#include "../IDrawable.h"
 
-class BrickDrawable : public IDrawable {
+class BorderDrawable : public IDrawable {
  public:
-  BrickDrawable();
+  BorderDrawable();
 
   void update(const std::shared_ptr<IObject>& object) override;
 };

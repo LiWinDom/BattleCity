@@ -1,6 +1,6 @@
 #include "TankSpawnerDrawable.h"
 
-#include "../../../Other/Log.h"
+#include "../../../../Other/Log.h"
 
 TankSpawnerDrawable::TankSpawnerDrawable() {
   if (!_texture.loadFromFile(Path::getAbsolutePath("resources/graphics/Spawn.png"))) {
@@ -13,6 +13,14 @@ TankSpawnerDrawable::TankSpawnerDrawable() {
 
 void TankSpawnerDrawable::update(const std::shared_ptr<IObject> &object) {
   uint8_t state = object->getState();
-  _sprites[0].setTextureRect(sf::IntRect((state - 1) * 16, 0, 16, 16));
+  switch (state) {
+    case 4:
+      state = 2;
+      break;
+    case 5:
+      state = 1;
+      break;
+  }
+  _sprites[0].setTextureRect(sf::IntRect((state) * 16, 0, 16, 16));
   _sprites[0].setPosition(object->getPosition());
 }

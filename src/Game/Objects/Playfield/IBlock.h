@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IObject.h"
+#include "../IObject.h"
 
 class IBlock : public IObject {
  public:

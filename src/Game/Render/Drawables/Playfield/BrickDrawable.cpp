@@ -1,6 +1,6 @@
 #include "BrickDrawable.h"
 
-#include "../../../Other/Log.h"
+#include "../../../../Other/Log.h"
 
 BrickDrawable::BrickDrawable() {
   if (!_texture.loadFromFile(Path::getAbsolutePath("resources/graphics/Blocks.png"))) {

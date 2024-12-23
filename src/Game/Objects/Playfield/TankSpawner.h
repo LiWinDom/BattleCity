@@ -1,7 +1,7 @@
 #pragma once
 
-#include "IObject.h"
-#include "ITank.h"
+#include "../IObject.h"
+#include "../ITank.h"
 
 class TankSpawner : public IObject {
  public:
@@ -13,9 +13,10 @@ class TankSpawner : public IObject {
 
  private:
   ObjectType _spawnObject;
-  float _animationStartTime = -1;
   uint8_t _spawnerNum;
-  uint8_t _currentFrame;
+  float _animationStartTime = -1;
+  float _frameChangeTime = -1;
+  uint8_t _currentFrame = -1;
 
   // Only for players
   uint8_t _spawnsLeft = 4;
