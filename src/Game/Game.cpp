@@ -45,6 +45,10 @@ _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
         case 'i':
           // TODO: ice
           break;
+        case 'p':
+          // TODO: protection
+          _objects.push_back(std::make_shared<Brick>(pos));
+          break;
         case 'e':
           // TODO: eagle
           break;
