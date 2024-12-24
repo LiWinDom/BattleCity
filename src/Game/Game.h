@@ -32,6 +32,5 @@ class Game {
   std::vector<std::shared_ptr<IObject>> _objects;
   std::vector<uint8_t> _tanks;
 
-  sf::Clock _globalClock;
   float _lastThink = 0;
 };
