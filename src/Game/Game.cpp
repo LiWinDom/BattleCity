@@ -121,7 +121,6 @@ void Game::think(const Event &event) {
   // Simulating 60 fps
   static sf::Clock globalClock;
   while (globalClock.getElapsedTime().asSeconds() + 1.0 / 60 > _lastThink) {
-    _lastThink += 1.0 / 60;
     for (size_t i = 0; i < _objects.size(); ++i) {
       auto object = _objects[i];
       if (object->isDestroyed()) {
@@ -129,5 +128,6 @@ void Game::think(const Event &event) {
       }
       object->think(*this, event);
     }
+    _lastThink += 1.0 / 60;
   }
 }
