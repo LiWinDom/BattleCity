@@ -20,4 +20,5 @@ class EnemyTank : public ITank {
 
   uint8_t _color = 0b10;
   float _bonusBlinkTime = -1;
+  float _livesChangeTime = -1;
 };

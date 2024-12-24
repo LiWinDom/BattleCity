@@ -34,6 +34,9 @@ void EnemyTank::changeColor(const Game& game) {
   if (_bonusBlinkTime == -1) {
     _bonusBlinkTime = game.getTime();
   }
+  if (_livesChangeTime == -1) {
+    _livesChangeTime = game.getTime();
+  }
 
   if (_hasBonus) {
     while (_bonusBlinkTime + 1.0 / 6 < game.getTime()) {
@@ -47,35 +50,38 @@ void EnemyTank::changeColor(const Game& game) {
   }
 
   if (_color != 0b11) {
-    if (_livesNum == 0) {
-      _color = 0b10;
-    }
-    else if (_livesNum == 1) {
-      // Yellow - Green
-      if (_color == 0b00) {
-        _color = 0b01;
-      }
-      else {
-        _color = 0b00;
-      }
-    }
-    else if (_livesNum == 2) {
-      // White - Yellow
-      if (_color == 0b10) {
-        _color = 0b00;
-      }
-      else {
+    while (_livesChangeTime + 1.0 / 60 < game.getTime()) {
+      if (_livesNum == 0) {
         _color = 0b10;
       }
-    }
-    else {
-      // White - Green
-      if (_color == 0b10) {
-        _color = 0b01;
+      else if (_livesNum == 1) {
+        // Yellow - Green
+        if (_color == 0b00) {
+          _color = 0b01;
+        }
+        else {
+          _color = 0b00;
+        }
+      }
+      else if (_livesNum == 2) {
+        // White - Yellow
+        if (_color == 0b10) {
+          _color = 0b00;
+        }
+        else {
+          _color = 0b10;
+        }
       }
       else {
-        _color = 0b10;
+        // White - Green
+        if (_color == 0b10) {
+          _color = 0b01;
+        }
+        else {
+          _color = 0b10;
+        }
       }
+      _livesChangeTime += 1.0 / 60;
     }
   }
 }

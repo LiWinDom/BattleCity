@@ -100,7 +100,7 @@ bool Game::isTwoPlayers() const {
 }
 
 float Game::getTime() const {
-  return _globalClock.getElapsedTime().asSeconds();
+  return _lastThink;
 }
 
 float Game::getPeriod() const {
@@ -119,8 +119,9 @@ void Game::think(const Event &event) {
   }
 
   // Simulating 60 fps
-  while (getTime() + 1.0/60 > _lastThink) {
-    _lastThink += 1.0/60;
+  static sf::Clock globalClock;
+  while (globalClock.getElapsedTime().asSeconds() + 1.0 / 60 > _lastThink) {
+    _lastThink += 1.0 / 60;
     for (size_t i = 0; i < _objects.size(); ++i) {
       auto object = _objects[i];
       if (object->isDestroyed()) {
