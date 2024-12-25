@@ -8,6 +8,7 @@
 #include "Objects/Playfield/Border.h"
 #include "Objects/Playfield/Brick.h"
 #include "Objects/Playfield/Bush.h"
+#include "Objects/Playfield/Eagle.h"
 #include "Objects/Playfield/TankSpawner.h"
 #include "Objects/Playfield/Wall.h"
 
@@ -50,17 +51,19 @@ _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
           _objects.push_back(std::make_shared<Brick>(pos));
           break;
         case 'e':
-          // TODO: eagle
+          _objects.push_back(std::make_shared<Eagle>(pos));
           break;
         case 's':
           _objects.push_back(std::make_shared<TankSpawner>(pos, ObjectType::EnemyTank, enemySpawnerNum = (enemySpawnerNum + 1) % 3));
           break;
         case '1':
           _objects.push_back(std::make_shared<TankSpawner>(pos, ObjectType::PlayerTank, 0));
+          ++_playerSpawnersLeft;
           break;
         case '2':
           if (_twoPlayers) {
             _objects.push_back(std::make_shared<TankSpawner>(pos, ObjectType::PlayerTank, 1));
+            ++_playerSpawnersLeft;
           }
           break;
       }
@@ -107,15 +110,33 @@ float Game::getPeriod() const {
   return (190 - _stage * 4 - (_twoPlayers ? 2 : 1 - 1) * 20) / 60.0;
 }
 
-void Game::think(const Event &event) {
+void Game::think(Event event) {
   // Removing destroyed objects
   for (size_t i = 0; i < _objects.size(); ++i) {
     auto object = _objects[i];
+
     if (object->isDestroyed()) {
+      if (object->getType() == ObjectType::Spawner && std::dynamic_pointer_cast<TankSpawner>(object)->getSpawnObject() == ObjectType::PlayerTank) {
+        --_playerSpawnersLeft;
+        if (_playerSpawnersLeft == 0) {
+          _gameOver = true;
+        }
+      }
+
       _objects.erase(_objects.begin() + i);
       --i;
       continue;
     }
+
+    if (object->getType() == ObjectType::Eagle) {
+      if (object->getState()) {
+        _gameOver = true;
+      }
+    }
+  }
+
+  if (_gameOver) {
+    event = Event();
   }
 
   // Simulating 60 fps

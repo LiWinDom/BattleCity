@@ -4,6 +4,7 @@
 #include "Drawables/Playfield/BrickDrawable.h"
 #include "Drawables/BulletDrawable.h"
 #include "Drawables/Playfield/BushDrawable.h"
+#include "Drawables/Playfield/EagleDrawable.h"
 #include "Drawables/ExplosionDrawable.h"
 #include "Drawables/TankDrawable.h"
 #include "Drawables/Playfield/TankSpawnerDrawable.h"

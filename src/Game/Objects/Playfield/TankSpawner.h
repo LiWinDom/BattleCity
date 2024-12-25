@@ -7,6 +7,8 @@ class TankSpawner : public IObject {
  public:
   TankSpawner(const sf::Vector2f& position, const ObjectType spawnObject, const uint8_t spawnerNum);
 
+  ObjectType getSpawnObject() const;
+
   uint8_t getState() const override;
 
   void think(Game& game, const Event& event) override;

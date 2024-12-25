@@ -47,6 +47,9 @@ int main(int argc, char* argv[]) {
             case ObjectType::Bush:
               drawables[object->getId()] = std::make_shared<BushDrawable>();
               break;
+            case ObjectType::Eagle:
+              drawables[object->getId()] = std::make_shared<EagleDrawable>();
+              break;
             case ObjectType::Explosion:
               drawables[object->getId()] = std::make_shared<ExplosionDrawable>();
               break;
