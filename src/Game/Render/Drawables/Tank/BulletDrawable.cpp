@@ -1,6 +1,6 @@
 #include "BulletDrawable.h"
 
-#include "../../../Other/Log.h"
+#include "../../../../Other/Log.h"
 
 BulletDrawable::BulletDrawable() {
   if (!_texture.loadFromFile(Path::getAbsolutePath("resources/graphics/Bullets.png"))) {

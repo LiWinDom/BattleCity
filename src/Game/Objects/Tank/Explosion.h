@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IObject.h"
+#include "../IObject.h"
 
 class Explosion : public IObject {
  public:

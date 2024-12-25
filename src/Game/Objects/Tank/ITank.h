@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Bullet.h"
-#include "IMovable.h"
+#include "../IMovable.h"
 
 class ITank : public IMovable {
  public:

@@ -1,6 +1,6 @@
 #include "ExplosionDrawable.h"
 
-#include "../../../Other/Log.h"
+#include "../../../../Other/Log.h"
 
 ExplosionDrawable::ExplosionDrawable() {
   if (!_texture.loadFromFile(Path::getAbsolutePath("resources/graphics/Explosion.png"))) {
