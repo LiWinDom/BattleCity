@@ -30,9 +30,10 @@ set (
     src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp
     src/Game/Objects/Playfield/IBlock.h src/Game/Objects/Playfield/IBlock.cpp
     src/Game/Objects/Playfield/Brick.h src/Game/Objects/Playfield/Brick.cpp
+    src/Game/Objects/Playfield/Bush.h src/Game/Objects/Playfield/Bush.cpp
+    src/Game/Objects/Playfield/Eagle.h src/Game/Objects/Playfield/Eagle.cpp
     src/Game/Objects/Playfield/Wall.h src/Game/Objects/Playfield/Wall.cpp
     src/Game/Objects/Playfield/Border.h src/Game/Objects/Playfield/Border.cpp
-    src/Game/Objects/Playfield/Bush.h src/Game/Objects/Playfield/Bush.cpp
     src/Game/Objects/Bullet.h src/Game/Objects/Bullet.cpp
     src/Game/Objects/Explosion.h src/Game/Objects/Explosion.cpp
     src/Game/Objects/Playfield/TankSpawner.h src/Game/Objects/Playfield/TankSpawner.cpp
@@ -43,13 +44,14 @@ set (
     src/Game/Render/Window.h src/Game/Render/Window.cpp
     src/Game/Render/Drawables/IDrawable.h src/Game/Render/Drawables/IDrawable.cpp
     src/Game/Render/Drawables/TankDrawable.h src/Game/Render/Drawables/TankDrawable.cpp
+    src/Game/Render/Drawables/BulletDrawable.h src/Game/Render/Drawables/BulletDrawable.cpp
+    src/Game/Render/Drawables/ExplosionDrawable.h src/Game/Render/Drawables/ExplosionDrawable.cpp
     src/Game/Render/Drawables/Playfield/WallDrawable.h src/Game/Render/Drawables/Playfield/WallDrawable.cpp
     src/Game/Render/Drawables/Playfield/BushDrawable.h src/Game/Render/Drawables/Playfield/BushDrawable.cpp
-    src/Game/Render/Drawables/BulletDrawable.h src/Game/Render/Drawables/BulletDrawable.cpp
     src/Game/Render/Drawables/Playfield/BorderDrawable.h src/Game/Render/Drawables/Playfield/BorderDrawable.cpp
     src/Game/Render/Drawables/Playfield/BrickDrawable.h src/Game/Render/Drawables/Playfield/BrickDrawable.cpp
-    src/Game/Render/Drawables/ExplosionDrawable.h src/Game/Render/Drawables/ExplosionDrawable.cpp
     src/Game/Render/Drawables/Playfield/TankSpawnerDrawable.h src/Game/Render/Drawables/Playfield/TankSpawnerDrawable.cpp
+    src/Game/Render/Drawables/Playfield/EagleDrawable.h src/Game/Render/Drawables/Playfield/EagleDrawable.cpp
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp

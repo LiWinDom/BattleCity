@@ -23,7 +23,7 @@ class Game {
   float getTime() const;
   float getPeriod() const;
 
-  void think(const Event& event);
+  void think(Event event);
 
  private:
   uint8_t _stage;
@@ -31,6 +31,9 @@ class Game {
   bool _twoPlayers;
   std::vector<std::shared_ptr<IObject>> _objects;
   std::vector<uint8_t> _tanks;
+
+  uint8_t _playerSpawnersLeft = 0;
+  bool _gameOver = false;
 
   float _lastThink = 0;
 };
