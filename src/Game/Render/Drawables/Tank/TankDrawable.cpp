@@ -1,6 +1,6 @@
 #include "TankDrawable.h"
 
-#include "../../../Other/Log.h"
+#include "../../../../Other/Log.h"
 
 TankDrawable::TankDrawable() {
   if (!_texture.loadFromFile(Path::getAbsolutePath("resources/graphics/Tanks.png"))) {

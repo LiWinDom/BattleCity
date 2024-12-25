@@ -3,8 +3,8 @@
 #include <exception>
 #include <limits>
 
-#include "../EnemyTank.h"
-#include "../PlayerTank.h"
+#include "../Tank/EnemyTank.h"
+#include "../Tank/PlayerTank.h"
 
 TankSpawner::TankSpawner(const sf::Vector2f& position, const ObjectType spawnObject, const uint8_t spawnerNum) :
 IObject(ObjectType::Spawner, position, {16, 16}), _spawnObject(spawnObject), _spawnerNum(spawnerNum) {

@@ -56,6 +56,9 @@ int main(int argc, char* argv[]) {
             case ObjectType::Spawner:
               drawables[object->getId()] = std::make_shared<TankSpawnerDrawable>();
               break;
+            case ObjectType::GameOver:
+              drawables[object->getId()] = std::make_shared<GameOverDrawable>();
+              break;
             default:
               Log::warning("No drawable assigned to object");
               continue;

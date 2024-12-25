@@ -11,6 +11,7 @@
 #include "Objects/Playfield/Eagle.h"
 #include "Objects/Playfield/TankSpawner.h"
 #include "Objects/Playfield/Wall.h"
+#include "Objects/Interface/GameOver.h"
 
 Game::Game(const uint8_t stage, const bool twoPlayers, const bool homebrewChanges) :
 _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
@@ -137,6 +138,10 @@ void Game::think(Event event) {
 
   if (_gameOver) {
     event = Event();
+    if (!_gameOverLabel) {
+      addObject(std::make_shared<GameOver>());
+      _gameOverLabel = true;
+    }
   }
 
   // Simulating 60 fps

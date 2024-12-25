@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../IObject.h"
-#include "../ITank.h"
+#include "../Tank/ITank.h"
 
 class TankSpawner : public IObject {
  public:

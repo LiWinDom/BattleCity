@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IMovable.h"
+#include "../IMovable.h"
 
 class Bullet : public IMovable {
  public:

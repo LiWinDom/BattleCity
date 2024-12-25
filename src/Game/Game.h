@@ -34,6 +34,7 @@ class Game {
 
   uint8_t _playerSpawnersLeft = 0;
   bool _gameOver = false;
+  bool _gameOverLabel = false;
 
   float _lastThink = 0;
 };

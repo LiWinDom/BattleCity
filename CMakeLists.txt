@@ -3,8 +3,8 @@ set(CLIENT_PROJECT_NAME BattleCity-client)
 set(SERVER_PROJECT_NAME BattleCity-server)
 project(BattleCity LANGUAGES CXX)
 
-set(CLIENT_VERSION "2024.1212.0")
-set(SERVER_VERSION "2024.1212.0")
+set(CLIENT_VERSION "2024.1225.0")
+set(SERVER_VERSION "2024.1225.0")
 
 add_compile_definitions(CLIENT_VERSION="${CLIENT_VERSION}")
 add_compile_definitions(SERVER_VERSION="${SERVER_VERSION}")
@@ -25,33 +25,35 @@ set (
 
     src/Game/Objects/IObject.h src/Game/Objects/IObject.cpp
     src/Game/Objects/IMovable.cpp src/Game/Objects/IMovable.h
-    src/Game/Objects/ITank.h src/Game/Objects/ITank.cpp
-    src/Game/Objects/EnemyTank.h src/Game/Objects/EnemyTank.cpp
-    src/Game/Objects/PlayerTank.h src/Game/Objects/PlayerTank.cpp
     src/Game/Objects/Playfield/IBlock.h src/Game/Objects/Playfield/IBlock.cpp
     src/Game/Objects/Playfield/Brick.h src/Game/Objects/Playfield/Brick.cpp
     src/Game/Objects/Playfield/Bush.h src/Game/Objects/Playfield/Bush.cpp
     src/Game/Objects/Playfield/Eagle.h src/Game/Objects/Playfield/Eagle.cpp
     src/Game/Objects/Playfield/Wall.h src/Game/Objects/Playfield/Wall.cpp
-    src/Game/Objects/Playfield/Border.h src/Game/Objects/Playfield/Border.cpp
-    src/Game/Objects/Bullet.h src/Game/Objects/Bullet.cpp
-    src/Game/Objects/Explosion.h src/Game/Objects/Explosion.cpp
     src/Game/Objects/Playfield/TankSpawner.h src/Game/Objects/Playfield/TankSpawner.cpp
+    src/Game/Objects/Playfield/Border.h src/Game/Objects/Playfield/Border.cpp
+    src/Game/Objects/Tank/Bullet.h src/Game/Objects/Tank/Bullet.cpp
+    src/Game/Objects/Tank/Explosion.h src/Game/Objects/Tank/Explosion.cpp
+    src/Game/Objects/Tank/ITank.h src/Game/Objects/Tank/ITank.cpp
+    src/Game/Objects/Tank/EnemyTank.h src/Game/Objects/Tank/EnemyTank.cpp
+    src/Game/Objects/Tank/PlayerTank.h src/Game/Objects/Tank/PlayerTank.cpp
+    src/Game/Objects/Interface/GameOver.h src/Game/Objects/Interface/GameOver.cpp
 )
 set (
     CLIENT_EXECUTABLES ./src/Client.cpp
     ${SHARED_EXECUTABLES}
     src/Game/Render/Window.h src/Game/Render/Window.cpp
     src/Game/Render/Drawables/IDrawable.h src/Game/Render/Drawables/IDrawable.cpp
-    src/Game/Render/Drawables/TankDrawable.h src/Game/Render/Drawables/TankDrawable.cpp
-    src/Game/Render/Drawables/BulletDrawable.h src/Game/Render/Drawables/BulletDrawable.cpp
-    src/Game/Render/Drawables/ExplosionDrawable.h src/Game/Render/Drawables/ExplosionDrawable.cpp
+    src/Game/Render/Drawables/Tank/TankDrawable.h src/Game/Render/Drawables/Tank/TankDrawable.cpp
+    src/Game/Render/Drawables/Tank/BulletDrawable.h src/Game/Render/Drawables/Tank/BulletDrawable.cpp
+    src/Game/Render/Drawables/Tank/ExplosionDrawable.h src/Game/Render/Drawables/Tank/ExplosionDrawable.cpp
     src/Game/Render/Drawables/Playfield/WallDrawable.h src/Game/Render/Drawables/Playfield/WallDrawable.cpp
     src/Game/Render/Drawables/Playfield/BushDrawable.h src/Game/Render/Drawables/Playfield/BushDrawable.cpp
     src/Game/Render/Drawables/Playfield/BorderDrawable.h src/Game/Render/Drawables/Playfield/BorderDrawable.cpp
     src/Game/Render/Drawables/Playfield/BrickDrawable.h src/Game/Render/Drawables/Playfield/BrickDrawable.cpp
     src/Game/Render/Drawables/Playfield/TankSpawnerDrawable.h src/Game/Render/Drawables/Playfield/TankSpawnerDrawable.cpp
     src/Game/Render/Drawables/Playfield/EagleDrawable.h src/Game/Render/Drawables/Playfield/EagleDrawable.cpp
+    src/Game/Render/Drawables/Interface/GameOverDrawable.h src/Game/Render/Drawables/Interface/GameOverDrawable.cpp
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp
