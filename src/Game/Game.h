@@ -37,4 +37,5 @@ class Game {
   bool _gameOverLabel = false;
 
   float _lastThink = 0;
+  bool _paused = false;
 };

@@ -1,9 +1,10 @@
 #include <map>
 
+#include <SFML/Network.hpp>
+
 #include "Other/Log.h"
 
-#include "Game/Game.h"
-
+#include "Game/Objects/NetworkObject.h"
 #include "Game/Render/Drawables.h"
 #include "Game/Render/Window.h"
 
@@ -12,15 +13,41 @@ int main(int argc, char* argv[]) {
   Log::message(std::string("Version: ") + CLIENT_VERSION);
   Log::message("");
 
+  sf::TcpSocket server;
   try {
+    sf::Socket::Status status = server.connect("127.0.0.1", 61000);
+    if (status != sf::Socket::Done) {
+      throw std::runtime_error("Failed to connect to server (is it running?)");
+    }
+
     auto window = std::make_unique<Window>();
-    Game game(1, false);
     std::map<uint16_t, std::shared_ptr<IDrawable>> drawables;
 
     while (window->isOpen()) {
       window->clear();
 
-      for (const auto object : game.getObjects()) {
+      uint8_t objectSizeData[2];
+      std::size_t received;
+      if (server.receive(objectSizeData, 2, received) != sf::Socket::Done) {
+        throw std::runtime_error("Failed to get data from server");
+      }
+
+      size_t objectsNum = objectSizeData[0] << 8 | objectSizeData[1];
+      for (size_t i = 0; i < objectsNum; ++i) {
+        // [id][id][ObjectType][destroyed][posX][posY][state]
+        size_t size = 7;
+        uint8_t objectData[size];
+        std::size_t received;
+        if (server.receive(objectData, size, received) != sf::Socket::Done) {
+          throw std::runtime_error("Failed to get data from server");
+        }
+
+        auto object = std::make_shared<NetworkObject>(
+            ((uint16_t)objectData[0] << 8) | objectData[1],
+            static_cast<ObjectType>(objectData[2]),
+            objectData[3], objectData[4], objectData[5], objectData[6]
+            );
+
         if (object->isDestroyed()) {
           drawables.erase(object->getId());
           continue;
@@ -83,7 +110,19 @@ int main(int argc, char* argv[]) {
       window->display();
 
       auto event = window->pollEvent();
-      game.think(event);
+
+      // [esc][][][up][left][down][right][shoot]
+      uint8_t pressed =   (event.player1.esc | event.player2.esc) << 8
+                        | (event.player1.up | event.player2.up) << 4
+                        | (event.player1.left | event.player2.left) << 3
+                        | (event.player1.down | event.player2.down) << 2
+                        | (event.player1.right | event.player2.right) << 1
+                        | (event.player1.shoot | event.player2.shoot);
+      uint8_t sendData[] = { pressed };
+
+      if (server.send(sendData, 1) != sf::Socket::Done) {
+        throw std::runtime_error("Failed to send data to player 1");
+      }
     }
   }
   catch (const std::runtime_error& error) {
@@ -92,6 +131,7 @@ int main(int argc, char* argv[]) {
     Log::error(error.what());
   }
 
+  server.disconnect();
   Log::message("");
   Log::message("Terminated. Goodbye!");
   return 0;

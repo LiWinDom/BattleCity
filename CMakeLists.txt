@@ -42,6 +42,8 @@ set (
 set (
     CLIENT_EXECUTABLES ./src/Client.cpp
     ${SHARED_EXECUTABLES}
+    src/Game/Objects/NetworkObject.h src/Game/Objects/NetworkObject.cpp
+
     src/Game/Render/Window.h src/Game/Render/Window.cpp
     src/Game/Render/Drawables/IDrawable.h src/Game/Render/Drawables/IDrawable.cpp
     src/Game/Render/Drawables/Tank/TankDrawable.h src/Game/Render/Drawables/Tank/TankDrawable.cpp
@@ -168,16 +170,15 @@ set(CLIENT_SFML_LIBRARIES
     sfml-graphics
     sfml-window
     # sfml-audio
-    # sfml-network
+    sfml-network
 )
 set(SERVER_SFML_LIBRARIES
     sfml-system
-    # sfml-network
+    sfml-network
 )
 
 # Dont need yet
 set(SFML_BUILD_AUDIO FALSE)
-set(SFML_BUILD_NETWORK FALSE)
 
 # Compiling SFML
 FetchContent_MakeAvailable(SFML)
