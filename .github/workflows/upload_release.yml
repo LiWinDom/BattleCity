@@ -71,7 +71,7 @@ jobs:
           TAG_NAME=${GITHUB_REF#refs/tags/}
           RELEASE_NAME="${TAG_NAME}"
           if [ -f CHANGELOG.md ]; then
-            CHANGELOG=$(cat CHANGELOG.md)
+            CHANGELOG=$(printf '%s' "$CHANGELOG" | jq -sRr @uri)
           else
             CHANGELOG="No changelog provided."
           fi
