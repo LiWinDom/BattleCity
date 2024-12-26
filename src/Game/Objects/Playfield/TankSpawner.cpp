@@ -57,13 +57,8 @@ void TankSpawner::think(Game& game, const Event &event) {
 
   if (_spawnObject == ObjectType::PlayerTank) {
     if (_spawnedTank == nullptr) {
-      if (_spawnsLeft == 0) {
-        _desytroyed = true;
-        return;
-      }
       _spawnedTank = std::make_shared<PlayerTank>(_position, _spawnerNum);
       game.addObject(_spawnedTank);
-      --_spawnsLeft;
     }
   }
   else {
@@ -82,6 +77,11 @@ void TankSpawner::think(Game& game, const Event &event) {
   // Deleting destroyed tank
   if (_spawnedTank != nullptr && _spawnedTank->isDestroyed()) {
     _spawnedTank = nullptr;
+    --_spawnsLeft;
     _animationStartTime = game.getTime() + 64.0 / 60;
+
+    if (_spawnsLeft == 0) {
+      _desytroyed = true;
+    }
   }
 }
