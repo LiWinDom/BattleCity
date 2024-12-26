@@ -8,7 +8,7 @@
 
 int main(int argc, char* argv[]) {
   Log::message("Started server");
-  Log::message(std::string("Version: ") + CLIENT_VERSION);
+  Log::message(std::string("Version: ") + SERVER_VERSION);
   Log::message("");
 
   sf::TcpListener listener;
@@ -29,7 +29,6 @@ int main(int argc, char* argv[]) {
     Log::info("Player 2 connected");
 
     Game game(1, true);
-    Log::info("Game started");
 
     while (true) {
       auto objectsNum = game.getObjects().size();

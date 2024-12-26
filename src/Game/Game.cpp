@@ -3,7 +3,7 @@
 #include <fmt/format.h>
 #include <fstream>
 
-#include "../Other/Path.h"
+#include "../Other/Log.h"
 #include "Enums.h"
 #include "Objects/Playfield/Border.h"
 #include "Objects/Playfield/Brick.h"
@@ -85,6 +85,8 @@ _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
   _objects.push_back(std::make_shared<Border>(1));
   _objects.push_back(std::make_shared<Border>(2));
   _objects.push_back(std::make_shared<Border>(3));
+
+  Log::info("Game started");
 }
 
 std::vector<std::shared_ptr<IObject>> Game::getObjects() const {
