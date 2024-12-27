@@ -45,12 +45,10 @@ int main(int argc, char* argv[]) {
       if (game == nullptr) {
         uint8_t objectSizeData[2];
         std::size_t received;
-        std::cout << "Receiving objectNum from server... ";
         if (server.receive(objectSizeData, 2, received) != sf::Socket::Done) {
           throw std::runtime_error("Failed to get data from server");
         }
         objectsNum = (uint16_t)objectSizeData[0] << 8 | objectSizeData[1];
-        std::cout << "got it: " << objectsNum << std::endl;
       }
       else {
         objectsNum = game->getObjects().size();
