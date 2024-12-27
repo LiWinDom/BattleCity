@@ -49,6 +49,8 @@ void Bullet::think(Game& game, const Event &event) {
           continue;
         }
         break;
+      case ObjectType::Water:
+        continue;
     }
     object->destroy(game, _rotation);
     needToDestroy = true;

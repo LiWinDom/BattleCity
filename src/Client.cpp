@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 
     if (!configFile.is_open()) {
       Log::info("Config file not found, starting local game");
-      game = std::make_shared<Game>(1, false);
+      game = std::make_shared<Game>(3, false);
     }
     else {
       std::string address;
@@ -110,6 +110,9 @@ int main(int argc, char* argv[]) {
               break;
             case ObjectType::Spawner:
               drawables[object->getId()] = std::make_shared<TankSpawnerDrawable>();
+              break;
+            case ObjectType::Water:
+              drawables[object->getId()] = std::make_shared<WaterDrawable>();
               break;
             case ObjectType::GameOver:
               drawables[object->getId()] = std::make_shared<GameOverDrawable>();
