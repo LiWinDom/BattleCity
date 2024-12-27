@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
       }
 
       const size_t objectSize = 7;
-      uint8_t objectsData[16384];
+      std::vector<uint8_t> objectsData(objectsNum * objectSize);
       for (size_t i = 0; i < objectsNum; ++i) {
         const auto object = game.getObjects()[i];
         // [id][id][ObjectType][destroyed][posX][posY][state]
@@ -58,10 +58,10 @@ int main(int argc, char* argv[]) {
         objectsData[i * objectSize + 6] = (uint8_t)object->getState();
       }
 
-      if (player1.send(objectsData, objectSize * objectsNum) != sf::Socket::Done) {
+      if (player1.send(&objectsData, objectSize * objectsNum) != sf::Socket::Done) {
         throw std::runtime_error("Failed to send data to player 1");
       }
-      if (player2.send(objectsData, objectSize * objectsNum) != sf::Socket::Done) {
+      if (player2.send(&objectsData, objectSize * objectsNum) != sf::Socket::Done) {
         throw std::runtime_error("Failed to send data to player 2");
       }
 

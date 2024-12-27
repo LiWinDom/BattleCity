@@ -48,20 +48,20 @@ int main(int argc, char* argv[]) {
         if (server.receive(objectSizeData, 2, received) != sf::Socket::Done) {
           throw std::runtime_error("Failed to get data from server");
         }
-        objectsNum = ((uint16_t)objectSizeData[0]) << 8 | objectSizeData[1];
+        objectsNum = (uint16_t)objectSizeData[0] << 8 | objectSizeData[1];
       }
       else {
         objectsNum = game->getObjects().size();
       }
 
-      const size_t objectSize = 7;
+      uint8_t objectSize = 7;
       std::vector<std::shared_ptr<IObject>> objects;
 
       if (game == nullptr) {
         // [id][id][ObjectType][destroyed][posX][posY][state]
-        uint8_t objectsData[16384];
+        std::vector<uint16_t> objectsData(objectsNum * objectSize);
         std::size_t received;
-        if (server.receive(objectsData, objectsNum * objectSize, received) != sf::Socket::Done) {
+        if (server.receive(&objectsData, objectsData.size(), received) != sf::Socket::Done) {
           throw std::runtime_error("Failed to get data from server");
         }
 
