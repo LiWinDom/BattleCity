@@ -43,14 +43,7 @@ int main(int argc, char* argv[]) {
 
       size_t objectsNum;
       if (game == nullptr) {
-        uint8_t objectSizeData[2];
-        std::size_t received;
-        std::cout << "Receiving objectNum from server... ";
-        if (server.receive(objectSizeData, 2, received) != sf::Socket::Done) {
-          throw std::runtime_error("Failed to get data from server");
-        }
-        objectsNum = (uint16_t)objectSizeData[0] << 8 | objectSizeData[1];
-        std::cout << "got it: " << objectsNum << std::endl;
+        objectsNum = -1;
       }
       else {
         objectsNum = game->getObjects().size();
@@ -64,11 +57,14 @@ int main(int argc, char* argv[]) {
           size_t size = 7;
           uint8_t objectData[size];
           std::size_t received;
-          std::cout << "Receiving objectData from server... ";
           if (server.receive(objectData, size, received) != sf::Socket::Done) {
             throw std::runtime_error("Failed to get data from server");
           }
-          std::cout << "got it" << std::endl;
+
+          if (objectData[0] == 0b11111111 && objectData[1] == 0b11111111 && objectData[2] == 0b11111111) {
+            // Terminator
+            break;
+          }
 
           object = std::make_shared<NetworkObject>(
               (uint16_t)objectData[0] << 8 | objectData[1],

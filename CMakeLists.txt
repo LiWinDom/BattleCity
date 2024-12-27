@@ -3,8 +3,8 @@ set(CLIENT_PROJECT_NAME BattleCity-client)
 set(SERVER_PROJECT_NAME BattleCity-server)
 project(BattleCity LANGUAGES CXX)
 
-set(CLIENT_VERSION "2024.1225.1")
-set(SERVER_VERSION "2024.1225.1")
+set(CLIENT_VERSION "2024.1226.0")
+set(SERVER_VERSION "2024.1226.0")
 
 add_compile_definitions(CLIENT_VERSION="${CLIENT_VERSION}")
 add_compile_definitions(SERVER_VERSION="${SERVER_VERSION}")
