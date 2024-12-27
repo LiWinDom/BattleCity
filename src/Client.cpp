@@ -45,39 +45,42 @@ int main(int argc, char* argv[]) {
       if (game == nullptr) {
         uint8_t objectSizeData[2];
         std::size_t received;
-        std::cout << "Receiving objectNum from server... ";
         if (server.receive(objectSizeData, 2, received) != sf::Socket::Done) {
           throw std::runtime_error("Failed to get data from server");
         }
         objectsNum = (uint16_t)objectSizeData[0] << 8 | objectSizeData[1];
-        std::cout << "got it: " << objectsNum << std::endl;
       }
       else {
         objectsNum = game->getObjects().size();
       }
 
-      for (size_t i = 0; i < objectsNum; ++i) {
+      uint8_t objectSize = 7;
+      std::vector<std::shared_ptr<IObject>> objects;
+
+      if (game == nullptr) {
         // [id][id][ObjectType][destroyed][posX][posY][state]
-        std::shared_ptr<IObject> object = nullptr;
-
-        if (game == nullptr) {
-          size_t size = 7;
-          uint8_t objectData[size];
-          std::size_t received;
-          if (server.receive(objectData, size, received) != sf::Socket::Done) {
-            throw std::runtime_error("Failed to get data from server");
-          }
-
-          object = std::make_shared<NetworkObject>(
-              (uint16_t)objectData[0] << 8 | objectData[1],
-              static_cast<ObjectType>(objectData[2]),
-              objectData[3], objectData[4], objectData[5], objectData[6]
-          );
+        std::vector<uint16_t> objectsData(objectsNum * objectSize);
+        std::size_t received;
+        if (server.receive(&objectsData, objectsData.size(), received) != sf::Socket::Done) {
+          throw std::runtime_error("Failed to get data from server");
         }
-        else {
-          object = game->getObjects()[i];
-        };
 
+        for (auto i = 0; i < objectsNum; ++i) {
+          objects.push_back(std::make_shared<NetworkObject>(
+              (uint16_t)objectsData[i * objectSize + 0] << 8 | objectsData[i * objectSize + 1],
+              static_cast<ObjectType>(objectsData[i * objectSize + 2]),
+              objectsData[i * objectSize + 3],
+              objectsData[i * objectSize + 4],
+              objectsData[i * objectSize + 5],
+              objectsData[i * objectSize + 6]
+              ));
+        }
+      }
+      else {
+        objects = game->getObjects();
+      }
+
+      for (const auto object : objects) {
         if (object->isDestroyed()) {
           drawables.erase(object->getId());
           continue;

@@ -44,25 +44,25 @@ int main(int argc, char* argv[]) {
         throw std::runtime_error("Failed to send data to player 2");
       }
 
-      for (const auto object : game.getObjects()) {
+      const size_t objectSize = 7;
+      std::vector<uint8_t> objectsData(objectsNum * objectSize);
+      for (size_t i = 0; i < objectsNum; ++i) {
+        const auto object = game.getObjects()[i];
         // [id][id][ObjectType][destroyed][posX][posY][state]
-        const size_t size = 7;
-        uint8_t objectData[size] = {
-            (uint8_t)(object->getId() >> 8 & 255),
-            (uint8_t)(object->getId() & 255),
-            static_cast<uint8_t>(object->getType()),
-            (uint8_t)object->isDestroyed(),
-            (uint8_t)object->getPosition().x,
-            (uint8_t)object->getPosition().y,
-            (uint8_t)object->getState(),
-        };
+        objectsData[i * objectSize + 0] = (uint8_t)(object->getId() >> 8 & 255);
+        objectsData[i * objectSize + 1] = (uint8_t)(object->getId() & 255);
+        objectsData[i * objectSize + 2] = static_cast<uint8_t>(object->getType());
+        objectsData[i * objectSize + 3] = (uint8_t)object->isDestroyed();
+        objectsData[i * objectSize + 4] = (uint8_t)object->getPosition().x;
+        objectsData[i * objectSize + 5] = (uint8_t)object->getPosition().y;
+        objectsData[i * objectSize + 6] = (uint8_t)object->getState();
+      }
 
-        if (player1.send(objectData, size) != sf::Socket::Done) {
-          throw std::runtime_error("Failed to send data to player 1");
-        }
-        if (player2.send(objectData, size) != sf::Socket::Done) {
-          throw std::runtime_error("Failed to send data to player 2");
-        }
+      if (player1.send(&objectsData, objectSize * objectsNum) != sf::Socket::Done) {
+        throw std::runtime_error("Failed to send data to player 1");
+      }
+      if (player2.send(&objectsData, objectSize * objectsNum) != sf::Socket::Done) {
+        throw std::runtime_error("Failed to send data to player 2");
       }
 
       Event event;
