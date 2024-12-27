@@ -10,6 +10,7 @@ int main(int argc, char* argv[]) {
   Log::message("Started server");
   Log::message(std::string("Version: ") + SERVER_VERSION);
   Log::message("");
+  std::cout.setf(std::ios::unitbuf);
 
   sf::TcpListener listener;
   sf::TcpSocket player1, player2;
