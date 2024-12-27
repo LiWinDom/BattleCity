@@ -32,6 +32,18 @@ int main(int argc, char* argv[]) {
     Game game(1, true);
 
     while (true) {
+      auto objectsNum = game.getObjects().size();
+      uint8_t objectSizeData[] = {
+          (uint8_t)(objectsNum >> 8 & 255),
+          (uint8_t)(objectsNum & 255),
+      };
+      if (player1.send(objectSizeData, 2) != sf::Socket::Done) {
+        throw std::runtime_error("Failed to send data to player 1");
+      }
+      if (player2.send(objectSizeData, 2) != sf::Socket::Done) {
+        throw std::runtime_error("Failed to send data to player 2");
+      }
+
       for (const auto object : game.getObjects()) {
         // [id][id][ObjectType][destroyed][posX][posY][state]
         const size_t size = 7;
@@ -53,33 +65,13 @@ int main(int argc, char* argv[]) {
         }
       }
 
-      const size_t size = 7;
-      uint8_t terminator[size] = {
-          (uint8_t)(0b11111111),
-          (uint8_t)(0b11111111),
-          (uint8_t)(0b11111111),
-          (uint8_t)0,
-          (uint8_t)0,
-          (uint8_t)0,
-          (uint8_t)0,
-      };
-
-      if (player1.send(terminator, size) != sf::Socket::Done) {
-        throw std::runtime_error("Failed to send data to player 1");
-      }
-      if (player2.send(terminator, size) != sf::Socket::Done) {
-        throw std::runtime_error("Failed to send data to player 2");
-      }
-
       Event event;
       uint8_t pressed[1]; // [esc][][][up][left][down][right][shoot]
       std::size_t received;
 
-      std::cout << "Receiving pressed from p1... ";
       if (player1.receive(pressed, 1, received) != sf::Socket::Done) {
         throw std::runtime_error("Failed to receive pressed keys from player 1");
       }
-      std::cout << "got it: " << (int)pressed[0] << std::endl;
       event.player1.esc =   (pressed[0] >> 7) & 1;
       event.player1.up =    (pressed[0] >> 4) & 1;
       event.player1.left =  (pressed[0] >> 3) & 1;
@@ -87,11 +79,9 @@ int main(int argc, char* argv[]) {
       event.player1.right = (pressed[0] >> 1) & 1;
       event.player1.shoot =  pressed[0] & 1;
 
-      std::cout << "Receiving pressed from p2... ";
       if (player2.receive(pressed, 1, received) != sf::Socket::Done) {
         throw std::runtime_error("Failed to receive pressed keys from player 2");
       }
-      std::cout << "got it: " << (int)pressed[0] << std::endl;
       event.player2.esc =   (pressed[0] >> 7) & 1;
       event.player2.up =    (pressed[0] >> 4) & 1;
       event.player2.left =  (pressed[0] >> 3) & 1;

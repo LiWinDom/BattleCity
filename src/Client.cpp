@@ -43,7 +43,14 @@ int main(int argc, char* argv[]) {
 
       size_t objectsNum;
       if (game == nullptr) {
-        objectsNum = -1;
+        uint8_t objectSizeData[2];
+        std::size_t received;
+        std::cout << "Receiving objectNum from server... ";
+        if (server.receive(objectSizeData, 2, received) != sf::Socket::Done) {
+          throw std::runtime_error("Failed to get data from server");
+        }
+        objectsNum = (uint16_t)objectSizeData[0] << 8 | objectSizeData[1];
+        std::cout << "got it: " << objectsNum << std::endl;
       }
       else {
         objectsNum = game->getObjects().size();
@@ -59,11 +66,6 @@ int main(int argc, char* argv[]) {
           std::size_t received;
           if (server.receive(objectData, size, received) != sf::Socket::Done) {
             throw std::runtime_error("Failed to get data from server");
-          }
-
-          if (objectData[0] == 0b11111111 && objectData[1] == 0b11111111 && objectData[2] == 0b11111111) {
-            // Terminator
-            break;
           }
 
           object = std::make_shared<NetworkObject>(
@@ -140,7 +142,6 @@ int main(int argc, char* argv[]) {
       auto event = window->pollEvent();
 
       if (game == nullptr) {
-        std::cout << "Sending pressed to server... ";
         // [esc][][][up][left][down][right][shoot]
         uint8_t pressed = (event.player1.esc | event.player2.esc) << 8
                           | (event.player1.up | event.player2.up) << 4
@@ -153,7 +154,6 @@ int main(int argc, char* argv[]) {
         if (server.send(sendData, 1) != sf::Socket::Done) {
           throw std::runtime_error("Failed to send data to player 1");
         }
-        std::cout << "sent: " << (int)pressed << std::endl;
       }
       else {
         game->think(event);
