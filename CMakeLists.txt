@@ -3,8 +3,8 @@ set(CLIENT_PROJECT_NAME BattleCity-client)
 set(SERVER_PROJECT_NAME BattleCity-server)
 project(BattleCity LANGUAGES CXX)
 
-set(CLIENT_VERSION "2024.1225.0")
-set(SERVER_VERSION "2024.1225.0")
+set(CLIENT_VERSION "2024.1227.0")
+set(SERVER_VERSION "2024.1227.0")
 
 add_compile_definitions(CLIENT_VERSION="${CLIENT_VERSION}")
 add_compile_definitions(SERVER_VERSION="${SERVER_VERSION}")
@@ -42,6 +42,8 @@ set (
 set (
     CLIENT_EXECUTABLES ./src/Client.cpp
     ${SHARED_EXECUTABLES}
+    src/Game/Objects/NetworkObject.h src/Game/Objects/NetworkObject.cpp
+
     src/Game/Render/Window.h src/Game/Render/Window.cpp
     src/Game/Render/Drawables/IDrawable.h src/Game/Render/Drawables/IDrawable.cpp
     src/Game/Render/Drawables/Tank/TankDrawable.h src/Game/Render/Drawables/Tank/TankDrawable.cpp
@@ -168,16 +170,15 @@ set(CLIENT_SFML_LIBRARIES
     sfml-graphics
     sfml-window
     # sfml-audio
-    # sfml-network
+    sfml-network
 )
 set(SERVER_SFML_LIBRARIES
     sfml-system
-    # sfml-network
+    sfml-network
 )
 
 # Dont need yet
 set(SFML_BUILD_AUDIO FALSE)
-set(SFML_BUILD_NETWORK FALSE)
 
 # Compiling SFML
 FetchContent_MakeAvailable(SFML)
@@ -216,15 +217,15 @@ set_target_properties(${SERVER_PROJECT_NAME} PROPERTIES
 
 # Copying resources folder
 if (WIN32)
-  file(COPY ./resources/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/)
-  file(REMOVE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/Icon.icns)
-  file(REMOVE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/Icon.ico)
-  file(REMOVE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/Icon.png)
+  file(COPY ./resources/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/resources/)
+  file(REMOVE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/resources/Icon.icns)
+  file(REMOVE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/resources/Icon.ico)
+  file(REMOVE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/resources/Icon.png)
 elseif (LINUX)
-  file(COPY ./resources/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/)
-  file(REMOVE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/Icon.icns)
-  file(REMOVE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/Icon.ico)
-  file(REMOVE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/Icon.png)
+  file(COPY ./resources/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/)
+  file(REMOVE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/resources/Icon.icns)
+  file(REMOVE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/resources/Icon.ico)
+  file(REMOVE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/resources/Icon.png)
 endif()
 # Copying OpenAL on Windows
 if (WIN32)

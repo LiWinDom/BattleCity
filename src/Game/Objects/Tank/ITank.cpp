@@ -62,18 +62,20 @@ void ITank::think(Game& game, const Event &event) {
       _rotation = ObjectRotation::Right;
     }
 
+    const auto collisionsNum = getHardCollisions(game.getObjects()).size();
     const auto movedTiles = move(game);
+
     _failedToMove = false;
     if (movedTiles % 2) {
       _wheelState = !_wheelState;
     }
-    if (!getHardCollisions(game.getObjects()).empty()) {
+    if (getHardCollisions(game.getObjects()).size() > collisionsNum) {
       _position = oldPosition;
       _failedToMove = true;
     }
   }
   else {
-    auto movedTiles = move(game, false);
+    move(game, false);
   }
 
   // Shooting
