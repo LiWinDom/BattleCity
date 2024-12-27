@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
         if (server.receive(objectSizeData, 2, received) != sf::Socket::Done) {
           throw std::runtime_error("Failed to get data from server");
         }
-        objectsNum = objectSizeData[0] << 8 | objectSizeData[1];
+        objectsNum = (uint16_t)objectSizeData[0] << 8 | objectSizeData[1];
         std::cout << "got it: " << objectsNum << std::endl;
       }
       else {
@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
           std::cout << "got it" << std::endl;
 
           object = std::make_shared<NetworkObject>(
-              ((uint16_t) objectData[0] << 8) | objectData[1],
+              (uint16_t)objectData[0] << 8 | objectData[1],
               static_cast<ObjectType>(objectData[2]),
               objectData[3], objectData[4], objectData[5], objectData[6]
           );
@@ -157,7 +157,7 @@ int main(int argc, char* argv[]) {
         if (server.send(sendData, 1) != sf::Socket::Done) {
           throw std::runtime_error("Failed to send data to player 1");
         }
-        std::cout << "sent: " << pressed << std::endl;
+        std::cout << "sent: " << (int)pressed << std::endl;
       }
       else {
         game->think(event);
