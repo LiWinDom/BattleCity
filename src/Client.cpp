@@ -49,8 +49,8 @@ int main(int argc, char* argv[]) {
         if (server.receive(objectSizeData, 2, received) != sf::Socket::Done) {
           throw std::runtime_error("Failed to get data from server");
         }
-        std::cout << "got it" << std::endl;
         objectsNum = objectSizeData[0] << 8 | objectSizeData[1];
+        std::cout << "got it: " << objectsNum << std::endl;
       }
       else {
         objectsNum = game->getObjects().size();
@@ -157,7 +157,7 @@ int main(int argc, char* argv[]) {
         if (server.send(sendData, 1) != sf::Socket::Done) {
           throw std::runtime_error("Failed to send data to player 1");
         }
-        std::cout << "sent" << std::endl;
+        std::cout << "sent: " << pressed << std::endl;
       }
       else {
         game->think(event);
