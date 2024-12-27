@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
         std::shared_ptr<IObject> object = nullptr;
 
         if (game == nullptr) {
-          size_t size = 7;
+          const size_t size = 7;
           uint8_t objectData[size];
           std::size_t received;
           if (server.receive(objectData, size, received) != sf::Socket::Done) {
