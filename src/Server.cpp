@@ -46,8 +46,10 @@ int main(int argc, char* argv[]) {
 
       for (const auto object : game.getObjects()) {
         // [id][id][ObjectType][destroyed][posX][posY][state]
-        const size_t size = 7;
+        const size_t size = 9;
         uint8_t objectData[size] = {
+            (uint8_t)(object->getId() >> 24 & 255),
+            (uint8_t)(object->getId() >> 16 & 255),
             (uint8_t)(object->getId() >> 8 & 255),
             (uint8_t)(object->getId() & 255),
             static_cast<uint8_t>(object->getType()),
