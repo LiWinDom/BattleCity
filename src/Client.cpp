@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 
     if (!configFile.is_open()) {
       Log::info("Config file not found, starting local game");
-      game = std::make_shared<Game>(1, false);
+      game = std::make_shared<Game>(7, false);
     }
     else {
       std::string address;
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
     }
 
     auto window = std::make_unique<Window>();
-    std::map<uint16_t, std::shared_ptr<IDrawable>> drawables;
+    std::map<uint32_t, std::shared_ptr<IDrawable>> drawables;
 
     while (window->isOpen()) {
       window->clear();
@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
         std::shared_ptr<IObject> object = nullptr;
 
         if (game == nullptr) {
-          const size_t size = 7;
+          const size_t size = 9;
           uint8_t objectData[size];
           std::size_t received;
           if (server.receive(objectData, size, received) != sf::Socket::Done) {
@@ -67,9 +67,9 @@ int main(int argc, char* argv[]) {
           }
 
           object = std::make_shared<NetworkObject>(
-              (uint16_t)objectData[0] << 8 | objectData[1],
-              static_cast<ObjectType>(objectData[2]),
-              objectData[3], objectData[4], objectData[5], objectData[6]
+              (uint32_t)objectData[0] << 24 | objectData[1] << 16 | objectData[2] << 8 | objectData[3],
+              static_cast<ObjectType>(objectData[4]),
+              objectData[5], objectData[6], objectData[7], objectData[8]
           );
         }
         else {
@@ -110,6 +110,9 @@ int main(int argc, char* argv[]) {
               break;
             case ObjectType::Spawner:
               drawables[object->getId()] = std::make_shared<TankSpawnerDrawable>();
+              break;
+            case ObjectType::Water:
+              drawables[object->getId()] = std::make_shared<WaterDrawable>();
               break;
             case ObjectType::GameOver:
               drawables[object->getId()] = std::make_shared<GameOverDrawable>();

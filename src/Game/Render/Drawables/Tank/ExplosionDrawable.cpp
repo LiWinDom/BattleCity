@@ -6,7 +6,7 @@ ExplosionDrawable::ExplosionDrawable() {
   if (!_texture.loadFromFile(Path::getAbsolutePath("resources/graphics/Explosion.png"))) {
     throw std::runtime_error(R"(Cannot load "resources/graphics/Explosion.png" texture)");
   }
-  _layer = 3;
+  _layer = 30;
   _sprites.emplace_back(_texture);
   Log::debug(R"(Drawable "Explosion" created)");
 }

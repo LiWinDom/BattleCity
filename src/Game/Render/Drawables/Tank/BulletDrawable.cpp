@@ -7,6 +7,7 @@ BulletDrawable::BulletDrawable() {
     throw std::runtime_error(R"(Cannot load "resources/graphics/Bullets.png" texture)");
   }
   _sprites.emplace_back(_texture);
+  _layer = 10;
   Log::debug(R"(Drawable "Bullet" created)");
 }
 

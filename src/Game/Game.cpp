@@ -10,6 +10,7 @@
 #include "Objects/Playfield/Bush.h"
 #include "Objects/Playfield/Eagle.h"
 #include "Objects/Playfield/TankSpawner.h"
+#include "Objects/Playfield/Water.h"
 #include "Objects/Playfield/Wall.h"
 #include "Objects/Interface/GameOver.h"
 
@@ -42,7 +43,7 @@ _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
           _objects.push_back(std::make_shared<Bush>(pos));
           break;
         case 'W':
-          // TODO: water
+          _objects.push_back(std::make_shared<Water>(pos));
           break;
         case 'i':
           // TODO: ice
@@ -86,6 +87,7 @@ _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
   _objects.push_back(std::make_shared<Border>(2));
   _objects.push_back(std::make_shared<Border>(3));
 
+  std::srand(std::time(nullptr));
   Log::info("Game started");
 }
 

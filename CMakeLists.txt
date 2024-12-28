@@ -29,6 +29,7 @@ set (
     src/Game/Objects/Playfield/Brick.h src/Game/Objects/Playfield/Brick.cpp
     src/Game/Objects/Playfield/Bush.h src/Game/Objects/Playfield/Bush.cpp
     src/Game/Objects/Playfield/Eagle.h src/Game/Objects/Playfield/Eagle.cpp
+    src/Game/Objects/Playfield/Water.h src/Game/Objects/Playfield/Water.cpp
     src/Game/Objects/Playfield/Wall.h src/Game/Objects/Playfield/Wall.cpp
     src/Game/Objects/Playfield/TankSpawner.h src/Game/Objects/Playfield/TankSpawner.cpp
     src/Game/Objects/Playfield/Border.h src/Game/Objects/Playfield/Border.cpp
@@ -49,6 +50,7 @@ set (
     src/Game/Render/Drawables/Tank/TankDrawable.h src/Game/Render/Drawables/Tank/TankDrawable.cpp
     src/Game/Render/Drawables/Tank/BulletDrawable.h src/Game/Render/Drawables/Tank/BulletDrawable.cpp
     src/Game/Render/Drawables/Tank/ExplosionDrawable.h src/Game/Render/Drawables/Tank/ExplosionDrawable.cpp
+    src/Game/Render/Drawables/Playfield/WaterDrawable.h src/Game/Render/Drawables/Playfield/WaterDrawable.cpp
     src/Game/Render/Drawables/Playfield/WallDrawable.h src/Game/Render/Drawables/Playfield/WallDrawable.cpp
     src/Game/Render/Drawables/Playfield/BushDrawable.h src/Game/Render/Drawables/Playfield/BushDrawable.cpp
     src/Game/Render/Drawables/Playfield/BorderDrawable.h src/Game/Render/Drawables/Playfield/BorderDrawable.cpp
