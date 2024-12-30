@@ -8,7 +8,7 @@
 
 Window::Window() {
   auto screen = sf::VideoMode::getDesktopMode();
-  _scale = std::min(screen.width / _width, screen.height / _height);
+  _scale = std::max((uint8_t)std::min(screen.width / _width, screen.height / _height) - 1, 1);
   _window = std::make_unique<sf::RenderWindow>(
       sf::VideoMode(_width * _scale, _height * _scale),
       std::string("BattleCity client [") + CLIENT_VERSION + "]",
