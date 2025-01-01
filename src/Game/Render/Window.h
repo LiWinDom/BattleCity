@@ -1,8 +1,8 @@
 #pragma once
-
-#include "SFML/Graphics.hpp"
 #include <memory>
 #include <vector>
+
+#include <SFML/Graphics.hpp>
 
 #include "../Event.h"
 #include "Drawables/IDrawable.h"

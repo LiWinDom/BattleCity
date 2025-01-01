@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
       configFile >> address;
       configFile.close();
 
-      client = make_unique<ClientNetwork>(address, 61000);
+      client = std::make_unique<ClientNetwork>(address, 61000);
     }
 
     auto window = std::make_unique<Window>();
