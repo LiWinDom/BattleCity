@@ -23,6 +23,9 @@ class Game {
   float getTime() const;
   float getPeriod() const;
 
+  bool isGameOver() const;
+  bool isFinished() const;
+
   void think(Event event);
 
  private:
@@ -36,6 +39,10 @@ class Game {
   bool _gameOver = false;
   bool _gameOverLabel = false;
 
+  float _finishedTime = -1;
+  bool _finished = false;
+
+  sf::Clock _globalClock;
   float _lastThink = 0;
   bool _paused = false;
 };

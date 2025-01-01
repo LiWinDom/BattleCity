@@ -13,10 +13,11 @@ int main(int argc, char* argv[]) {
 
   try {
     ServerNetwork server(61000);
-    Game game(0, true);
+    uint8_t currentStage = 0;
+    auto game = std::make_unique<Game>(currentStage, true);
 
     while (true) {
-      for (const auto object : game.getObjects()) {
+      for (const auto object : game->getObjects()) {
         server.send(Serializer::objectToBytes(object), Serializer::getObjectSize());
       }
       // End of objects
@@ -25,7 +26,10 @@ int main(int argc, char* argv[]) {
       auto eventData = server.receive(1);
       auto event = Serializer::bytesToEvent(eventData[0], eventData[1]);
 
-      game.think(event);
+      game->think(event);
+      if (game->isFinished()) {
+        game = std::make_unique<Game>(++currentStage, true);
+      }
     }
   }
   catch (const std::runtime_error& error) {

@@ -18,9 +18,10 @@ int main(int argc, char* argv[]) {
   try {
     std::ifstream configFile(Path::getAbsolutePath("client.config"));
 
+    uint8_t currentStage = 0;
     if (!configFile.is_open()) {
       Log::info("Config file not found, starting local game");
-      game = std::make_unique<Game>(7, false);
+      game = std::make_unique<Game>(currentStage, false);
     }
     else {
       std::string address;
@@ -128,6 +129,10 @@ int main(int argc, char* argv[]) {
       }
       else {
         game->think(event);
+        if (game->isFinished()) {
+          game = std::make_unique<Game>(++currentStage, false);
+          drawables.clear();
+        }
       }
     }
   }

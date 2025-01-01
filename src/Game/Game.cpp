@@ -115,7 +115,17 @@ float Game::getPeriod() const {
   return (190 - _stage * 4 - (_twoPlayers ? 2 : 1 - 1) * 20) / 60.0;
 }
 
+bool Game::isGameOver() const {
+  return _gameOver;
+}
+
+bool Game::isFinished() const {
+  return _finished;
+}
+
 void Game::think(Event event) {
+  size_t tanksLeft = 0;
+
   // Removing destroyed objects
   for (size_t i = 0; i < _objects.size(); ++i) {
     auto object = _objects[i];
@@ -133,13 +143,20 @@ void Game::think(Event event) {
       continue;
     }
 
-    if (object->getType() == ObjectType::Eagle) {
-      if (object->getState()) {
-        _gameOver = true;
-      }
+    // Special conditions
+    switch (object->getType()) {
+      case ObjectType::Eagle:
+        if (object->getState()) {
+          _gameOver = true;
+        }
+        break;
+      case ObjectType::EnemyTank:
+        ++tanksLeft;
+        break;
     }
   }
 
+  // Creating game over label
   if (_gameOver) {
     event = Event();
     if (!_gameOverLabel) {
@@ -149,14 +166,26 @@ void Game::think(Event event) {
   }
 
   // Simulating 60 fps
-  static sf::Clock globalClock;
-  while (globalClock.getElapsedTime().asSeconds() + 1.0 / 60 > _lastThink) {
+  while (_globalClock.getElapsedTime().asSeconds() + 1.0 / 60 > _lastThink) {
     if (!_paused) {
       for (const auto object : _objects) {
         if (object->isDestroyed()) {
           continue;
         }
         object->think(*this, event);
+      }
+
+      // Preparing for level change
+      if (tanksLeft == 0) {
+        if (_finishedTime == -1) {
+          _finishedTime = getTime();
+        }
+        if (_finishedTime + getPeriod() * 2 < getTime()) {
+          _finished = true;
+        }
+      }
+      else {
+        _finishedTime = -1;
       }
     }
     _lastThink += 1.0 / 60;
