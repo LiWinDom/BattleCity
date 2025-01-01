@@ -29,6 +29,7 @@ int main(int argc, char* argv[]) {
       game->think(event);
       if (game->isFinished()) {
         game = std::make_unique<Game>(++currentStage, true);
+        server.send(Serializer::objectToBytes(std::make_shared<IObject>(ObjectType::NewStage, sf::Vector2f(0, 0), sf::Vector2f(0, 0))), Serializer::getObjectSize());
       }
     }
   }

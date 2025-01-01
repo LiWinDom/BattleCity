@@ -54,6 +54,11 @@ int main(int argc, char* argv[]) {
           if (object->getType() == ObjectType::NetworkTerminator) {
             break;
           }
+          else if (object->getType() == ObjectType::NewStage) {
+            drawables.clear();
+            i = 0;
+            continue;
+          }
         }
         else {
           object = game->getObjects()[i];
