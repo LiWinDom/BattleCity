@@ -25,6 +25,9 @@ enum class ObjectType : uint8_t {
   Explosion = 30,
   // Interface objects
   GameOver = 101,
+  LeftTanks = 102,
+  PlayerLives = 103,
+  StageNumber = 104,
   // Service
   NewStage = 254,
   NetworkTerminator = 255,

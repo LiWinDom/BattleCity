@@ -17,6 +17,7 @@ class Game {
   std::vector<std::shared_ptr<IObject>> getObjects() const;
   void addObject(std::shared_ptr<IObject> object);
 
+  uint8_t getStage() const;
   std::vector<uint8_t> getTanks() const;
 
   bool isTwoPlayers() const;

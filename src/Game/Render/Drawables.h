@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Drawables/Interface/GameOverDrawable.h"
+#include "Drawables/Interface/StageNumberDrawable.h"
 #include "Drawables/Playfield/BorderDrawable.h"
 #include "Drawables/Playfield/BrickDrawable.h"
 #include "Drawables/Playfield/BushDrawable.h"

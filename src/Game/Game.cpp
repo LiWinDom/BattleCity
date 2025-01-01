@@ -4,15 +4,7 @@
 #include <fstream>
 
 #include "../Other/Log.h"
-#include "Enums.h"
-#include "Objects/Playfield/Border.h"
-#include "Objects/Playfield/Brick.h"
-#include "Objects/Playfield/Bush.h"
-#include "Objects/Playfield/Eagle.h"
-#include "Objects/Playfield/TankSpawner.h"
-#include "Objects/Playfield/Water.h"
-#include "Objects/Playfield/Wall.h"
-#include "Objects/Interface/GameOver.h"
+#include "Objects/Objects.h"
 
 Game::Game(const uint8_t stage, const bool twoPlayers, const bool homebrewChanges) :
 _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
@@ -86,9 +78,11 @@ _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
   _objects.push_back(std::make_shared<Border>(1));
   _objects.push_back(std::make_shared<Border>(2));
   _objects.push_back(std::make_shared<Border>(3));
+  // Interface objects
+  _objects.push_back(std::make_shared<StageNumber>());
 
   std::srand(std::time(nullptr));
-  Log::info("Game started");
+  Log::info(fmt::format("Game started, stage {}", _stage));
 }
 
 std::vector<std::shared_ptr<IObject>> Game::getObjects() const {
@@ -97,6 +91,10 @@ std::vector<std::shared_ptr<IObject>> Game::getObjects() const {
 
 void Game::addObject(std::shared_ptr<IObject> object) {
   _objects.push_back(object);
+}
+
+uint8_t Game::getStage() const {
+  return _stage;
 }
 
 std::vector<uint8_t> Game::getTanks() const {
@@ -130,19 +128,6 @@ void Game::think(Event event) {
   for (size_t i = 0; i < _objects.size(); ++i) {
     auto object = _objects[i];
 
-    if (object->isDestroyed()) {
-      if (object->getType() == ObjectType::Spawner && std::dynamic_pointer_cast<TankSpawner>(object)->getSpawnObject() == ObjectType::PlayerTank) {
-        --_playerSpawnersLeft;
-        if (_playerSpawnersLeft == 0) {
-          _gameOver = true;
-        }
-      }
-
-      _objects.erase(_objects.begin() + i);
-      --i;
-      continue;
-    }
-
     // Special conditions
     switch (object->getType()) {
       case ObjectType::Eagle:
@@ -153,6 +138,18 @@ void Game::think(Event event) {
       case ObjectType::EnemyTank:
         ++tanksLeft;
         break;
+    }
+
+    if (object->isDestroyed()) {
+      if (object->getType() == ObjectType::Spawner && std::dynamic_pointer_cast<TankSpawner>(object)->getSpawnObject() == ObjectType::PlayerTank) {
+        --_playerSpawnersLeft;
+        if (_playerSpawnersLeft == 0) {
+          _gameOver = true;
+        }
+      }
+
+      _objects.erase(_objects.begin() + i);
+      --i;
     }
   }
 

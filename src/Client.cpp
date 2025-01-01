@@ -12,13 +12,13 @@ int main(int argc, char* argv[]) {
   Log::message("");
   std::cout.setf(std::ios::unitbuf);
 
+  uint8_t currentStage = 0;
   std::unique_ptr<Game> game = nullptr;
   std::unique_ptr<ClientNetwork> client = nullptr;
 
   try {
     std::ifstream configFile(Path::getAbsolutePath("client.config"));
 
-    uint8_t currentStage = 0;
     if (!configFile.is_open()) {
       Log::info("Config file not found, starting local game");
       game = std::make_unique<Game>(currentStage, false);
@@ -104,6 +104,9 @@ int main(int argc, char* argv[]) {
               break;
             case ObjectType::GameOver:
               drawables[object->getId()] = std::make_shared<GameOverDrawable>();
+              break;
+            case ObjectType::StageNumber:
+              drawables[object->getId()] = std::make_shared<StageNumberDrawable>();
               break;
             default:
               Log::warning("No drawable assigned to object");
