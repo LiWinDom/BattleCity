@@ -19,49 +19,60 @@ endif ()
 # Executables
 set (
     SHARED_EXECUTABLES
-    src/Other/Path.h src/Other/Path.cpp
-    src/Other/Log.h ./src/Game/Enums.h ./src/Game/Event.h
-    src/Game/Game.h src/Game/Game.cpp
+    src/Other/Log.h src/Other/Path.h src/Other/Path.cpp
 
-    src/Game/Objects/IObject.h src/Game/Objects/IObject.cpp
+    src/Game/Enums.h src/Game/Event.h
+    src/Game/Game.h src/Game/Game.cpp
+    src/Game/Network/Serializer.h src/Game/Network/Serializer.cpp
+    src/Game/Objects/NetworkObject.h src/Game/Objects/NetworkObject.cpp
+
     src/Game/Objects/IMovable.cpp src/Game/Objects/IMovable.h
-    src/Game/Objects/Playfield/IBlock.h src/Game/Objects/Playfield/IBlock.cpp
+    src/Game/Objects/IObject.h src/Game/Objects/IObject.cpp
+
+    src/Game/Objects/Interface/GameOver.h src/Game/Objects/Interface/GameOver.cpp
+
+    src/Game/Objects/Playfield/Border.h src/Game/Objects/Playfield/Border.cpp
     src/Game/Objects/Playfield/Brick.h src/Game/Objects/Playfield/Brick.cpp
     src/Game/Objects/Playfield/Bush.h src/Game/Objects/Playfield/Bush.cpp
     src/Game/Objects/Playfield/Eagle.h src/Game/Objects/Playfield/Eagle.cpp
-    src/Game/Objects/Playfield/Water.h src/Game/Objects/Playfield/Water.cpp
-    src/Game/Objects/Playfield/Wall.h src/Game/Objects/Playfield/Wall.cpp
+    src/Game/Objects/Playfield/IBlock.h src/Game/Objects/Playfield/IBlock.cpp
     src/Game/Objects/Playfield/TankSpawner.h src/Game/Objects/Playfield/TankSpawner.cpp
-    src/Game/Objects/Playfield/Border.h src/Game/Objects/Playfield/Border.cpp
+    src/Game/Objects/Playfield/Wall.h src/Game/Objects/Playfield/Wall.cpp
+    src/Game/Objects/Playfield/Water.h src/Game/Objects/Playfield/Water.cpp
+
     src/Game/Objects/Tank/Bullet.h src/Game/Objects/Tank/Bullet.cpp
+    src/Game/Objects/Tank/EnemyTank.h src/Game/Objects/Tank/EnemyTank.cpp
     src/Game/Objects/Tank/Explosion.h src/Game/Objects/Tank/Explosion.cpp
     src/Game/Objects/Tank/ITank.h src/Game/Objects/Tank/ITank.cpp
-    src/Game/Objects/Tank/EnemyTank.h src/Game/Objects/Tank/EnemyTank.cpp
     src/Game/Objects/Tank/PlayerTank.h src/Game/Objects/Tank/PlayerTank.cpp
-    src/Game/Objects/Interface/GameOver.h src/Game/Objects/Interface/GameOver.cpp
 )
 set (
-    CLIENT_EXECUTABLES ./src/Client.cpp
-    ${SHARED_EXECUTABLES}
-    src/Game/Objects/NetworkObject.h src/Game/Objects/NetworkObject.cpp
+    CLIENT_EXECUTABLES ./src/Client.cpp ${SHARED_EXECUTABLES}
+
+    src/Game/Network/ClientNetwork.h src/Game/Network/ClientNetwork.cpp
 
     src/Game/Render/Window.h src/Game/Render/Window.cpp
+
     src/Game/Render/Drawables/IDrawable.h src/Game/Render/Drawables/IDrawable.cpp
-    src/Game/Render/Drawables/Tank/TankDrawable.h src/Game/Render/Drawables/Tank/TankDrawable.cpp
-    src/Game/Render/Drawables/Tank/BulletDrawable.h src/Game/Render/Drawables/Tank/BulletDrawable.cpp
-    src/Game/Render/Drawables/Tank/ExplosionDrawable.h src/Game/Render/Drawables/Tank/ExplosionDrawable.cpp
-    src/Game/Render/Drawables/Playfield/WaterDrawable.h src/Game/Render/Drawables/Playfield/WaterDrawable.cpp
-    src/Game/Render/Drawables/Playfield/WallDrawable.h src/Game/Render/Drawables/Playfield/WallDrawable.cpp
-    src/Game/Render/Drawables/Playfield/BushDrawable.h src/Game/Render/Drawables/Playfield/BushDrawable.cpp
+
+    src/Game/Render/Drawables/Interface/GameOverDrawable.h src/Game/Render/Drawables/Interface/GameOverDrawable.cpp
+
     src/Game/Render/Drawables/Playfield/BorderDrawable.h src/Game/Render/Drawables/Playfield/BorderDrawable.cpp
     src/Game/Render/Drawables/Playfield/BrickDrawable.h src/Game/Render/Drawables/Playfield/BrickDrawable.cpp
-    src/Game/Render/Drawables/Playfield/TankSpawnerDrawable.h src/Game/Render/Drawables/Playfield/TankSpawnerDrawable.cpp
+    src/Game/Render/Drawables/Playfield/BushDrawable.h src/Game/Render/Drawables/Playfield/BushDrawable.cpp
     src/Game/Render/Drawables/Playfield/EagleDrawable.h src/Game/Render/Drawables/Playfield/EagleDrawable.cpp
-    src/Game/Render/Drawables/Interface/GameOverDrawable.h src/Game/Render/Drawables/Interface/GameOverDrawable.cpp
+    src/Game/Render/Drawables/Playfield/TankSpawnerDrawable.h src/Game/Render/Drawables/Playfield/TankSpawnerDrawable.cpp
+    src/Game/Render/Drawables/Playfield/WallDrawable.h src/Game/Render/Drawables/Playfield/WallDrawable.cpp
+    src/Game/Render/Drawables/Playfield/WaterDrawable.h src/Game/Render/Drawables/Playfield/WaterDrawable.cpp
+
+    src/Game/Render/Drawables/Tank/BulletDrawable.h src/Game/Render/Drawables/Tank/BulletDrawable.cpp
+    src/Game/Render/Drawables/Tank/ExplosionDrawable.h src/Game/Render/Drawables/Tank/ExplosionDrawable.cpp
+    src/Game/Render/Drawables/Tank/TankDrawable.h src/Game/Render/Drawables/Tank/TankDrawable.cpp
 )
 set (
-    SERVER_EXECUTABLES ./src/Server.cpp
-    ${SHARED_EXECUTABLES}
+    SERVER_EXECUTABLES ./src/Server.cpp ${SHARED_EXECUTABLES}
+
+    src/Game/Network/ServerNetwork.h src/Game/Network/ServerNetwork.cpp
 )
 
 # Adding icon and other resources

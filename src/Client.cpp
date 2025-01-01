@@ -1,10 +1,8 @@
-#include <fstream>
 #include <map>
 
-#include <SFML/Network.hpp>
-
 #include "Other/Log.h"
-#include "Game/Objects/NetworkObject.h"
+#include "Game/Network/ClientNetwork.h"
+#include "Game/Network/Serializer.h"
 #include "Game/Render/Drawables.h"
 #include "Game/Render/Window.h"
 
@@ -14,25 +12,22 @@ int main(int argc, char* argv[]) {
   Log::message("");
   std::cout.setf(std::ios::unitbuf);
 
-  std::shared_ptr<Game> game = nullptr;
-  sf::TcpSocket server;
+  std::unique_ptr<Game> game = nullptr;
+  std::unique_ptr<ClientNetwork> client = nullptr;
 
   try {
     std::ifstream configFile(Path::getAbsolutePath("client.config"));
 
     if (!configFile.is_open()) {
       Log::info("Config file not found, starting local game");
-      game = std::make_shared<Game>(7, false);
+      game = std::make_unique<Game>(7, false);
     }
     else {
       std::string address;
       configFile >> address;
       configFile.close();
 
-      auto status = server.connect(address, 61000);
-      if (status != sf::Socket::Done) {
-        throw std::runtime_error("Failed to connect to server (is it running?)");
-      }
+      client = make_unique<ClientNetwork>(address, 61000);
     }
 
     auto window = std::make_unique<Window>();
@@ -43,12 +38,7 @@ int main(int argc, char* argv[]) {
 
       size_t objectsNum;
       if (game == nullptr) {
-        uint8_t objectSizeData[2];
-        std::size_t received;
-        if (server.receive(objectSizeData, 2, received) != sf::Socket::Done) {
-          throw std::runtime_error("Failed to get data from server");
-        }
-        objectsNum = (uint16_t)objectSizeData[0] << 8 | objectSizeData[1];
+        objectsNum = -1;
       }
       else {
         objectsNum = game->getObjects().size();
@@ -59,18 +49,10 @@ int main(int argc, char* argv[]) {
         std::shared_ptr<IObject> object = nullptr;
 
         if (game == nullptr) {
-          const size_t size = 9;
-          uint8_t objectData[size];
-          std::size_t received;
-          if (server.receive(objectData, size, received) != sf::Socket::Done) {
-            throw std::runtime_error("Failed to get data from server");
+          object = Serializer::bytesToObject(client->receive(Serializer::getObjectSize()));
+          if (object->getType() == ObjectType::NetworkTerminator) {
+            break;
           }
-
-          object = std::make_shared<NetworkObject>(
-              (uint32_t)objectData[0] << 24 | objectData[1] << 16 | objectData[2] << 8 | objectData[3],
-              static_cast<ObjectType>(objectData[4]),
-              objectData[5], objectData[6], objectData[7], objectData[8]
-          );
         }
         else {
           object = game->getObjects()[i];
@@ -141,20 +123,8 @@ int main(int argc, char* argv[]) {
       window->display();
 
       auto event = window->pollEvent();
-
       if (game == nullptr) {
-        // [esc][][][up][left][down][right][shoot]
-        uint8_t pressed = (event.player1.esc | event.player2.esc) << 8
-                          | (event.player1.up | event.player2.up) << 4
-                          | (event.player1.left | event.player2.left) << 3
-                          | (event.player1.down | event.player2.down) << 2
-                          | (event.player1.right | event.player2.right) << 1
-                          | (event.player1.shoot | event.player2.shoot);
-        uint8_t sendData[] = {pressed};
-
-        if (server.send(sendData, 1) != sf::Socket::Done) {
-          throw std::runtime_error("Failed to send data to player 1");
-        }
+        client->send(Serializer::eventToBytes(event), 1);
       }
       else {
         game->think(event);
@@ -167,7 +137,6 @@ int main(int argc, char* argv[]) {
     Log::error(error.what());
   }
 
-  server.disconnect();
   Log::message("");
   Log::message("Terminated. Goodbye!");
   return 0;
