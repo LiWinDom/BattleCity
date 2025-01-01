@@ -123,6 +123,7 @@ bool Game::isFinished() const {
 
 void Game::think(Event event) {
   size_t tanksLeft = 0;
+  size_t spawnersLeft = 0;
 
   // Removing destroyed objects
   for (size_t i = 0; i < _objects.size(); ++i) {
@@ -138,19 +139,20 @@ void Game::think(Event event) {
       case ObjectType::EnemyTank:
         ++tanksLeft;
         break;
+      case ObjectType::Spawner:
+        if (std::dynamic_pointer_cast<TankSpawner>(object)->getSpawnObject() == ObjectType::PlayerTank) {
+          ++spawnersLeft;
+        }
+        break;
     }
 
     if (object->isDestroyed()) {
-      if (object->getType() == ObjectType::Spawner && std::dynamic_pointer_cast<TankSpawner>(object)->getSpawnObject() == ObjectType::PlayerTank) {
-        --_playerSpawnersLeft;
-        if (_playerSpawnersLeft == 0) {
-          _gameOver = true;
-        }
-      }
-
       _objects.erase(_objects.begin() + i);
       --i;
     }
+  }
+  if (spawnersLeft == 0) {
+    _gameOver = true;
   }
 
   // Creating game over label

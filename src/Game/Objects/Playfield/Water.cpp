@@ -7,5 +7,5 @@ uint8_t Water::getState() const {
 }
 
 void Water::think(Game &game, const Event &event) {
-  _currentFrame = (int)(game.getTime() * 3) % 3;
+  _currentFrame = (int)(game.getTime() * 2) % 2 + 1;
 }
