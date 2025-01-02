@@ -2,6 +2,7 @@
 
 #include "../IObject.h"
 #include "../Tank/ITank.h"
+#include "../Interface/PlayerLives.h"
 
 class TankSpawner : public IObject {
  public:
@@ -10,6 +11,8 @@ class TankSpawner : public IObject {
   ObjectType getSpawnObject() const;
 
   uint8_t getState() const override;
+
+  void addLife();
 
   void think(Game& game, const Event& event) override;
 
@@ -21,8 +24,9 @@ class TankSpawner : public IObject {
   uint8_t _currentFrame = -1;
 
   // Only for players
-  uint8_t _spawnsLeft = 4;
+  uint8_t _spawnsLeft = 3;
   std::shared_ptr<ITank> _spawnedTank;
+  std::shared_ptr<PlayerLives> _livesIndicator = nullptr;
 
   // Only for enemies
   uint8_t _nextTankNum;

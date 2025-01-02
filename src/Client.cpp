@@ -108,6 +108,9 @@ int main(int argc, char* argv[]) {
             case ObjectType::StageNumber:
               drawables[object->getId()] = std::make_shared<StageNumberDrawable>();
               break;
+            case ObjectType::PlayerLives:
+              drawables[object->getId()] = std::make_shared<PlayerLivesDrawable>();
+              break;
             default:
               Log::warning("No drawable assigned to object");
               continue;

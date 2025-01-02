@@ -1,6 +1,5 @@
 #include "TankSpawner.h"
 
-#include <exception>
 #include <limits>
 
 #include "../Tank/EnemyTank.h"
@@ -34,6 +33,12 @@ void TankSpawner::think(Game& game, const Event &event) {
     }
   }
 
+  if (_spawnObject == ObjectType::PlayerTank && _livesIndicator == nullptr) {
+    _livesIndicator = std::make_shared<PlayerLives>(_spawnerNum);
+    _livesIndicator->setState(_spawnsLeft);
+    game.addObject(_livesIndicator);
+  }
+
   // Waiting for next spawn
   if (_animationStartTime > game.getTime()) {
     return;
@@ -59,6 +64,9 @@ void TankSpawner::think(Game& game, const Event &event) {
     if (_spawnedTank == nullptr) {
       _spawnedTank = std::make_shared<PlayerTank>(_position, _spawnerNum);
       game.addObject(_spawnedTank);
+
+      --_spawnsLeft;
+      _livesIndicator->setState(_spawnsLeft);
     }
   }
   else {
@@ -77,11 +85,15 @@ void TankSpawner::think(Game& game, const Event &event) {
   // Deleting destroyed tank
   if (_spawnedTank != nullptr && _spawnedTank->isDestroyed()) {
     _spawnedTank = nullptr;
-    --_spawnsLeft;
     _animationStartTime = game.getTime() + 64.0 / 60;
 
     if (_spawnsLeft == 0) {
       _desytroyed = true;
     }
   }
+}
+
+void TankSpawner::addLife() {
+  _spawnsLeft = std::min(_spawnsLeft + 1, 99);
+  _livesIndicator->setState(_spawnsLeft);
 }
