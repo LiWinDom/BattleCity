@@ -65,7 +65,7 @@ Event Window::pollEvent() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
       event.player1.right = true;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
       event.player1.shoot = true;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
