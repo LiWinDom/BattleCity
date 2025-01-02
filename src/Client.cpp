@@ -140,7 +140,10 @@ int main(int argc, char* argv[]) {
       }
       else {
         game->think(event);
-        if (game->isFinished()) {
+        if (game->isFinished() || event.player1.reset) {
+          if (event.player1.reset) {
+            currentStage = -1;
+          }
           game = std::make_unique<Game>(++currentStage, false);
           drawables.clear();
         }

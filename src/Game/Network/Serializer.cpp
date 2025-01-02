@@ -34,7 +34,8 @@ std::shared_ptr<NetworkObject> Serializer::bytesToObject(const std::unique_ptr<u
 std::unique_ptr<uint8_t[]> Serializer::eventToBytes(const Event &event) {
   auto data = std::make_unique<uint8_t[]>(1);
 
-  data[0] = (event.player1.esc | event.player2.esc) << 8
+  data[0] = (event.player1.esc | event.player2.esc) << 7
+          | (event.player1.reset | event.player2.reset) << 6
           | (event.player1.up | event.player2.up) << 4
           | (event.player1.left | event.player2.left) << 3
           | (event.player1.down | event.player2.down) << 2
@@ -48,6 +49,7 @@ Event Serializer::bytesToEvent(const std::unique_ptr<uint8_t[]> &player1, const 
   Event event;
 
   event.player1.esc =   (player1[0] >> 7) & 1;
+  event.player1.reset = (player1[0] >> 6) & 1;
   event.player1.up =    (player1[0] >> 4) & 1;
   event.player1.left =  (player1[0] >> 3) & 1;
   event.player1.down =  (player1[0] >> 2) & 1;
@@ -55,6 +57,7 @@ Event Serializer::bytesToEvent(const std::unique_ptr<uint8_t[]> &player1, const 
   event.player1.shoot =  player1[0] & 1;
 
   event.player2.esc =   (player2[0] >> 7) & 1;
+  event.player2.reset = (player1[0] >> 6) & 1;
   event.player2.up =    (player2[0] >> 4) & 1;
   event.player2.left =  (player2[0] >> 3) & 1;
   event.player2.down =  (player2[0] >> 2) & 1;

@@ -68,6 +68,7 @@ Event Window::pollEvent() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
       event.player1.shoot = true;
     }
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
       event.player2.up = true;
     }
@@ -82,6 +83,15 @@ Event Window::pollEvent() {
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) {
       event.player2.shoot = true;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+      event.player1.reset = true;
+      event.player2.reset = true;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+      event.player1.esc = true;
+      event.player2.esc = true;
     }
   }
   return event;

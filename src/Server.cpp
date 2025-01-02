@@ -27,7 +27,10 @@ int main(int argc, char* argv[]) {
       auto event = Serializer::bytesToEvent(eventData[0], eventData[1]);
 
       game->think(event);
-      if (game->isFinished()) {
+      if (game->isFinished() || event.player1.reset || event.player2.reset) {
+        if (event.player1.reset || event.player2.reset) {
+          currentStage = -1;
+        }
         game = std::make_unique<Game>(++currentStage, true);
         server.send(Serializer::objectToBytes(std::make_shared<IObject>(ObjectType::NewStage, sf::Vector2f(0, 0), sf::Vector2f(0, 0))), Serializer::getObjectSize());
       }
