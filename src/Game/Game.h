@@ -9,6 +9,7 @@
 #include "Event.h"
 
 class IObject;
+class LeftTanks;
 
 class Game {
  public:
@@ -39,6 +40,7 @@ class Game {
   uint8_t _playerSpawnersLeft = 0;
   bool _gameOver = false;
   bool _gameOverLabel = false;
+  std::shared_ptr<LeftTanks> _leftTanksIndicator = nullptr;
 
   float _finishedTime = -1;
   bool _finished = false;

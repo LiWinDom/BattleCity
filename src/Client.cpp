@@ -111,6 +111,9 @@ int main(int argc, char* argv[]) {
             case ObjectType::PlayerLives:
               drawables[object->getId()] = std::make_shared<PlayerLivesDrawable>();
               break;
+            case ObjectType::LeftTanks:
+              drawables[object->getId()] = std::make_shared<LeftTanksDrawable>();
+              break;
             default:
               Log::warning("No drawable assigned to object");
               continue;

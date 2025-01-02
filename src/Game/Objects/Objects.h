@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Interface/GameOver.h"
+#include "Interface/LeftTanks.h"
 #include "Interface/StageNumber.h"
 #include "Playfield/Border.h"
 #include "Playfield/Brick.h"

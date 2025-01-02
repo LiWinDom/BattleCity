@@ -80,6 +80,8 @@ _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
   _objects.push_back(std::make_shared<Border>(3));
   // Interface objects
   _objects.push_back(std::make_shared<StageNumber>());
+  _leftTanksIndicator = std::make_shared<LeftTanks>(_tanks.size());
+  _objects.push_back(_leftTanksIndicator);
 
   std::srand(std::time(nullptr));
   Log::info(fmt::format("Game started, stage {}", _stage));
@@ -91,6 +93,9 @@ std::vector<std::shared_ptr<IObject>> Game::getObjects() const {
 
 void Game::addObject(std::shared_ptr<IObject> object) {
   _objects.push_back(object);
+  if (object->getType() == ObjectType::EnemyTank) {
+    _leftTanksIndicator->removeTank();
+  }
 }
 
 uint8_t Game::getStage() const {

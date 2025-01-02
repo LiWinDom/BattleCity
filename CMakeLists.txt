@@ -30,6 +30,7 @@ set (
     src/Game/Objects/IObject.h src/Game/Objects/IObject.cpp
 
     src/Game/Objects/Interface/GameOver.h src/Game/Objects/Interface/GameOver.cpp
+    src/Game/Objects/Interface/LeftTanks.h src/Game/Objects/Interface/LeftTanks.cpp
     src/Game/Objects/Interface/PlayerLives.h src/Game/Objects/Interface/PlayerLives.cpp
     src/Game/Objects/Interface/StageNumber.h src/Game/Objects/Interface/StageNumber.cpp
 
@@ -58,6 +59,7 @@ set (
     src/Game/Render/Drawables/IDrawable.h src/Game/Render/Drawables/IDrawable.cpp
 
     src/Game/Render/Drawables/Interface/GameOverDrawable.h src/Game/Render/Drawables/Interface/GameOverDrawable.cpp
+    src/Game/Render/Drawables/Interface/LeftTanksDrawable.h src/Game/Render/Drawables/Interface/LeftTanksDrawable.cpp
     src/Game/Render/Drawables/Interface/PlayerLivesDrawable.h src/Game/Render/Drawables/Interface/PlayerLivesDrawable.cpp
     src/Game/Render/Drawables/Interface/StageNumberDrawable.h src/Game/Render/Drawables/Interface/StageNumberDrawable.cpp
 
