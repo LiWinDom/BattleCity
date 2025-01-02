@@ -143,6 +143,9 @@ void Game::think(Event event) {
         if (std::dynamic_pointer_cast<TankSpawner>(object)->getSpawnObject() == ObjectType::PlayerTank) {
           ++spawnersLeft;
         }
+        else {
+          ++tanksLeft;
+        }
         break;
     }
 
