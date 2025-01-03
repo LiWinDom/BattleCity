@@ -21,35 +21,14 @@ inline LogOptions operator&(const LogOptions& left, const LogOptions& right) {
   return static_cast<LogOptions>(static_cast<T>(left) & static_cast<T>(right));
 }
 
-static std::ofstream clean(Path::getAbsolutePath("latest.log")); // Creating file, to start it over
-
 namespace Log {
-  static void message(const std::string& message, LogOptions options = LogOptions::Console | LogOptions::File) noexcept {
-    if ((options & LogOptions::Console) != LogOptions::None) {
-      std::cout << message << std::endl;
-    }
-    if ((options & LogOptions::File) != LogOptions::None) {
-      std::ofstream file(Path::getAbsolutePath("latest.log"), std::ios::app);
-      file << message << std::endl;
-      file.close();
-    }
-  }
+  void message(const std::string& message, LogOptions options = LogOptions::Console | LogOptions::File) noexcept;
 
-  static void info(const std::string& message, const LogOptions options = LogOptions::Console | LogOptions::File) {
-    Log::message("[INFO] " + message, options);
-  }
+  void info(const std::string& message, const LogOptions options = LogOptions::Console | LogOptions::File);
 
-  static void debug(const std::string& message, const LogOptions options = LogOptions::Console | LogOptions::File) {
-#ifdef DEBUG
-    Log::message("[DEBUG] " + message, options);
-#endif
-  }
+  void debug(const std::string& message, const LogOptions options = LogOptions::Console | LogOptions::File);
 
-  static void warning(const std::string& message, const LogOptions options = LogOptions::Console | LogOptions::File) {
-    Log::message("[WARNING] " + message, options);
-  }
+  void warning(const std::string& message, const LogOptions options = LogOptions::Console | LogOptions::File);
 
-  static void error(const std::string& message, const LogOptions options = LogOptions::Console | LogOptions::File) {
-    Log::message("[ERROR] " + message, options);
-  }
+  void error(const std::string& message, const LogOptions options = LogOptions::Console | LogOptions::File);
 }

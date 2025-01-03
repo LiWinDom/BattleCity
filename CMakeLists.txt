@@ -3,8 +3,8 @@ set(CLIENT_PROJECT_NAME BattleCity-client)
 set(SERVER_PROJECT_NAME BattleCity-server)
 project(BattleCity LANGUAGES CXX)
 
-set(CLIENT_VERSION "2025.102.0")
-set(SERVER_VERSION "2025.102.0")
+set(CLIENT_VERSION "2025.102.1")
+set(SERVER_VERSION "2025.102.1")
 
 add_compile_definitions(CLIENT_VERSION="${CLIENT_VERSION}")
 add_compile_definitions(SERVER_VERSION="${SERVER_VERSION}")
@@ -19,7 +19,8 @@ endif ()
 # Executables
 set (
     SHARED_EXECUTABLES
-    src/Other/Log.h src/Other/Path.h src/Other/Path.cpp
+    src/Other/Log.h src/Other/Log.cpp
+    src/Other/Path.h src/Other/Path.cpp
 
     src/Game/Enums.h src/Game/Event.h
     src/Game/Game.h src/Game/Game.cpp
