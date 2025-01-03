@@ -1,33 +1,31 @@
 #include "Serializer.h"
 
 size_t Serializer::getObjectSize() {
-  return 9;
+  return 7;
 }
 
 std::shared_ptr<uint8_t[]> Serializer::objectToBytes(const std::shared_ptr<IObject> &object) {
   auto data = std::make_unique<uint8_t[]>(getObjectSize());
 
-  data[0] = object->getId() >> 24 & 255;
-  data[1] = object->getId() >> 16 & 255;
-  data[2] = object->getId() >> 8 & 255;
-  data[3] = object->getId() & 255;
-  data[4] = static_cast<uint8_t>(object->getType());
-  data[5] = object->isDestroyed();
-  data[6] = object->getPosition().x;
-  data[7] = object->getPosition().y;
-  data[8] = object->getState();
+  data[0] = object->getId() >> 8 & 255;
+  data[1] = object->getId() & 255;
+  data[2] = static_cast<uint8_t>(object->getType());
+  data[3] = object->isDestroyed();
+  data[4] = object->getPosition().x;
+  data[5] = object->getPosition().y;
+  data[6] = object->getState();
 
   return data;
 }
 
 std::shared_ptr<NetworkObject> Serializer::bytesToObject(const std::shared_ptr<uint8_t[]>& bytes) {
   return std::make_shared<NetworkObject>(
-      (uint32_t)bytes[0] << 24 | bytes[1] << 16 | bytes[2] << 8 | bytes[3],
-      static_cast<ObjectType>(bytes[4]),
+      (uint16_t)bytes[0] << 8 | bytes[1],
+      static_cast<ObjectType>(bytes[2]),
+      bytes[3],
+      bytes[4],
       bytes[5],
-      bytes[6],
-      bytes[7],
-      bytes[8]
+      bytes[6]
   );
 }
 

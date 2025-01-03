@@ -1,7 +1,12 @@
 #include "IObject.h"
 
 IObject::IObject(ObjectType type, const sf::Vector2f& position, const sf::Vector2f& size) :
-  _id(std::rand() << 16 | std::rand()), _type(type), _position(position), _size(size) {}
+  _id(generateId()), _type(type), _position(position), _size(size) {}
+
+uint16_t IObject::generateId() {
+  static uint16_t prevId = 0;
+  return prevId++;
+}
 
 bool IObject::operator|(const IObject &other) const {
   if (_desytroyed || other._desytroyed) return false;
@@ -21,7 +26,7 @@ bool IObject::operator&(const IObject &other) const {
   return operator|(other);
 }
 
-uint32_t IObject::getId() const {
+uint16_t IObject::getId() const {
   return _id;
 }
 

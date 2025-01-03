@@ -12,12 +12,13 @@
 class IObject {
  public:
   IObject(ObjectType type, const sf::Vector2f& position, const sf::Vector2f& size);
+  uint16_t generateId();
 
   // Collision check
   bool operator|(const IObject& other) const;
   bool operator&(const IObject& other) const;
 
-  uint32_t getId() const;
+  uint16_t getId() const;
   ObjectType getType() const;
   sf::Vector2f getPosition() const;
   sf::Vector2f getSize() const;
@@ -34,7 +35,7 @@ class IObject {
   virtual void destroy(Game& game, const ObjectRotation bulletRotation);
 
  protected:
-  uint32_t _id;
+  uint16_t _id;
   ObjectType _type;
 
   sf::Vector2f _position;
