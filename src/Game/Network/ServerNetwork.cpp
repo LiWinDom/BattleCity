@@ -33,7 +33,7 @@ ServerNetwork::~ServerNetwork() {
   Log::info("Server closed");
 }
 
-void ServerNetwork::send(const std::unique_ptr<uint8_t[]>& data, size_t size) {
+void ServerNetwork::send(const std::shared_ptr<uint8_t[]>& data, size_t size) {
   for (auto& socket : _sockets) {
     if (socket->send(data.get(), size) != sf::Socket::Status::Done) {
       // Data to string
@@ -47,8 +47,8 @@ void ServerNetwork::send(const std::unique_ptr<uint8_t[]>& data, size_t size) {
   }
 }
 
-std::vector<std::unique_ptr<uint8_t[]>> ServerNetwork::receive(size_t size) {
-  std::vector<std::unique_ptr<uint8_t[]>> data(_sockets.size());
+std::vector<std::shared_ptr<uint8_t[]>> ServerNetwork::receive(size_t size) {
+  std::vector<std::shared_ptr<uint8_t[]>> data(_sockets.size());
   for (auto& d : data) {
     d = std::make_unique<uint8_t[]>(size);
   }

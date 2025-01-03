@@ -16,9 +16,35 @@ int main(int argc, char* argv[]) {
     uint8_t currentStage = 0;
     auto game = std::make_unique<Game>(currentStage, true);
 
+    std::map<uint8_t, std::shared_ptr<uint8_t[]>> prevBytes;
     while (true) {
       for (const auto object : game->getObjects()) {
-        server.send(Serializer::objectToBytes(object), Serializer::getObjectSize());
+        // Some send optimisation
+        auto bytes = Serializer::objectToBytes(object);
+
+        bool needSend = false;
+        if (prevBytes.count(object->getId()) <= 0) {
+          prevBytes[object->getId()] = bytes;
+          needSend = true;
+        }
+        else {
+          for (auto i = 0; i < Serializer::getObjectSize(); ++i) {
+            if (prevBytes[object->getId()][i] != bytes[i]) {
+              needSend = true;
+              break;
+            }
+          }
+        }
+
+        if (needSend) {
+          server.send(bytes, Serializer::getObjectSize());
+        }
+        if (object->isDestroyed()) {
+          prevBytes.erase(object->getId());
+        }
+        else {
+          prevBytes[object->getId()] = bytes;
+        }
       }
       // End of objects
       server.send(Serializer::objectToBytes(std::make_shared<IObject>(ObjectType::NetworkTerminator, sf::Vector2f(0, 0), sf::Vector2f(0, 0))), Serializer::getObjectSize());

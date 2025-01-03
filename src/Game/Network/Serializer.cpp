@@ -4,7 +4,7 @@ size_t Serializer::getObjectSize() {
   return 9;
 }
 
-std::unique_ptr<uint8_t[]> Serializer::objectToBytes(const std::shared_ptr<IObject> &object) {
+std::shared_ptr<uint8_t[]> Serializer::objectToBytes(const std::shared_ptr<IObject> &object) {
   auto data = std::make_unique<uint8_t[]>(getObjectSize());
 
   data[0] = object->getId() >> 24 & 255;
@@ -20,7 +20,7 @@ std::unique_ptr<uint8_t[]> Serializer::objectToBytes(const std::shared_ptr<IObje
   return data;
 }
 
-std::shared_ptr<NetworkObject> Serializer::bytesToObject(const std::unique_ptr<uint8_t[]>& bytes) {
+std::shared_ptr<NetworkObject> Serializer::bytesToObject(const std::shared_ptr<uint8_t[]>& bytes) {
   return std::make_shared<NetworkObject>(
       (uint32_t)bytes[0] << 24 | bytes[1] << 16 | bytes[2] << 8 | bytes[3],
       static_cast<ObjectType>(bytes[4]),
@@ -31,7 +31,7 @@ std::shared_ptr<NetworkObject> Serializer::bytesToObject(const std::unique_ptr<u
   );
 }
 
-std::unique_ptr<uint8_t[]> Serializer::eventToBytes(const Event &event) {
+std::shared_ptr<uint8_t[]> Serializer::eventToBytes(const Event &event) {
   auto data = std::make_unique<uint8_t[]>(1);
 
   data[0] = (event.player1.esc | event.player2.esc) << 7
@@ -45,7 +45,7 @@ std::unique_ptr<uint8_t[]> Serializer::eventToBytes(const Event &event) {
   return data;
 }
 
-Event Serializer::bytesToEvent(const std::unique_ptr<uint8_t[]> &player1, const std::unique_ptr<uint8_t[]>& player2) {
+Event Serializer::bytesToEvent(const std::shared_ptr<uint8_t[]> &player1, const std::shared_ptr<uint8_t[]>& player2) {
   Event event;
 
   event.player1.esc =   (player1[0] >> 7) & 1;

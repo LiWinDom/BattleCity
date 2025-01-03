@@ -19,7 +19,7 @@ ClientNetwork::~ClientNetwork() {
   Log::info("Client disconnected");
 }
 
-void ClientNetwork::send(const std::unique_ptr<uint8_t[]>& data, size_t size) {
+void ClientNetwork::send(const std::shared_ptr<uint8_t[]>& data, size_t size) {
   if (_socket.send(data.get(), size) != sf::Socket::Status::Done) {
     // Data to string
     std::ostringstream stringData;
@@ -31,8 +31,8 @@ void ClientNetwork::send(const std::unique_ptr<uint8_t[]>& data, size_t size) {
   }
 }
 
-std::unique_ptr<uint8_t[]> ClientNetwork::receive(size_t size) {
-  auto data = std::make_unique<uint8_t[]>(size);
+std::shared_ptr<uint8_t[]> ClientNetwork::receive(size_t size) {
+  std::shared_ptr<uint8_t[]> data(new uint8_t[size], std::default_delete<uint8_t[]>());
 
   sf::Socket::Status status;
   size_t totalReceived = 0;

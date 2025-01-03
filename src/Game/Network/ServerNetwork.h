@@ -10,8 +10,8 @@ class ServerNetwork {
   ServerNetwork(uint16_t port);
   ~ServerNetwork();
 
-  void send(const std::unique_ptr<uint8_t[]>& data, size_t size);
-  std::vector<std::unique_ptr<uint8_t[]>> receive(size_t size);
+  void send(const std::shared_ptr<uint8_t[]>& data, size_t size);
+  std::vector<std::shared_ptr<uint8_t[]>> receive(size_t size);
 
  private:
   sf::TcpListener _listener;
