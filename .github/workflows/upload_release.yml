@@ -71,14 +71,14 @@ jobs:
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
           RELEASE_NAME="${TAG_NAME}"
-          if [ -f CHANGELOG.md ]; then
-            CHANGELOG=$(cat CHANGELOG.md | jq -R)
-          else
-            CHANGELOG="No changelog provided."
-          fi
           echo "tag_name=$TAG_NAME" >> $GITHUB_ENV
           echo "release_name=$RELEASE_NAME" >> $GITHUB_ENV
-          echo "changelog=$CHANGELOG" >> $GITHUB_ENV
+
+      - name: Changelog to Release
+        id: release
+        uses: MatteoCampinoti94/changelog-to-release@v1.0.2
+        with:
+          version-name: ${{ env.release_name }}
 
       - name: Create GitHub Release
         id: create_release
@@ -87,8 +87,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ env.tag_name }}
-          release_name: ${{ env.release_name }}
-          body: ${{ env.changelog }}
+          release_name: ${{ steps.release.outputs.title }}
+          body: ${{ steps.release.outputs.body }}
           draft: false
           prerelease: false
 
