@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
   Log::message("");
   std::cout.setf(std::ios::unitbuf);
 
-  uint8_t currentStage = 15;
+  uint8_t currentStage = 0;
   std::unique_ptr<Game> game = nullptr;
   std::unique_ptr<ClientNetwork> client = nullptr;
 
