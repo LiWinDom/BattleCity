@@ -175,7 +175,8 @@ void Game::think(Event event) {
   // Simulating 60 fps
   while (_globalClock.getElapsedTime().asSeconds() + 1.0 / 60 > _lastThink) {
     if (!_paused) {
-      for (const auto object : _objects) {
+      for (auto i = 0; i < _objects.size(); ++i) {
+        const auto object = _objects[i];
         if (object->isDestroyed()) {
           continue;
         }
