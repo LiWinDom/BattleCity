@@ -6,7 +6,7 @@
 #include "../Objects/NetworkObject.h"
 
 namespace Serializer {
-  constexpr size_t getObjectSize();
+  size_t getObjectSize();
   std::shared_ptr<uint8_t[]> objectToBytes(const std::shared_ptr<IObject>& object);
   std::shared_ptr<NetworkObject> bytesToObject(const std::shared_ptr<uint8_t[]>& bytes);
 

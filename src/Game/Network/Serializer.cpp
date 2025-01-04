@@ -1,6 +1,6 @@
 #include "Serializer.h"
 
-constexpr size_t Serializer::getObjectSize() {
+size_t Serializer::getObjectSize() {
   return 7;
 }
 
