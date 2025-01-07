@@ -5,7 +5,7 @@
 
 class PlayerTank : public ITank {
  public:
-  PlayerTank(TankSpawner* spawner);
+  PlayerTank(TankSpawner* spawner, uint8_t tankType = 0);
 
   uint8_t getState() const override;
 

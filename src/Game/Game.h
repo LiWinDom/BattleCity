@@ -14,6 +14,7 @@ class LeftTanks;
 class Game {
  public:
   Game(const uint8_t stage, const bool twoPlayers, const bool homebrewChanges = true);
+  Game(const Game* previousGame);
 
   std::vector<std::shared_ptr<IObject>> getObjects() const;
   void addObject(std::shared_ptr<IObject> object);
@@ -38,7 +39,6 @@ class Game {
   std::vector<std::shared_ptr<IObject>> _objects;
   std::vector<uint8_t> _tanks;
 
-  uint8_t _playerSpawnersLeft = 0;
   bool _gameOver = false;
   bool _gameOverLabel = false;
   std::shared_ptr<LeftTanks> _leftTanksIndicator = nullptr;

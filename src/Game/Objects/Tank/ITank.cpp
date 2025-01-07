@@ -7,6 +7,14 @@ ITank::ITank(ObjectType type, const sf::Vector2f& position) : IMovable(type, pos
   _collisionLayer = 1;
 }
 
+uint8_t ITank::getTankType() {
+  return _tankType;
+}
+
+uint8_t ITank::isBonus() const {
+  return _hasBonus;
+}
+
 uint8_t ITank::getState() const {
   // [type][type][][color][color][wheelState][rotation][rotation]
   return _tankType << 6

@@ -8,6 +8,9 @@ class ITank : public IMovable {
  public:
   ITank(ObjectType type, const sf::Vector2f& position);
 
+  uint8_t getTankType();
+  uint8_t isBonus() const;
+
   uint8_t getState() const override;
 
   void think(Game& game, const Event& event) override;

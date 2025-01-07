@@ -153,7 +153,7 @@ int main(int argc, char* argv[]) {
           if (event.player1.reset) {
             currentStage = -1;
           }
-          game = std::make_unique<Game>(++currentStage, false);
+          game = std::make_unique<Game>(game.get());
           drawables.clear();
         }
       }

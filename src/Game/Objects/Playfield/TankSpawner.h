@@ -14,6 +14,10 @@ class TankSpawner : public IObject {
 
   uint8_t getSpawnerNum() const;
 
+  uint8_t getLeftSpawns() const;
+
+  void setSpawnState(uint8_t spawnsLeft, uint8_t tankType);
+
   void addLife();
 
   void think(Game& game, const Event& event) override;
@@ -27,6 +31,7 @@ class TankSpawner : public IObject {
 
   // Only for players
   uint8_t _spawnsLeft = 3;
+  uint8_t _tankType = 0;
   std::shared_ptr<ITank> _spawnedTank;
   std::shared_ptr<PlayerLives> _livesIndicator = nullptr;
 

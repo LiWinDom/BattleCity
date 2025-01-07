@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
         if (event.player1.reset || event.player2.reset) {
           currentStage = -1;
         }
-        game = std::make_unique<Game>(++currentStage, true);
+        game = std::make_unique<Game>(game.get());
         server.send(Serializer::objectToBytes(std::make_shared<IObject>(ObjectType::NewStage, sf::Vector2f(0, 0), sf::Vector2f(0, 0))), Serializer::getObjectSize());
       }
     }

@@ -26,6 +26,15 @@ uint8_t TankSpawner::getSpawnerNum() const {
   return _spawnerNum;
 }
 
+uint8_t TankSpawner::getLeftSpawns() const {
+  return _spawnsLeft;
+}
+
+void TankSpawner::setSpawnState(uint8_t spawnsLeft, uint8_t tankType) {
+  _spawnsLeft = spawnsLeft + 1;
+  _tankType = tankType;
+}
+
 void TankSpawner::addLife() {
   _spawnsLeft = std::min(_spawnsLeft + 1, 99);
   _livesIndicator->setState(_spawnsLeft);
@@ -71,10 +80,11 @@ void TankSpawner::think(Game& game, const Event &event) {
 
   if (_spawnObject == ObjectType::PlayerTank) {
     if (_spawnedTank == nullptr) {
-      _spawnedTank = std::make_shared<PlayerTank>(this);
+      _spawnedTank = std::make_shared<PlayerTank>(this, _tankType);
       game.addObject(_spawnedTank);
 
       --_spawnsLeft;
+      _tankType = 0;
       _livesIndicator->setState(_spawnsLeft);
     }
   }

@@ -52,12 +52,10 @@ _stage(stage), _twoPlayers(twoPlayers), _homebrew(homebrewChanges) {
           break;
         case '1':
           _objects.push_back(std::make_shared<TankSpawner>(pos, ObjectType::PlayerTank, 0));
-          ++_playerSpawnersLeft;
           break;
         case '2':
           if (_twoPlayers) {
             _objects.push_back(std::make_shared<TankSpawner>(pos, ObjectType::PlayerTank, 1));
-            ++_playerSpawnersLeft;
           }
           break;
       }
@@ -95,6 +93,32 @@ void Game::addObject(std::shared_ptr<IObject> object) {
   _objects.push_back(object);
   if (object->getType() == ObjectType::EnemyTank) {
     _leftTanksIndicator->removeTank();
+  }
+}
+
+Game::Game(const Game* previousGame) : Game(previousGame->_stage + 1, previousGame->_twoPlayers, previousGame->_homebrew) {
+  uint8_t playerLives[] = {0, 0}, playerTankTypes[] = {0, 0};
+
+  for (auto object : previousGame->_objects) {
+    if (object->getType() == ObjectType::Spawner) {
+      auto spawner = dynamic_cast<TankSpawner*>(object.get());
+      if (spawner->getSpawnObject() == ObjectType::PlayerTank) {
+        playerLives[spawner->getSpawnerNum()] = spawner->getLeftSpawns();
+      }
+    }
+    else if (object->getType() == ObjectType::PlayerTank) {
+      auto tank = dynamic_cast<ITank*>(object.get());
+      playerTankTypes[tank->isBonus()] = tank->getTankType();
+    }
+  }
+
+  for (auto object : _objects) {
+    if (object->getType() == ObjectType::Spawner) {
+      auto spawner = dynamic_cast<TankSpawner*>(object.get());
+      if (spawner->getSpawnObject() == ObjectType::PlayerTank) {
+        spawner->setSpawnState(playerLives[spawner->getSpawnerNum()], playerTankTypes[spawner->getSpawnerNum()]);
+      }
+    }
   }
 }
 
