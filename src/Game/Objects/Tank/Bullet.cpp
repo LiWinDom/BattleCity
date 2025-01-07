@@ -1,6 +1,7 @@
 #include "Bullet.h"
 
 #include "Explosion.h"
+#include "ITank.h"
 
 Bullet::Bullet(const sf::Vector2f& tankPosition, const ObjectRotation& rotation, const bool belongsToEnemy, const bool isFast, const bool isPowerful) :
 IMovable(ObjectType::Bullet, {0, 0}, {4, 4}, rotation, isFast ? 240 : 120), _belongsToEnemy(belongsToEnemy), _isPowerful(isPowerful) {
@@ -41,6 +42,10 @@ void Bullet::think(Game& game, const Event &event) {
         break;
       case ObjectType::PlayerTank:
         if (!_belongsToEnemy) {
+          auto tank = dynamic_cast<ITank*>(object.get());
+          tank->freeze(game, 3);
+          needToDestroy = true;
+          destroyWithExplosion = true;
           continue;
         }
         break;
@@ -50,6 +55,7 @@ void Bullet::think(Game& game, const Event &event) {
         }
         break;
       case ObjectType::Water:
+      case ObjectType::Bonus:
         continue;
     }
     object->destroy(game, _rotation);
@@ -66,6 +72,6 @@ void Bullet::think(Game& game, const Event &event) {
   }
 }
 
-void Bullet::destroy(Game &game, const ObjectRotation bulletRotation) {
+void Bullet::destroy(Game &game, const ObjectRotation& bulletRotation) {
   _desytroyed = true;
 }

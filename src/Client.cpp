@@ -93,8 +93,14 @@ int main(int argc, char* argv[]) {
             case ObjectType::Eagle:
               drawables[object->getId()] = std::make_shared<EagleDrawable>();
               break;
+            case ObjectType::Bonus:
+              drawables[object->getId()] = std::make_shared<BonusDrawable>();
+              break;
             case ObjectType::Explosion:
               drawables[object->getId()] = std::make_shared<ExplosionDrawable>();
+              break;
+            case ObjectType::Protection:
+              drawables[object->getId()] = std::make_shared<ProtectionDrawable>();
               break;
             case ObjectType::Spawner:
               drawables[object->getId()] = std::make_shared<TankSpawnerDrawable>();

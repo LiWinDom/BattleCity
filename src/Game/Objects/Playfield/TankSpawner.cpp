@@ -22,6 +22,15 @@ uint8_t TankSpawner::getState() const {
   return _currentFrame;
 }
 
+uint8_t TankSpawner::getSpawnerNum() const {
+  return _spawnerNum;
+}
+
+void TankSpawner::addLife() {
+  _spawnsLeft = std::min(_spawnsLeft + 1, 99);
+  _livesIndicator->setState(_spawnsLeft);
+}
+
 void TankSpawner::think(Game& game, const Event &event) {
   if (_animationStartTime == -1) {
     // Game start
@@ -62,7 +71,7 @@ void TankSpawner::think(Game& game, const Event &event) {
 
   if (_spawnObject == ObjectType::PlayerTank) {
     if (_spawnedTank == nullptr) {
-      _spawnedTank = std::make_shared<PlayerTank>(_position, _spawnerNum);
+      _spawnedTank = std::make_shared<PlayerTank>(this);
       game.addObject(_spawnedTank);
 
       --_spawnsLeft;
@@ -91,9 +100,4 @@ void TankSpawner::think(Game& game, const Event &event) {
       _desytroyed = true;
     }
   }
-}
-
-void TankSpawner::addLife() {
-  _spawnsLeft = std::min(_spawnsLeft + 1, 99);
-  _livesIndicator->setState(_spawnsLeft);
 }

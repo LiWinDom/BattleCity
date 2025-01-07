@@ -11,6 +11,8 @@
 #include "Drawables/Playfield/TankSpawnerDrawable.h"
 #include "Drawables/Playfield/WaterDrawable.h"
 #include "Drawables/Playfield/WallDrawable.h"
+#include "Drawables/Tank/BonusDrawable.h"
 #include "Drawables/Tank/BulletDrawable.h"
 #include "Drawables/Tank/ExplosionDrawable.h"
+#include "Drawables/Tank/ProtectionDrawable.h"
 #include "Drawables/Tank/TankDrawable.h"

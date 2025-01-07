@@ -12,7 +12,6 @@
 class IObject {
  public:
   IObject(ObjectType type, const sf::Vector2f& position, const sf::Vector2f& size);
-  uint16_t generateId();
 
   // Collision check
   bool operator|(const IObject& other) const;
@@ -32,7 +31,7 @@ class IObject {
   std::vector<std::shared_ptr<IObject>> getHardCollisions(const std::vector<std::shared_ptr<IObject>>& objects) const;
 
   virtual void think(Game& game, const Event &event);
-  virtual void destroy(Game& game, const ObjectRotation bulletRotation);
+  virtual void destroy(Game& game, const ObjectRotation& bulletRotation = ObjectRotation::Up);
 
  protected:
   uint16_t _id;
@@ -44,4 +43,7 @@ class IObject {
   bool _collision = true;
   uint8_t _collisionLayer = 0;
   bool _desytroyed = false;
+
+ private:
+  uint16_t generateId();
 };

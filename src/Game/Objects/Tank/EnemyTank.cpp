@@ -5,6 +5,8 @@
 EnemyTank::EnemyTank(const sf::Vector2f& position, const uint8_t tankType, const bool hasBonus) : ITank(ObjectType::EnemyTank, position) {
   _tankType = tankType;
   _hasBonus = hasBonus;
+  _speed = 30;
+
   switch (_tankType) {
     case 0:
       // Simple tank
@@ -113,6 +115,26 @@ void EnemyTank::think(Game& game, const Event& event) {
   _event.player1.shoot = false;
 
   changeColor(game);
+}
+
+void EnemyTank::upgrade() {
+  _tankType = std::min(_tankType + 1, 3);
+
+  if (_tankType == 1) {
+    _speed = 60;
+  }
+  else if (_tankType == 2) {
+    _speed = 30;
+    _fastBullets = true;
+  }
+  else {
+    _fastBullets = false;
+    _livesNum = 3;
+  }
+}
+
+void EnemyTank::addLife() {
+  _livesNum = std::min(_livesNum + 1, 3);
 }
 
 void EnemyTank::changeDirection(Game &game) {

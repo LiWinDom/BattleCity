@@ -6,7 +6,7 @@ uint8_t Brick::getState() const {
   return _state;
 }
 
-void Brick::destroy(Game& game, const ObjectRotation bulletRotation) {
+void Brick::destroy(Game& game, const ObjectRotation& bulletRotation) {
   switch (bulletRotation) {
     case ObjectRotation::Up:
       if (_state & 0b1100) {

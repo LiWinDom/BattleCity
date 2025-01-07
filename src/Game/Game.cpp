@@ -106,6 +106,10 @@ std::vector<uint8_t> Game::getTanks() const {
   return _tanks;
 }
 
+bool Game::isHomebrew() const {
+  return _homebrew;
+}
+
 bool Game::isTwoPlayers() const {
   return _twoPlayers;
 }

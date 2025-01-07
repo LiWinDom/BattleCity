@@ -4,7 +4,7 @@ set(SERVER_PROJECT_NAME BattleCity-server)
 project(BattleCity LANGUAGES CXX)
 
 set(CLIENT_VERSION "2025.102.1")
-set(SERVER_VERSION "2025.102.1")
+set(SERVER_VERSION ${CLIENT_VERSION})
 
 add_compile_definitions(CLIENT_VERSION="${CLIENT_VERSION}")
 add_compile_definitions(SERVER_VERSION="${SERVER_VERSION}")
@@ -44,11 +44,13 @@ set (
     src/Game/Objects/Playfield/Wall.h src/Game/Objects/Playfield/Wall.cpp
     src/Game/Objects/Playfield/Water.h src/Game/Objects/Playfield/Water.cpp
 
+    src/Game/Objects/Tank/Bonus.h src/Game/Objects/Tank/Bonus.cpp
     src/Game/Objects/Tank/Bullet.h src/Game/Objects/Tank/Bullet.cpp
     src/Game/Objects/Tank/EnemyTank.h src/Game/Objects/Tank/EnemyTank.cpp
     src/Game/Objects/Tank/Explosion.h src/Game/Objects/Tank/Explosion.cpp
     src/Game/Objects/Tank/ITank.h src/Game/Objects/Tank/ITank.cpp
     src/Game/Objects/Tank/PlayerTank.h src/Game/Objects/Tank/PlayerTank.cpp
+    src/Game/Objects/Tank/Protection.h src/Game/Objects/Tank/Protection.cpp
 )
 set (
     CLIENT_EXECUTABLES ./src/Client.cpp ${SHARED_EXECUTABLES}
@@ -72,9 +74,11 @@ set (
     src/Game/Render/Drawables/Playfield/WallDrawable.h src/Game/Render/Drawables/Playfield/WallDrawable.cpp
     src/Game/Render/Drawables/Playfield/WaterDrawable.h src/Game/Render/Drawables/Playfield/WaterDrawable.cpp
 
+    src/Game/Render/Drawables/Tank/BonusDrawable.h src/Game/Render/Drawables/Tank/BonusDrawable.cpp
     src/Game/Render/Drawables/Tank/BulletDrawable.h src/Game/Render/Drawables/Tank/BulletDrawable.cpp
     src/Game/Render/Drawables/Tank/ExplosionDrawable.h src/Game/Render/Drawables/Tank/ExplosionDrawable.cpp
     src/Game/Render/Drawables/Tank/TankDrawable.h src/Game/Render/Drawables/Tank/TankDrawable.cpp
+    src/Game/Render/Drawables/Tank/ProtectionDrawable.h src/Game/Render/Drawables/Tank/ProtectionDrawable.cpp
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp ${SHARED_EXECUTABLES}

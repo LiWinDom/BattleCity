@@ -11,6 +11,9 @@ class EnemyTank : public ITank {
   void changeColor(const Game& game);
   void think(Game& game, const Event& event) override;
 
+  void upgrade() override;
+  void addLife() override;
+
  private:
   void changeDirection(Game& game);
   void rotateClockwise();

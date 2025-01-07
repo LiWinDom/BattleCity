@@ -3,11 +3,6 @@
 IObject::IObject(ObjectType type, const sf::Vector2f& position, const sf::Vector2f& size) :
   _id(generateId()), _type(type), _position(position), _size(size) {}
 
-uint16_t IObject::generateId() {
-  static uint16_t prevId = 0;
-  return prevId++;
-}
-
 bool IObject::operator|(const IObject &other) const {
   if (_desytroyed || other._desytroyed) return false;
   if (!_collision || !other._collision) return false;
@@ -86,6 +81,11 @@ void IObject::think(Game& game, const Event &event) {
   return;
 }
 
-void IObject::destroy(Game& game, const ObjectRotation bulletRotation) {
+void IObject::destroy(Game& game, const ObjectRotation& bulletRotation) {
   return;
+}
+
+uint16_t IObject::generateId() {
+  static uint16_t prevId = 0;
+  return prevId++;
 }

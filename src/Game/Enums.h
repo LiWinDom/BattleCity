@@ -23,6 +23,7 @@ enum class ObjectType : uint8_t {
   EnemyTank = 12,
   Bullet = 20,
   Explosion = 30,
+  Bonus = 40,
   // Interface objects
   GameOver = 101,
   LeftTanks = 102,

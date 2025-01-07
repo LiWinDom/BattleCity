@@ -1,16 +1,9 @@
 #include "ITank.h"
 
+#include "Bonus.h"
 #include "Explosion.h"
 
 ITank::ITank(ObjectType type, const sf::Vector2f& position) : IMovable(type, position, sf::Vector2f(16, 16), 45) {
-  if (_type == ObjectType::EnemyTank) {
-    if (_tankType == 1) {
-      _speed = 60;
-    }
-    else {
-      _speed = 30;
-    }
-  }
   _collisionLayer = 1;
 }
 
@@ -22,6 +15,11 @@ uint8_t ITank::getState() const {
 }
 
 void ITank::think(Game& game, const Event &event) {
+  if (_frozenUntil > game.getTime()) {
+    move(game, false);
+    return;
+  }
+
   // Getting pressed keys
   PressedButtons pressed;
   if (_type == ObjectType::PlayerTank) {
@@ -92,8 +90,15 @@ void ITank::think(Game& game, const Event &event) {
   }
 }
 
-void ITank::destroy(Game &game, const ObjectRotation bulletRotation) {
+void ITank::destroy(Game &game, const ObjectRotation& bulletRotation) {
+  if (_protectedUntil > game.getTime()) {
+    return;
+  }
+
   if (_livesNum == 0) {
+    if (_type == ObjectType::EnemyTank && _hasBonus) {
+      game.addObject(std::make_shared<Bonus>(game));
+    }
     game.addObject(std::make_shared<Explosion>(_position + sf::Vector2f(_size.x / 2, _size.y / 2), true));
     _desytroyed = true;
     return;
@@ -114,7 +119,7 @@ void ITank::shoot(Game& game) {
   }
   _lastShotTime = game.getTime();
 
-  const auto bullet = std::make_shared<Bullet>(_position, _rotation, _type == ObjectType::EnemyTank, _fastBullets, _powerfulBulltets);
+  const auto bullet = std::make_shared<Bullet>(_position, _rotation, _type == ObjectType::EnemyTank, _fastBullets, _powerfulBullets);
   game.addObject(bullet);
   _bullets.push_back(bullet);
 }
@@ -124,4 +129,15 @@ void ITank::snap(float& coordinate) {
     coordinate += 8;
   }
   coordinate -= (int)coordinate % 8;
+}
+
+void ITank::addProtection(Game &game, float time) {
+  time = time / 60 * 64; // Normalizing time
+  _protectedUntil = game.getTime() + time;
+  game.addObject(std::make_shared<Protection>(this, _protectedUntil));
+}
+
+void ITank::freeze(Game &game, float time) {
+  time = time / 60 * 64; // Normalizing time
+  _frozenUntil = game.getTime() + time;
 }

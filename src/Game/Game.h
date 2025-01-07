@@ -21,6 +21,7 @@ class Game {
   uint8_t getStage() const;
   std::vector<uint8_t> getTanks() const;
 
+  bool isHomebrew() const;
   bool isTwoPlayers() const;
   float getTime() const;
   float getPeriod() const;

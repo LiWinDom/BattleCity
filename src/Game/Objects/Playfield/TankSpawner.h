@@ -12,6 +12,8 @@ class TankSpawner : public IObject {
 
   uint8_t getState() const override;
 
+  uint8_t getSpawnerNum() const;
+
   void addLife();
 
   void think(Game& game, const Event& event) override;
