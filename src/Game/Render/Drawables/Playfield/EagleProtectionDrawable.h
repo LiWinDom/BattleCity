@@ -2,9 +2,9 @@
 
 #include "../IDrawable.h"
 
-class ProtectionDrawable : public IDrawable {
+class EagleProtectionDrawable : public IDrawable {
  public:
-  ProtectionDrawable();
+  EagleProtectionDrawable();
 
   void update(const std::shared_ptr<IObject>& object) override;
 };

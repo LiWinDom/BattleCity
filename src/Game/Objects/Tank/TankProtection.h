@@ -2,9 +2,9 @@
 
 #include "../IObject.h"
 
-class Protection : public IObject {
+class TankProtection : public IObject {
  public:
-  Protection(IObject* tank, float protectionUntil);
+  TankProtection(IObject* tank, float protectionUntil);
 
   uint8_t getState() const override;
 

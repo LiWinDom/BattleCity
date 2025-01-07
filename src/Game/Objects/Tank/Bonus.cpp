@@ -1,5 +1,6 @@
 #include "Bonus.h"
 
+#include "../Playfield/EagleProtection.h"
 #include "ITank.h"
 
 Bonus::Bonus(Game& game) : IObject(ObjectType::Bonus, {0, 0}, {16, 16}) {
@@ -34,6 +35,9 @@ void Bonus::think(Game &game, const Event &event) {
     if (object->getType() != ObjectType::PlayerTank && object->getType() != ObjectType::EnemyTank) {
       continue;
     }
+    if (object->getType() == ObjectType::EnemyTank && !game.isHomebrew()) {
+      continue;
+    }
     auto tank = dynamic_cast<ITank*>(object.get());
 
     switch (_bonusType) {
@@ -50,8 +54,18 @@ void Bonus::think(Game &game, const Event &event) {
           }
         }
         break;
-      case BonusType::BaseProtection:
-        // TODO
+      case BonusType::EagleProtection:
+        for (auto protectionObject : game.getObjects()) {
+          if (protectionObject->getType() == ObjectType::EagleProtection) {
+            auto eagleProtection = dynamic_cast<EagleProtection*>(protectionObject.get());
+            if (object->getType() == ObjectType::PlayerTank) {
+              eagleProtection->addProtection(game);
+            }
+            else {
+              eagleProtection->removeProtection(game);
+            }
+          }
+        }
         break;
       case BonusType::TankUpgrade:
         tank->upgrade();

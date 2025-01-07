@@ -7,7 +7,7 @@
 enum class BonusType : uint8_t {
   PlayerProtection = 0,
   TimeFreezer = 1,
-  BaseProtection = 2,
+  EagleProtection = 2,
   TankUpgrade = 3,
   Granade = 4,
   Life = 5,

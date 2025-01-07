@@ -2,7 +2,7 @@
 
 #include "../IMovable.h"
 #include "Bullet.h"
-#include "Protection.h"
+#include "TankProtection.h"
 
 class ITank : public IMovable {
  public:

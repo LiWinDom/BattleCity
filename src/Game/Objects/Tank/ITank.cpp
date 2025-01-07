@@ -142,7 +142,7 @@ void ITank::snap(float& coordinate) {
 void ITank::addProtection(Game &game, float time) {
   time = time / 60 * 64; // Normalizing time
   _protectedUntil = game.getTime() + time;
-  game.addObject(std::make_shared<Protection>(this, _protectedUntil));
+  game.addObject(std::make_shared<TankProtection>(this, _protectedUntil));
 }
 
 void ITank::freeze(Game &game, float time) {

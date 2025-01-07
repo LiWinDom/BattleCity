@@ -2,7 +2,7 @@
 
 #include "IBlock.h"
 
-class Wall : public IBlock {
+class Wall : virtual public IBlock {
  public:
   Wall(const sf::Vector2f& position);
 };

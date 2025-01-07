@@ -3,7 +3,7 @@ set(CLIENT_PROJECT_NAME BattleCity-client)
 set(SERVER_PROJECT_NAME BattleCity-server)
 project(BattleCity LANGUAGES CXX)
 
-set(CLIENT_VERSION "2025.102.1")
+set(CLIENT_VERSION "2025.107.0")
 set(SERVER_VERSION ${CLIENT_VERSION})
 
 add_compile_definitions(CLIENT_VERSION="${CLIENT_VERSION}")
@@ -39,6 +39,7 @@ set (
     src/Game/Objects/Playfield/Brick.h src/Game/Objects/Playfield/Brick.cpp
     src/Game/Objects/Playfield/Bush.h src/Game/Objects/Playfield/Bush.cpp
     src/Game/Objects/Playfield/Eagle.h src/Game/Objects/Playfield/Eagle.cpp
+    src/Game/Objects/Playfield/EagleProtection.h src/Game/Objects/Playfield/EagleProtection.cpp
     src/Game/Objects/Playfield/IBlock.h src/Game/Objects/Playfield/IBlock.cpp
     src/Game/Objects/Playfield/TankSpawner.h src/Game/Objects/Playfield/TankSpawner.cpp
     src/Game/Objects/Playfield/Wall.h src/Game/Objects/Playfield/Wall.cpp
@@ -50,7 +51,7 @@ set (
     src/Game/Objects/Tank/Explosion.h src/Game/Objects/Tank/Explosion.cpp
     src/Game/Objects/Tank/ITank.h src/Game/Objects/Tank/ITank.cpp
     src/Game/Objects/Tank/PlayerTank.h src/Game/Objects/Tank/PlayerTank.cpp
-    src/Game/Objects/Tank/Protection.h src/Game/Objects/Tank/Protection.cpp
+    src/Game/Objects/Tank/TankProtection.h src/Game/Objects/Tank/TankProtection.cpp
 )
 set (
     CLIENT_EXECUTABLES ./src/Client.cpp ${SHARED_EXECUTABLES}
@@ -70,6 +71,7 @@ set (
     src/Game/Render/Drawables/Playfield/BrickDrawable.h src/Game/Render/Drawables/Playfield/BrickDrawable.cpp
     src/Game/Render/Drawables/Playfield/BushDrawable.h src/Game/Render/Drawables/Playfield/BushDrawable.cpp
     src/Game/Render/Drawables/Playfield/EagleDrawable.h src/Game/Render/Drawables/Playfield/EagleDrawable.cpp
+    src/Game/Render/Drawables/Playfield/EagleProtectionDrawable.h src/Game/Render/Drawables/Playfield/EagleProtectionDrawable.cpp
     src/Game/Render/Drawables/Playfield/TankSpawnerDrawable.h src/Game/Render/Drawables/Playfield/TankSpawnerDrawable.cpp
     src/Game/Render/Drawables/Playfield/WallDrawable.h src/Game/Render/Drawables/Playfield/WallDrawable.cpp
     src/Game/Render/Drawables/Playfield/WaterDrawable.h src/Game/Render/Drawables/Playfield/WaterDrawable.cpp
@@ -78,7 +80,7 @@ set (
     src/Game/Render/Drawables/Tank/BulletDrawable.h src/Game/Render/Drawables/Tank/BulletDrawable.cpp
     src/Game/Render/Drawables/Tank/ExplosionDrawable.h src/Game/Render/Drawables/Tank/ExplosionDrawable.cpp
     src/Game/Render/Drawables/Tank/TankDrawable.h src/Game/Render/Drawables/Tank/TankDrawable.cpp
-    src/Game/Render/Drawables/Tank/ProtectionDrawable.h src/Game/Render/Drawables/Tank/ProtectionDrawable.cpp
+    src/Game/Render/Drawables/Tank/TankProtectionDrawable.h src/Game/Render/Drawables/Tank/TankProtectionDrawable.cpp
 )
 set (
     SERVER_EXECUTABLES ./src/Server.cpp ${SHARED_EXECUTABLES}

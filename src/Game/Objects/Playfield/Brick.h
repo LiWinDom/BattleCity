@@ -2,7 +2,7 @@
 
 #include "IBlock.h"
 
-class Brick : public IBlock {
+class Brick : virtual public IBlock {
  public:
   Brick(const sf::Vector2f& position);
 
@@ -10,6 +10,6 @@ class Brick : public IBlock {
 
   void destroy(Game& game, const ObjectRotation& bulletRotation) override;
 
- private:
+ protected:
   uint8_t _state = 15;
 };
