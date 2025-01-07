@@ -1,8 +1,10 @@
 #include "PlayerTank.h"
 
 PlayerTank::PlayerTank(TankSpawner* spawner, uint8_t tankType) : ITank(ObjectType::PlayerTank, spawner->getPosition()), _spawnerPointer(spawner) {
-  _tankType = tankType;
   _hasBonus = spawner->getSpawnerNum();
+  for (auto i = 0; i < tankType; ++i) {
+    upgrade();
+  }
 }
 
 uint8_t PlayerTank::getState() const {
