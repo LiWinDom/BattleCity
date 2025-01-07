@@ -21,10 +21,11 @@ void EagleProtection::removeProtection(Game& game, float time) {
 }
 
 void EagleProtection::think(Game &game, const Event &event) {
-  if (_stateUntil < game.getTime()) {
-    _protectionState = 1;
-    _collision = true;
+  if (_stateUntil > game.getTime()) {
+    return;
   }
+  _protectionState = 1;
+  _collision = _state;
 }
 
 void EagleProtection::destroy(Game& game, const ObjectRotation& bulletRotation) {
