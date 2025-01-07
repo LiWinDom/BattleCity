@@ -12,7 +12,6 @@ int main(int argc, char* argv[]) {
   Log::message("");
   std::cout.setf(std::ios::unitbuf);
 
-  uint8_t currentStage = 0;
   std::unique_ptr<Game> game = nullptr;
   std::unique_ptr<ClientNetwork> client = nullptr;
 
@@ -21,7 +20,7 @@ int main(int argc, char* argv[]) {
 
     if (!configFile.is_open()) {
       Log::info("Config file not found, starting local game");
-      game = std::make_unique<Game>(currentStage, false);
+      game = std::make_unique<Game>(0, false);
     }
     else {
       std::string address;
@@ -93,14 +92,17 @@ int main(int argc, char* argv[]) {
             case ObjectType::Eagle:
               drawables[object->getId()] = std::make_shared<EagleDrawable>();
               break;
+            case ObjectType::EagleProtection:
+              drawables[object->getId()] = std::make_shared<EagleProtectionDrawable>();
+              break;
             case ObjectType::Bonus:
               drawables[object->getId()] = std::make_shared<BonusDrawable>();
               break;
             case ObjectType::Explosion:
               drawables[object->getId()] = std::make_shared<ExplosionDrawable>();
               break;
-            case ObjectType::Protection:
-              drawables[object->getId()] = std::make_shared<ProtectionDrawable>();
+            case ObjectType::TankProtection:
+              drawables[object->getId()] = std::make_shared<TankProtectionDrawable>();
               break;
             case ObjectType::Spawner:
               drawables[object->getId()] = std::make_shared<TankSpawnerDrawable>();
@@ -149,11 +151,12 @@ int main(int argc, char* argv[]) {
       }
       else {
         game->think(event);
-        if (game->isFinished() || event.player1.reset) {
-          if (event.player1.reset) {
-            currentStage = -1;
-          }
+        if (game->isFinished()) {
           game = std::make_unique<Game>(game.get());
+          drawables.clear();
+        }
+        else if (event.player1.reset) {
+          game = std::make_unique<Game>(0, false);
           drawables.clear();
         }
       }

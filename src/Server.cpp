@@ -13,8 +13,7 @@ int main(int argc, char* argv[]) {
 
   try {
     ServerNetwork server(61000);
-    uint8_t currentStage = 0;
-    auto game = std::make_unique<Game>(currentStage, true);
+    auto game = std::make_unique<Game>(0, true);
 
     std::map<uint8_t, std::shared_ptr<uint8_t[]>> prevBytes;
     while (true) {
@@ -54,11 +53,14 @@ int main(int argc, char* argv[]) {
 
       game->think(event);
       if (game->isFinished() || event.player1.reset || event.player2.reset) {
-        if (event.player1.reset || event.player2.reset) {
-          currentStage = -1;
+        if (game->isFinished()) {
+          game = std::make_unique<Game>(game.get());
+          server.send(Serializer::objectToBytes(std::make_shared<IObject>(ObjectType::NewStage, sf::Vector2f(0, 0), sf::Vector2f(0, 0))), Serializer::getObjectSize());
         }
-        game = std::make_unique<Game>(game.get());
-        server.send(Serializer::objectToBytes(std::make_shared<IObject>(ObjectType::NewStage, sf::Vector2f(0, 0), sf::Vector2f(0, 0))), Serializer::getObjectSize());
+        else if (event.player1.reset) {
+          game = std::make_unique<Game>(0, false);
+          server.send(Serializer::objectToBytes(std::make_shared<IObject>(ObjectType::NewStage, sf::Vector2f(0, 0), sf::Vector2f(0, 0))), Serializer::getObjectSize());
+        }
       }
     }
   }
