@@ -57,8 +57,8 @@ int main(int argc, char* argv[]) {
           game = std::make_unique<Game>(game.get());
           server.send(Serializer::objectToBytes(std::make_shared<IObject>(ObjectType::NewStage, sf::Vector2f(0, 0), sf::Vector2f(0, 0))), Serializer::getObjectSize());
         }
-        else if (event.player1.reset) {
-          game = std::make_unique<Game>(0, false);
+        else if (event.player1.reset || event.player2.reset) {
+          game = std::make_unique<Game>(0, true);
           server.send(Serializer::objectToBytes(std::make_shared<IObject>(ObjectType::NewStage, sf::Vector2f(0, 0), sf::Vector2f(0, 0))), Serializer::getObjectSize());
         }
       }
