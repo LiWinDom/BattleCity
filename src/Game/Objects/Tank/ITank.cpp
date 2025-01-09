@@ -98,7 +98,7 @@ void ITank::think(Game& game, const Event &event) {
   }
 }
 
-void ITank::destroy(Game &game, const ObjectRotation& bulletRotation) {
+void ITank::destroy(Game &game, const ObjectRotation& bulletRotation, const bool powerfulBullet) {
   if (_protectedUntil > game.getTime()) {
     return;
   }

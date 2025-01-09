@@ -81,7 +81,11 @@ void IObject::think(Game& game, const Event &event) {
   return;
 }
 
-void IObject::destroy(Game& game, const ObjectRotation& bulletRotation) {
+void IObject::destroy(Game& game) {
+  return;
+}
+
+void IObject::destroy(Game& game, const ObjectRotation& bulletRotation, const bool powerfulBullet) {
   return;
 }
 

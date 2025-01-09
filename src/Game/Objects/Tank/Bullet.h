@@ -10,7 +10,7 @@ class Bullet : public IMovable {
 
   void think(Game& game, const Event& event) override;
 
-  void destroy(Game& game, const ObjectRotation& bulletRotation = ObjectRotation::Up) override;
+  void destroy(Game& game, const ObjectRotation& bulletRotation = ObjectRotation::Up, const bool powerfulBullet = false) override;
 
  private:
   bool _belongsToEnemy, _isPowerful;

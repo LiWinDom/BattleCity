@@ -15,7 +15,7 @@ class EagleProtection : public Brick, public Wall {
 
   void think(Game& game, const Event& event) override;
 
-  void destroy(Game& game, const ObjectRotation& bulletRotation) override;
+  void destroy(Game& game, const ObjectRotation& bulletRotation, const bool powerfulBullet = false) override;
 
  private:
   float _stateUntil = -1;

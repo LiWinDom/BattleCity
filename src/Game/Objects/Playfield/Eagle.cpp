@@ -6,6 +6,6 @@ uint8_t Eagle::getState() const {
   return _state;
 }
 
-void Eagle::destroy(Game &game, const ObjectRotation& bulletRotation) {
+void Eagle::destroy(Game &game, const ObjectRotation& bulletRotation, const bool powerfulBullet) {
   _state = true;
 }

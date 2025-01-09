@@ -58,7 +58,7 @@ void Bullet::think(Game& game, const Event &event) {
       case ObjectType::Bonus:
         continue;
     }
-    object->destroy(game, _rotation);
+    object->destroy(game, _rotation, _isPowerful);
     needToDestroy = true;
     if (object->getType() != ObjectType::Bullet) {
       destroyWithExplosion = true;
@@ -72,6 +72,6 @@ void Bullet::think(Game& game, const Event &event) {
   }
 }
 
-void Bullet::destroy(Game &game, const ObjectRotation& bulletRotation) {
+void Bullet::destroy(Game &game, const ObjectRotation& bulletRotation, const bool powerfulBullet) {
   _desytroyed = true;
 }

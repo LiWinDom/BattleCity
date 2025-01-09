@@ -31,7 +31,8 @@ class IObject {
   std::vector<std::shared_ptr<IObject>> getHardCollisions(const std::vector<std::shared_ptr<IObject>>& objects) const;
 
   virtual void think(Game& game, const Event &event);
-  virtual void destroy(Game& game, const ObjectRotation& bulletRotation = ObjectRotation::Up);
+  virtual void destroy(Game& game);
+  virtual void destroy(Game& game, const ObjectRotation& bulletRotation, const bool powerfulBullet = false);
 
  protected:
   uint16_t _id;

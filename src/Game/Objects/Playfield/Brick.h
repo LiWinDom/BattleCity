@@ -8,7 +8,7 @@ class Brick : virtual public IBlock {
 
   uint8_t getState() const override;
 
-  void destroy(Game& game, const ObjectRotation& bulletRotation) override;
+  void destroy(Game& game, const ObjectRotation& bulletRotation, const bool powerfulBullet = false) override;
 
  protected:
   uint8_t _state = 15;

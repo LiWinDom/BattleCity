@@ -28,12 +28,12 @@ void EagleProtection::think(Game &game, const Event &event) {
   _collision = _state;
 }
 
-void EagleProtection::destroy(Game& game, const ObjectRotation& bulletRotation) {
+void EagleProtection::destroy(Game& game, const ObjectRotation& bulletRotation, const bool powerfulBullet) {
   if (_protectionState == 1) {
-    Brick::destroy(game, bulletRotation);
+    Brick::destroy(game, bulletRotation, powerfulBullet);
     _desytroyed = false;
   }
   else if (_protectionState == 2) {
-    Wall::destroy(game, bulletRotation);
+    Wall::destroy(game, bulletRotation, powerfulBullet);
   }
 }

@@ -8,7 +8,7 @@ class Eagle : public IObject {
 
   uint8_t getState() const override;
 
-  void destroy(Game& game, const ObjectRotation& bulletRotation = ObjectRotation::Up) override;
+  void destroy(Game& game, const ObjectRotation& bulletRotation = ObjectRotation::Up, const bool powerfulBullet = false) override;
 
  private:
   bool _state = false;
