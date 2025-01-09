@@ -48,7 +48,7 @@ std::shared_ptr<uint8_t[]> ClientNetwork::receive(size_t size) {
     if (status == sf::Socket::Disconnected) {
       throw std::runtime_error("Server disconnected");
     }
-  } while (status == sf::Socket::Partial);
+  } while (status == sf::Socket::Partial && totalReceived < size);
 
   return data;
 }

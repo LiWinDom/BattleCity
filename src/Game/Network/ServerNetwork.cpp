@@ -70,7 +70,7 @@ std::vector<std::shared_ptr<uint8_t[]>> ServerNetwork::receive(size_t size) {
       if (status == sf::Socket::Disconnected) {
         throw std::runtime_error(fmt::format("Client {} disconnected", i));
       }
-    } while (status == sf::Socket::Partial);
+    } while (status == sf::Socket::Partial && totalReceived < size);
   }
 
   return data;
